@@ -12,9 +12,6 @@ __pycache__/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# personal AI-tool config (team config in .claude/settings.json and CLAUDE.md is committed)
-CLAUDE.local.md
-.claude/settings.local.json
 
 # os / editor
 .DS_Store

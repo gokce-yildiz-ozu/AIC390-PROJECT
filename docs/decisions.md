@@ -23,14 +23,12 @@ test cases with teams that started a week earlier.
 in practice assign us UC6, whose multilingual hidden cases and dated travel rules add risk. UC8: hardest data and
 near-identical HS codes in hidden tests.
 
-## D-001 — The repository is the shared state between people and AI tools (accepted, 2026-11-11)
+## D-001 — The repository is the team's single source of truth (accepted, 2026-11-11)
 
-**Decision.** Requirements, status, decisions and work requests live in this repo (`docs/`). The claude.ai
-planning chat writes work requests to `docs/handoffs/`; Claude Code implements them and writes the Result.
+**Decision.** Requirements (`docs/course/requirements.md`), current status (`docs/STATUS.md`) and decisions (this
+file) live in the repo next to the code, not in chats or private notes.
 
-**Why.** Claude Code cannot see the claude.ai project's files or chats, and teammates may use other tools.
-A file in git is visible to everyone, versioned, and is itself evidence for the contributions and AI-tools
-sections of the weekly report (R15).
+**Why.** Everyone sees the same version, changes are reviewed and dated, and the history doubles as evidence for
+the contributions section of the weekly report.
 
-**Consequence.** Anything a coding agent needs from the handbook or a planning discussion must be written into
-the repo; chat-only decisions don't count.
+**Consequence.** A decision made in a meeting or a chat counts only once it is written here.

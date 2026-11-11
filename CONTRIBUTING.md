@@ -1,6 +1,6 @@
-# AGENTS.md: AIC 390 team project
+# Contributing: AIC 390 team project
 
-Shared instructions for every coding agent (Claude Code, Cursor, Copilot, Codex) and every human on the team.
+How we work in this repository. Read this before your first commit.
 
 ## What this repo is
 
@@ -14,8 +14,6 @@ week. Grading rewards evidence: measured numbers with n, a 95% interval, and the
 | Deliverable IDs, weekly requirements, course rules | `docs/course/requirements.md` (read before planning any week) |
 | Current state, owners, next actions | `docs/STATUS.md` |
 | Decisions and their reasons | `docs/decisions.md` |
-| Work requests from the planning chat | `docs/handoffs/` |
-| How we use AI tools as a team | `docs/ai-workflow.md` |
 
 ## Commands
 

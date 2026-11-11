@@ -1,7 +1,7 @@
 # Course requirements: our working checklist
 
-Condensed from the course's *Applied project handbook* (instructor: Hüseyin Ulusoy) so that coding agents, which
-cannot see the course files, know what each deliverable needs. The handbook is authoritative; if this file and the
+Condensed from the course's *Applied project handbook* (instructor: Hüseyin Ulusoy) so the whole team has every
+deliverable's requirements in one place, next to the code. The handbook is authoritative; if this file and the
 handbook disagree, the handbook wins and this file gets fixed.
 
 ## Architecture we must build (same for every team, only the domain differs)

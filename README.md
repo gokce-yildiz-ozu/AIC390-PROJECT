@@ -34,8 +34,7 @@ python scripts/run_baseline.py --dry-run    # offline smoke test
 | `results/` | Raw outputs and summaries behind every reported number |
 | `docs/course/requirements.md` | Deliverables, rules and grading, condensed |
 | `docs/STATUS.md`, `docs/decisions.md` | Current state; decisions and reasons |
-| `docs/ai-workflow.md` | How we use claude.ai and Claude Code together (R15 disclosure) |
-| `AGENTS.md`, `CLAUDE.md`, `.claude/` | Instructions for coding agents |
+| `CONTRIBUTING.md` | Commands, layout, rules and conventions for the team |
 
 ## Reproducing a number
 
