@@ -1,0 +1,23 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# personal AI-tool config (team config in .claude/settings.json and CLAUDE.md is committed)
+CLAUDE.local.md
+.claude/settings.local.json
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json

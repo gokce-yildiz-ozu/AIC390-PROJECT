@@ -1,0 +1,16 @@
+{
+  "week": 1,
+  "test_set_size": null,
+  "e2e_accuracy": null,
+  "abstention_correct": null,
+  "unsupported_claims": null,
+  "hit_at_5": null,
+  "mrr": null,
+  "task_success": null,
+  "pass_k": null,
+  "injection_success": null,
+  "cost_per_task_usd": null,
+  "latency_p50_s": null,
+  "spend_week_usd": null,
+  "spend_total_usd": null
+}
