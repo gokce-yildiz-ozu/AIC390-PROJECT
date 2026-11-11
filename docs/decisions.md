@@ -14,6 +14,11 @@ model. Synthetic data is quick to write, leaving time for experiments. Class sur
 UC1 wanted first by three teams, UC4 by one; nobody ranked UC3 or UC5 first. UC7 is our best remaining option on
 merit even though other teams list it second.
 
+**Update 2026-11-11 (in class).** The instructor said several teams may take the same use case, so R1's
+"no two teams share a use case" no longer applies. The ranking stands on merit alone (merit order:
+UC3 > UC5 > UC7 > UC1 > UC4 > UC2 > UC6 > UC8). A unique use case also avoids being compared on the same hidden
+test cases with teams that started a week earlier.
+
 **Alternatives considered.** UC1 > UC2 > UC6 (a teammate's suggestion): UC1 and UC2 are contested, so it would
 in practice assign us UC6, whose multilingual hidden cases and dated travel rules add risk. UC8: hardest data and
 near-identical HS codes in hidden tests.
