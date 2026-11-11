@@ -4,7 +4,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 
 ## Now
 
-- Week: 1 (problem and baseline). Use case: **not assigned yet** (preference form pending).
+- Week: 1 (problem and baseline). Use case: **not assigned yet**; preference UC3 > UC5 > UC7 (D-002), first customer for UC3: Istanbul property manager, 3 blocks, ~120 units.
 - Team: not finalized. Roles: data and retrieval lead = ?, agent and tools lead = ?, evaluation and safety lead = ?
 - Repo: skeleton, AI-workflow instructions and course checklist in place; W1 deliverables not started.
 
