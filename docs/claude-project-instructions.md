@@ -1,5 +1,4 @@
-<!-- Paste everything below the line into: claude.ai → Project "AIC390" → Instructions.
-Replace https://github.com/gokce-yildiz-ozu/AIC390-PROJECT after the repository exists. -->
+<!-- Paste everything below the line into: claude.ai → Project "AIC390" → Instructions. -->
 
 ---
 
