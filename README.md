@@ -1,16 +1,17 @@
-# AIC 390 team project
+# Deadline Radar
 
-> Product name, use case and first customer: decided in week 1 (see `docs/STATUS.md`).
+One verified deadline list from a student's emails, LMS posts and syllabi, and cited answers to school-rule
+questions. Built in seven weeks for AIC 390 Prompt Engineering, Özyeğin University, Fall 2026.
 
-An AI assistant for one market that **answers** from documents with citations, **looks up** structured data,
-**acts** through a confirmed sandbox action, and **measures** itself on a weekly scoreboard. Built in seven weeks
-for AIC 390 Prompt Engineering, Özyeğin University, Fall 2026.
+The assistant **extracts** deadlines from untrusted messages, **answers** rule questions from documents with
+citations, **looks up** deadlines in structured data, **acts** through one confirmed sandbox action (a calendar
+reminder), and **measures** itself on a weekly scoreboard. First user: an undergraduate taking 4–6 courses.
 
 | Team member | Role |
 |---|---|
-| | Data and retrieval lead |
-| | Agent and tools lead |
-| | Evaluation and safety lead |
+| Serap Gökçe Yıldız | Evaluation and safety lead |
+| Enes Kemal Köylü | to be decided |
+| Mert Bozma | to be decided |
 
 ## Setup
 
@@ -34,6 +35,7 @@ python scripts/run_baseline.py --dry-run    # offline smoke test
 | `results/` | Raw outputs and summaries behind every reported number |
 | `docs/course/requirements.md` | Deliverables, rules and grading, condensed |
 | `docs/STATUS.md`, `docs/decisions.md` | Current state; decisions and reasons |
+| `docs/proposal/`, `docs/feedback/` | Project proposal and instructor feedback |
 | `CONTRIBUTING.md` | Commands, layout, rules and conventions for the team |
 
 ## Reproducing a number
