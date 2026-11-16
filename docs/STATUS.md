@@ -31,13 +31,13 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 |---|---|---|---|---|
 | 1 | Decide the two remaining roles; all members have repo access | all | this file, README | open |
 | 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | open |
-| 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | open |
+| 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | done |
 | 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | done |
 | 5 | W1.4 Data inventory: documents and DB | data and retrieval | `docs/data_inventory.md` | open |
 | 6 | W1.4 Data inventory: tools and action API sketch | agent and tools | `docs/data_inventory.md` | open |
 | 7 | D-005 RAG plan detailed (corpus, metadata, stack) | data and retrieval | `docs/decisions.md` | open |
 | 8 | W1.5 Baseline at temperatures 0, 0.7, 1.2 | evaluation and safety | `results/` | open |
-| 9 | W1.6 Cost estimate vs measured tokens | agent and tools | `docs/cost_estimate.md` | open |
+| 9 | W1.6 Cost estimate vs measured tokens | agent and tools | `docs/cost_estimate.md` | done |
 | 10 | W1.7 ≥ 5 predicted failures, each tied to a Module 1 concept | evaluation and safety | `docs/predicted_failures.md` | open |
 | 11 | W1.8 README, `reports/week-1.md`, tag `week-1`, submit link | evaluation and safety | `reports/week-1.md` | open |
 
