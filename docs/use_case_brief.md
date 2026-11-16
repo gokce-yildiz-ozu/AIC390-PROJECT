@@ -36,10 +36,9 @@ arrived the same day moved it to Monday 16 November (w1-23), but Deniz has not r
 "due next Friday", and Deniz cannot tell whether that means 13 or 20 November (w1-02). Deniz asks if ECON-101 work
 can be one day late: the course policy says no (w1-12), but the answer is in a PDF Deniz never opened.
 
-In AIC 390 the weekly report is due on Tuesday at 12:30, 24 hours before class, but Deniz's team agreed to submit by
-10:00 that morning. One deliverable now has two times, and Deniz has to decide which one goes on the list. (This
-case is not in `week1_inputs.jsonl`, which is frozen after the baseline (R9); we add it to the week-2 test set,
-W2.3.)
+In AIC 390 the weekly report is due on Tuesday at 12:30. Deniz asks the assistant: "Remind me 2 hours before it."
+The assistant shows a preview of a reminder for Tuesday 10:30 and adds it to the calendar only after Deniz confirms
+(the same pattern as w1-22).
 
 ## User stories (5)
 
