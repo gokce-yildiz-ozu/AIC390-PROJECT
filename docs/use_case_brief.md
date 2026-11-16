@@ -59,4 +59,4 @@ W2.3.)
 | Relative dates and date changes resolved in code | Sending emails, deleting data, payments (no tool can do these) |
 | Cited answers to course and regulation questions, or "not in the documents" | Grade predictions and exceptions not in the documents (must not answer) |
 | Reminder in a sandbox calendar after preview and confirmation | Code assignments, automatic submission |
-| First user: undergraduates taking 4–6 courses | Master's students (later: thesis deadlines live outside email and the LMS) |
+| First user: undergraduates taking 4–6 courses | Master's students (later) |
