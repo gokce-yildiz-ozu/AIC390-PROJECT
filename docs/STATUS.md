@@ -47,7 +47,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 |---|---|---|---|
 | Serap Gökçe Yıldız | | | |
 | Enes Kemal Köylü | | | |
-| Mert Bozma | | | |
+| Mert Bozma | ✓ | | |
 
 ## Experiments
 
