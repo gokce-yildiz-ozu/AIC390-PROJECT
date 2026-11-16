@@ -7,7 +7,7 @@ Line format (JSONL):
 
 ```json
 {"id": "w1-01", "channel": "email", "received_at": "2026-11-09T10:15:00+03:00", "course": "CS-301",
- "text": "...", "ingredients": ["extraction", "exact-id"], "expected": "..."}
+ "sender": "instructor:Dr. Murat Öztürk", "text": "...", "ingredients": ["extraction", "exact-id"], "expected": "..."}
 ```
 
 | Field | Meaning |
@@ -15,6 +15,7 @@ Line format (JSONL):
 | `channel` | `email`, `lms` (course announcement) or `chat` (the student asks the assistant) |
 | `received_at` | Fixed reference time. Relative dates ("next Friday") are resolved against it, so runs are reproducible (R8) |
 | `course` | Course code the message is about, or `null` |
+| `sender` | Who sent it, from the channel's metadata, not from the text: `instructor:<name>`, `student:<account>` or `user` (the student asking). Trust decisions use this field, never claims inside `text` |
 | `ingredients` | What the input tests: `extraction`, `relative-date`, `conflict`, `needs-retrieval`, `question`, `look-up`, `action`, `unanswerable`, `multi-step`, `untrusted-input`, `exact-id` |
 | `expected` | Expected outcome in one line: the deadline(s) with date and time, the answer's source, or the correct refusal |
 
