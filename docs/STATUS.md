@@ -33,7 +33,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 | 1 | Decide the two remaining roles; all members have repo access | all | this file, README | open |
 | 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | open |
 | 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | open |
-| 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | open |
+| 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | done |
 | 5 | W1.4 Data inventory: documents and DB | data and retrieval | `docs/data_inventory.md` | open |
 | 6 | W1.4 Data inventory: tools and action API sketch | agent and tools | `docs/data_inventory.md` | open |
 | 7 | D-005 RAG plan detailed (corpus, metadata, stack) | data and retrieval | `docs/decisions.md` | open |
