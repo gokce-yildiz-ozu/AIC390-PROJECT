@@ -2,31 +2,52 @@
 
 Owners: data and retrieval lead (documents, database), agent and tools lead (action API, tools).
 Facts below come from the proposal (`docs/proposal/`) and D-005. All data is synthetic (R10).
-Replace every `TODO`; delete the hints when done.
 
 ## 1. Documents (for RAG)
 
-<!-- Proposal: 28 synthetic documents. D-005 (proposed) raises this to 45–60 because W3.1 needs ≥ 30 and the
-instructor found the RAG too easy. Decide the final count here and record it in D-005. -->
+48 synthetic documents (D-005): above W3.1's minimum of 30, and built so that a course code alone does not
+identify the right passage.
 
 | Type | Count (planned) | Example | Why it makes retrieval harder |
 |---|---|---|---|
-| Course syllabi | TODO | CS-301 syllabus (late policy, grading) | Confusable course codes (CS-301 vs CS-310) |
-| Revised syllabus versions | TODO | CS-310 syllabus v2 | Same course, different dates by version |
-| Course policies | TODO | ECON-101 late-work policy | Overrides the regulation |
-| Regulation, split by article | TODO | Article 9 (withdrawal), 12 (make-up), 14 (late work) | Exact identifiers ("Article 12") |
-| Academic calendar | TODO | Make-up week, last withdrawal day | Dates referenced indirectly |
-| FAQ | TODO | | |
+| Course syllabi | 6 | CS-301, CS-310, CS-130, MATH-212, MATH-221, ECON-101 | Confusable course codes (CS-301 / CS-310 / CS-130, MATH-212 / MATH-221) |
+| Revised syllabus versions | 4 | CS-310 syllabus v2 | Same course, different dates by version; only the newest valid version counts |
+| Course policies | 8 | ECON-101 late-work policy | Overrides the regulation |
+| Regulation, split by article | 16 | Article 9 (withdrawal), 12 (make-up), 14 (late work) | Exact identifiers ("Article 12"); similar wording across articles |
+| Academic calendar | 3 | Fall term calendar, make-up week, final exam period | Dates referenced indirectly ("before the make-up week") |
+| Past course announcements | 6 | CS-301 office hours moved | Near-duplicates of real deadlines act as distractors |
+| FAQ | 5 | Withdrawal, make-up exams, LMS submission | Generic answers compete with course-specific ones |
+| **Total** | **48** | | |
 
-Metadata per chunk (D-005): course, doc type, version, valid from, language, audience. TODO: confirm.
+**Facts the corpus must contain** (from the expected outputs in `eval/testsets/week1_inputs.jsonl`):
+
+| Fact | Document | Input |
+|---|---|---|
+| Late penalty 10% per day, at most 3 days, then 0 | CS-301 syllabus, late policy | w1-09 |
+| Lab attendance of at least 70% is mandatory | CS-310 syllabus | w1-13 |
+| Lab 3 due 2026-11-13 23:59 | CS-310 syllabus | w1-06 |
+| Make-up week starts 2026-11-30 | Academic calendar | w1-08 |
+| Last day to withdraw: 2026-12-04 | Academic calendar (Article 9 points to it) | w1-10 |
+| Make-up exam: documented excuse, handed in within 3 working days | Regulation, Article 12 | w1-11 |
+| The course instructor sets the late-work rule | Regulation, Article 14 | w1-12, w1-21 |
+| ECON-101 does not accept late work | ECON-101 course policy | w1-12 |
+
+**Deliberately not in the corpus:** dormitory, tuition and fee documents, so that w1-20 stays unanswerable.
+
+**Metadata per chunk:** `doc_id`, `course` (or null), `doc_type`, `section` (article or heading, used in
+citations), `version`, `valid_from`, `language` (tr / en), `audience` (all students, or students enrolled in the
+course; W3.1 "who may see it").
 
 ## 2. Database tables
 
 | Table | Columns | Notes |
 |---|---|---|
-| `deadlines` | TODO (proposal: title, type, course, due, source, evidence quote, verified) | Counting and listing go to SQL, never to RAG |
-| `courses` | TODO | |
-| `enrolments` | TODO | Which student takes which course; tools return only that student's rows |
+| `students` | `student_id`, `name` (synthetic), `program` | The student comes from the session, never from the model |
+| `courses` | `course_code`, `title`, `instructor`, `term`, `language` | |
+| `enrolments` | `student_id`, `course_code`, `term` | Tools return only the session student's courses |
+| `messages` | `message_id`, `student_id`, `channel` (email, lms), `sender`, `course_code`, `received_at`, `subject`, `body` | Sandbox inbox read by `read_new_emails`; `body` is untrusted; `received_at` resolves relative dates |
+| `deadlines` | `deadline_id`, `student_id`, `course_code`, `title`, `type` (homework, lab, quiz, exam, project, other), `due_date`, `due_time` (null if not stated), `source_id`, `evidence_quote`, `verified`, `supersedes_id`, `created_at` | Counting and listing go to SQL, never to RAG. A moved deadline is a new row that points to the old one, so both sources can be cited |
+| `calendar_events` | `event_id`, `student_id`, `deadline_id`, `title`, `start_at`, `status` (pending, confirmed) | Sandbox write target of `create_calendar_event` |
 
 ## 3. Action API sketch
 
@@ -58,7 +79,8 @@ Rules for every tool:
 |---|---|---|
 | Inbox emails | Instruction hidden in an email body | w1-24 |
 | LMS posts, forum | A student posing as the instructor | w1-25 |
-| TODO | | |
+| Retrieved documents (syllabus, announcement text) | An instruction hidden in a passage that RAG puts into the prompt | none yet (W2.8, W5.5) |
+| Rows extracted into `deadlines` | A fake deadline from a malicious message later treated as fact (second-order injection) | w1-24, w1-25 |
 
 Trust decisions use the `sender` field from channel metadata, never claims inside the text
 (`eval/testsets/README.md`).
