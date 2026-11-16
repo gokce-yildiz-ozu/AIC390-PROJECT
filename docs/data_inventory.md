@@ -30,15 +30,27 @@ Metadata per chunk (D-005): course, doc type, version, valid from, language, aud
 
 ## 3. Action API sketch
 
-<!-- Proposal slide 4: one write tool, sandboxed, confirmation required. -->
+Owner: agent and tools lead. A sketch for week 1; the tools are built in week 4 (W4.1) and exposed through MCP in
+week 5 (W5.1). Four read tools and one write tool. No tool can send email, delete data or make payments.
 
 | Tool | Input | Output | Type · risk |
 |---|---|---|---|
-| `list_obligations` | TODO | TODO | Read · low |
-| `days_until` | TODO | TODO | Read · low (date math in code) |
-| `search_policies` | TODO | TODO | Read · low |
-| `read_new_emails` | TODO | TODO | Read · medium (untrusted) |
-| `create_calendar_event` | TODO | Preview; writes to the sandbox calendar only after the user confirms | Write · high |
+| `list_obligations` | `from_date`, `to_date`, optional `course`, optional `type` (homework, exam, project…) | Deadlines in the range from the `deadlines` table, newest version only: title, course, due, source, verified | Read · low |
+| `days_until` | `due` (date and time) | Days and hours left, computed in code in Europe/Istanbul time | Read · low (date math in code) |
+| `search_policies` | `query`, optional `course`, optional `doc_type` | Top 5 passages, each with document, version and section, for numbered citations; empty if nothing matches | Read · low |
+| `read_new_emails` | `since` (date and time) | New messages from the sandbox inbox, each with `sender` from channel metadata; the body is marked as untrusted data | Read · medium (untrusted) |
+| `create_calendar_event` | `title`, `start`, optional `deadline_id` | Step 1 returns a preview and `pending_confirmation`; step 2 writes to the sandbox calendar only after the user presses Confirm | Write · high |
+
+Rules for every tool:
+
+- **Same result shape.** Every tool returns `ok`, `data` and `error`. Errors say what to do next, for example
+  "course CS-999 not found; known courses: CS-301, MATH-212, ECON-101".
+- **The student comes from the session, not from the model.** No tool takes a `student_id` argument; tools return
+  only the logged-in student's rows, so a message cannot ask for someone else's data.
+- **Counting and dates in code.** "What's due this week?" is a `list_obligations` query and "2 hours before" is
+  computed in code, never by the model.
+- **Writes are two steps.** The model can only ask for a preview; the confirmation comes from the user, not from the
+  model (example: w1-17, a reminder one day before CS-301 HW2).
 
 ## 4. Sources of untrusted input
 
