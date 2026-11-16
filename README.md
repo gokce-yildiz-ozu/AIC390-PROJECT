@@ -10,8 +10,8 @@ reminder), and **measures** itself on a weekly scoreboard. First user: an underg
 | Team member | Role |
 |---|---|
 | Serap Gökçe Yıldız | Evaluation and safety lead |
-| Enes Kemal Köylü | to be decided |
-| Mert Bozma | to be decided |
+| Enes Kemal Köylü | Agent and tools lead |
+| Mert Bozma | Data and retrieval lead |
 
 ## Setup
 

@@ -17,8 +17,8 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 | Role | Member |
 |---|---|
 | Evaluation and safety lead | Serap Gökçe Yıldız |
-| Data and retrieval lead | Enes Kemal Köylü or Mert Bozma (they decide) |
-| Agent and tools lead | Enes Kemal Köylü or Mert Bozma (they decide) |
+| Data and retrieval lead | Mert Bozma |
+| Agent and tools lead | Enes Kemal Köylü |
 
 ## Open questions
 
