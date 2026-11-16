@@ -1,0 +1,85 @@
+{
+  "source": "results\\2026-11-16_baseline_openai-gpt-oss-120b\\outputs.jsonl",
+  "model": "openai/gpt-oss-120b",
+  "price": {
+    "input_usd_per_mtok": 0.15,
+    "output_usd_per_mtok": 0.6,
+    "source": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+    "checked": "2026-11-16"
+  },
+  "formula": "cost = (input_tokens * input_price + output_tokens * output_price) / 1e6; output_tokens include reasoning",
+  "all": {
+    "n": 75,
+    "mean_input_tokens": 222,
+    "mean_output_tokens": 425.82666666666665,
+    "mean_reasoning_tokens": 116.26666666666667,
+    "p50_total_tokens": 518,
+    "p95_total_tokens": 1353,
+    "usd_per_1000_requests": 0.288796,
+    "share_of_cost_from_reasoning": 0.24155459216886657
+  },
+  "by_temperature": {
+    "0.0": {
+      "n": 25,
+      "mean_input_tokens": 222,
+      "mean_output_tokens": 449.56,
+      "mean_reasoning_tokens": 113,
+      "p50_total_tokens": 519,
+      "p95_total_tokens": 1441,
+      "usd_per_1000_requests": 0.30303599999999997,
+      "share_of_cost_from_reasoning": 0.22373579376707717
+    },
+    "0.7": {
+      "n": 25,
+      "mean_input_tokens": 222,
+      "mean_output_tokens": 400.44,
+      "mean_reasoning_tokens": 115.28,
+      "p50_total_tokens": 565,
+      "p95_total_tokens": 1047,
+      "usd_per_1000_requests": 0.27356400000000003,
+      "share_of_cost_from_reasoning": 0.2528402860025442
+    },
+    "1.2": {
+      "n": 25,
+      "mean_input_tokens": 222,
+      "mean_output_tokens": 427.48,
+      "mean_reasoning_tokens": 120.52,
+      "p50_total_tokens": 500,
+      "p95_total_tokens": 1454,
+      "usd_per_1000_requests": 0.289788,
+      "share_of_cost_from_reasoning": 0.2495341422005052
+    }
+  },
+  "by_channel": {
+    "chat": {
+      "n": 42,
+      "mean_input_tokens": 201.5,
+      "mean_output_tokens": 593.2619047619048,
+      "mean_reasoning_tokens": 86.64285714285714,
+      "p50_total_tokens": 720,
+      "p95_total_tokens": 1454,
+      "usd_per_1000_requests": 0.3861821428571428,
+      "share_of_cost_from_reasoning": 0.1346144953806032
+    },
+    "email": {
+      "n": 21,
+      "mean_input_tokens": 247.71428571428572,
+      "mean_output_tokens": 177.1904761904762,
+      "mean_reasoning_tokens": 137.76190476190476,
+      "p50_total_tokens": 429,
+      "p95_total_tokens": 508,
+      "usd_per_1000_requests": 0.14347142857142856,
+      "share_of_cost_from_reasoning": 0.5761226725082147
+    },
+    "lms": {
+      "n": 12,
+      "mean_input_tokens": 248.75,
+      "mean_output_tokens": 274.9166666666667,
+      "mean_reasoning_tokens": 182.33333333333334,
+      "p50_total_tokens": 541,
+      "p95_total_tokens": 627,
+      "usd_per_1000_requests": 0.20226249999999998,
+      "share_of_cost_from_reasoning": 0.5408812805141834
+    }
+  }
+}
