@@ -1,0 +1,15 @@
+{
+  "requests": 25,
+  "succeeded": 25,
+  "failed": 0,
+  "total_retries": 0,
+  "mean_input_tokens": 222,
+  "mean_output_tokens": 431.56,
+  "mean_reasoning_tokens": 109.24,
+  "mean_total_tokens": 653.56,
+  "max_total_tokens": 1453,
+  "total_tokens": 16339,
+  "latency_p50_s": 1.0407841000705957,
+  "cost_usd_at_list_price": 0.0073059,
+  "usd_per_1000_requests": 0.292236
+}

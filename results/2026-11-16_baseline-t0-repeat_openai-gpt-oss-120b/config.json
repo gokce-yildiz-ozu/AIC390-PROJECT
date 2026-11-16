@@ -1,0 +1,24 @@
+{
+  "commit": "2d7e58e",
+  "dirty": false,
+  "model": "openai/gpt-oss-120b",
+  "prompt": "prompts\\baseline_v1.md",
+  "prompt_version": "baseline_v1",
+  "inputs": "eval\\testsets\\week1_inputs.jsonl",
+  "ids": null,
+  "n_inputs": 25,
+  "temperatures": [
+    0.0
+  ],
+  "n_calls": 25,
+  "sleep_s": 13.0,
+  "price": {
+    "input_usd_per_mtok": 0.15,
+    "output_usd_per_mtok": 0.6,
+    "cached_input_usd_per_mtok": 0.075,
+    "source": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+    "checked": "2026-11-16",
+    "tier": "paid list price; the page names no tier. The page lists no separate price for reasoning tokens; we cost them as part of completion_tokens, as the API reports them.",
+    "note": "We run on Groq's free plan, so our actual spend is 0 USD. This price is used only for W1.6's $ per 1,000 requests. request_cost ignores the cached-input discount."
+  }
+}
