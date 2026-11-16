@@ -5,15 +5,14 @@ Owner: agent and tools lead. Sources: the proposal (`docs/proposal/`), D-003 and
 ## First customer
 
 The user is an undergraduate student taking 4–6 courses. Master's students are left out for now: they take fewer
-courses, many of their deadlines (thesis, supervisor meetings) never appear in email or the LMS, and our test inputs
-are written for undergraduates.
+courses, and our test inputs are written for undergraduates.
 
 The payer is the university. The LMS is the school's own system, so we would sell to the school directly, not to an
 LMS vendor. This also removes the dependence on a third-party platform for access to the data.
 
 Why the school would pay is still an assumption, not a finding: fewer missed deadlines, fewer make-up and appeal
-requests, and happier students. Who pays stays a hypothesis (D-004). We test it with at least two potential customers
-in week 3, for example student affairs and the IT office.
+requests, and happier students. Our first customer is a private university, which competes for students; a tool
+like this is also good publicity for the school. Who pays stays a hypothesis (D-004).
 
 ## The job done by hand today
 
