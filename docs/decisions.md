@@ -36,8 +36,10 @@ calendar passage, compute the new date in code and cite both sources. Build a de
 academic calendar, course policies that override the regulation. Metadata per chunk: course, doc type, version,
 valid from, language, audience.
 
+**Detail (2026-11-17).** The corpus will consist of 48 documents, distributed by type as detailed in the table in `docs/data_inventory.md` §1. To ensure precise citations with article or heading numbers, `doc_id` and `section` fields have been added to the per-chunk metadata, which were missing from the original list. The corpus will contain the 8 facts required for the test inputs' expected answers, corresponding to the "Facts" table in the inventory. Dormitory and tuition fee documents will be excluded, as noted in the "Deliberately not in the corpus" row, so that input w1-20 deliberately remains unanswerable.
+
 **Open.** Storage and search stack: the proposal slide said PostgreSQL with pgvector; for a corpus this size BM25
-plus in-memory embeddings may be enough. Decide with the agent and tools lead and record the reason here.
+plus in-memory embeddings may be enough. Decide with the agent and tools lead and record the reason here. The stack question has been directed to Enes and will be resolved in week 2, before the RAG work starts in week 3.
 
 ## D-004 — Scope A, payer kept as a hypothesis (accepted, 2026-11-16)
 
