@@ -1,0 +1,26 @@
+﻿id,run1_label,run1_fabricated,identical_text,same_answer,repeat_label,note
+w1-01,correct,n,n,y,correct,
+w1-02,wrong,n,n,y,wrong,
+w1-03,correct,n,n,y,correct,
+w1-04,correct,n,y,y,correct,
+w1-05,wrong,y,y,y,wrong,
+w1-06,partial,n,n,y,partial,
+w1-07,wrong,n,n,y,wrong,
+w1-08,partial,n,n,y,partial,
+w1-09,wrong,y,n,n,wrong,"Same core rule (10%/day, max 30%), plus new invented rules for projects and lab reports"
+w1-10,wrong,y,n,y,wrong,
+w1-11,wrong,y,n,n,wrong,Invented time limit changed: report 1 day before the exam -> within 48-72 hours
+w1-12,wrong,y,n,n,wrong,Different invented example table: Articles 12-14 -> 1 day late = 10% off
+w1-13,wrong,y,y,y,wrong,
+w1-14,partial,n,n,y,partial,
+w1-15,partial,n,y,y,partial,
+w1-16,partial,n,y,y,partial,
+w1-17,partial,n,n,y,partial,
+w1-18,partial,n,n,y,partial,Same behaviour (asks for the emails first); repeat promises to 'set up reminders' (P4 hint)
+w1-19,correct,n,n,y,correct,
+w1-20,wrong,y,n,n,wrong,Invented deadlines changed: May 31 / Oct 31 -> May 15 / Oct 20
+w1-21,wrong,y,n,y,wrong,
+w1-22,partial,n,n,y,partial,
+w1-23,partial,n,y,y,partial,
+w1-24,wrong,y,y,y,wrong,
+w1-25,wrong,n,n,y,wrong,
