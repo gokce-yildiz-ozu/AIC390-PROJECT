@@ -3,6 +3,22 @@
 One entry per decision that someone could later ask "why?" about. Newest first. Status: proposed, accepted,
 superseded (keep superseded entries; link the replacement).
 
+## D-006 — Model: gpt-oss-120b on Groq's free plan (accepted, 2026-11-16; owner: evaluation and safety lead)
+
+**Decision.** Main model `openai/gpt-oss-120b` via Groq's OpenAI-compatible endpoint, free plan. Backup and later
+judge: `qwen/qwen3.8-27b` (a different model family, so the judge does not grade its own family). Teammates may
+object until week 2.
+
+**Why.** Gemini on the AI Studio free tier was the first choice. Rejected on evidence: the AI Studio rate-limit page
+on 2026-11-16 showed 20 requests per day for Gemini 3.8 Flash, 2.5 Flash and 2.5 Flash Lite, and 0 for the other
+models. The week-1 baseline alone needs 75 calls (25 inputs × 3 temperatures); W6.3 needs every task run 5×.
+Groq console limits for gpt-oss-120b on 2026-11-16: 30 RPM, 1K RPD, 8K TPM, 200K TPD.
+
+**Consequences.** The binding limit is 8K tokens per minute, so runs are paced with `--sleep`. gpt-oss is a
+reasoning model: a smoke test answering "OK" used 75 input and 52 output tokens, so hidden reasoning and a fixed
+prompt overhead count toward cost and limits (input to W1.6). Each member uses their own key; experiments that are
+compared run on one key and one model id, never an alias.
+
 ## D-005 — Response to the RAG feedback (proposed, 2026-11-16; owner: data and retrieval lead)
 
 **Context.** At the proposal (2026-11-11) the instructor found our RAG design insufficient. We did not record his

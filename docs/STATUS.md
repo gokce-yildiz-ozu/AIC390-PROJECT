@@ -10,7 +10,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
   12:30** (R4: 24 h before class). Team target: submitted by 10:00.
 - Proposal presented 2026-11-11. Instructor feedback: `docs/feedback/2026-11-11-proposal.md`. Main point: RAG
   design insufficient → response plan D-005 (proposed).
-- Model: instructor leaves the choice to us. Spend is still reported every week (R14).
+- Model: openai/gpt-oss-120b on Groq, free plan (D-006). Spend is still reported every week (R14).
 
 ## Roles
 
@@ -22,7 +22,6 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 
 ## Open questions
 
-- Which provider and model for the baseline? Record the choice in `docs/decisions.md`.
 - What exactly did the instructor find insufficient about RAG? Confirm our reading (D-005) in the week-1
   presentation.
 
