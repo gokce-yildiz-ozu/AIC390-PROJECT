@@ -61,5 +61,6 @@ test whether these differ; with 25 calls each we treat them as the same.
   it for emails (58 %) and LMS posts (54 %). Counting only the visible answer would underestimate the cost.
 - **Questions cost more than messages.** A chat question costs 2.7× an email ($0.386 vs $0.143), because the
   model writes long free-form answers. This is input for the week-2 main prompt (W2.2): ask for short answers.
-- **Fixed overhead.** A smoke test that only answered "OK" used 75 input and 52 output tokens (D-006), so even a
-  trivial request is not free.
+- **Fixed overhead.** Even a trivial request is not free: hidden reasoning is spent on every call (see the
+  reasoning column above). A single manual smoke test before the baseline pointed the same way (D-006); it is not a
+  committed result, so no number from it is used here.

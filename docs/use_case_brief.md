@@ -29,7 +29,7 @@ Nothing connects these four places, so a moved date or a rule found too late is 
 
 ## Persona
 
-Deniz is a third-year undergraduate taking CS-301, MATH-212, ECON-101 and AIC 390 (fictional student, R10).
+Deniz is a third-year undergraduate taking CS-301, CS-310, MATH-212, ECON-101 and AIC 390 (fictional student, R10).
 
 On Friday 13 November, Deniz thinks the ECON-101 Assignment 2 is due tonight at 23:59 (w1-14). An email that
 arrived the same day moved it to Monday 16 November (w1-23), but Deniz has not read it. CS-301 Lab Report 3 says
