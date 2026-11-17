@@ -49,6 +49,18 @@ course; W3.1 "who may see it").
 | `deadlines` | `deadline_id`, `student_id`, `course_code`, `title`, `type` (homework, lab, quiz, exam, project, other), `due_date`, `due_time` (null if not stated), `source_id`, `evidence_quote`, `verified`, `supersedes_id`, `created_at` | Counting and listing go to SQL, never to RAG. A moved deadline is a new row that points to the old one, so both sources can be cited |
 | `calendar_events` | `event_id`, `student_id`, `deadline_id`, `title`, `start_at`, `status` (pending, confirmed) | Sandbox write target of `create_calendar_event` |
 
+
+**Seed rows the week-1 expected outputs need.** Look-up and action inputs (w1-14 to w1-22) are answered from the
+`deadlines` table as it stands at their `received_at`, so the seed must contain the deadlines from the earlier
+messages (w1-01 to w1-08, including moved dates as `supersedes_id` rows) plus one deadline that appears in no message:
+
+| Row | Course | Due | Needed by |
+|---|---|---|---|
+| HW3 | CS-301 | 2026-12-04 23:59 | w1-15 ("3 submissions left") |
+
+The student in the seed is enrolled in CS-301, CS-310, MATH-212, ECON-101 and AIC 390 (persona in
+`docs/use_case_brief.md`).
+
 ## 3. Action API sketch
 
 Owner: agent and tools lead. A sketch for week 1; the tools are built in week 4 (W4.1) and exposed through MCP in
