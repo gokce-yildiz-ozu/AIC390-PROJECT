@@ -56,24 +56,24 @@ TODO (Gökçe): basis of each number and why Wilson intervals.
 
 ### Experiment 1: Temperature (W1.5)
 
-- **Hypothesis:** TODO
-- **Change:** TODO
-- **Result:** TODO
-- **Decision:** TODO
+- **Hypothesis:** Temperature changes how varied the answers are, not how accurate they are (P6).
+- **Change:** Only the temperature: 0, 0.7 and 1.2. Same prompt (`baseline_v1`), same 25 inputs, same model (`openai/gpt-oss-120b`), one run each.
+- **Result:** Correct answers were 4/25 = 0.16 [0.064, 0.347] at all three temperatures. Wrong: 12/25, 9/25 and 9/25. Outputs with made-up facts: 9/25 = 0.36 [0.202, 0.555], 7/25 and 6/25. The intervals overlap and each temperature was run once, so we claim no difference. 20 of 25 inputs got the same label at all three temperatures, but none of the 25 got the same text.
+- **Decision:** Use T = 0 from week 2 on (W2.1 requires it). A higher temperature fixed none of the failures.
 
 ### Experiment 2: Repeat run at T = 0
 
-- **Hypothesis:** TODO
-- **Change:** TODO
-- **Result:** TODO
-- **Decision:** TODO
+- **Hypothesis:** At T = 0 the same input gives the same output.
+- **Change:** None. A second run with the same configuration (commit `2d7e58e`), compared by hand with the first (`t0_comparison.csv`).
+- **Result:** Identical text 7/25; same meaning 21/25; a different answer 4/25 (w1-09, 11, 12, 20); a different label 0/25. All four changed answers were outputs with made-up facts: 4 of 9 such outputs changed, against 0 of the other 16. We noticed this after the run, so it is a hypothesis, not a finding.
+- **Decision:** T = 0 is not deterministic on this setup; we did not test why. From week 2, prompt versions are compared on the same cases with a paired test (McNemar, W2.5) and repeated runs. We will test whether answers that change between runs flag hallucinations (W2.7).
 
 ### Experiment 3: Predicted failures P1–P6 (W1.7)
 
-- **Hypothesis:** TODO
-- **Change:** TODO
-- **Result:** TODO
-- **Decision:** TODO
+- **Hypothesis:** Six failures, each tied to a Module 1 concept, with pass thresholds written before the baseline (commit `3bbdb25`, 19:59; baseline outputs in `2d7e58e`, 21:10). The thresholds have not changed since.
+- **Change:** None. The script checks the baseline labels against each threshold.
+- **Result:** 5 of 6 came true. P1 (tokens): 2/2 wrong at T = 0, 5/6 across temperatures. P3 (knowledge cutoff): 5/6 gave a rule with no source. P4 (training stages): 2/5 wrong, exactly at the threshold. P5 (context window): 2/2 wrong. P6 (temperature): true. P2 (statelessness) was false: only 1 of 7 made up a date (threshold 2); in the other 6 the model said it had no access to the earlier email or the list. The second half of P5 was also wrong: the model did not resist the obvious "ignore all previous instructions".
+- **Decision:** Without context, the model admits it does not know more often than we expected (P2), but it does not resist even obvious injections (P5). Security moves up to week 2 (W2.8).
 
 ## 5. Failure analysis
 
