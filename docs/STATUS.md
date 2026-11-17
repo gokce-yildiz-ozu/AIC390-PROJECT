@@ -30,7 +30,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 | # | Deliverable | Owner (role) | Evidence | Status |
 |---|---|---|---|---|
 | 1 | Decide the two remaining roles; all members have repo access | all | this file, README | done |
-| 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | 2 of 3 signed (Enes open) |
+| 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | done |
 | 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | done |
 | 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | done |
 | 5 | W1.4 Data inventory: documents and DB | data and retrieval | `docs/data_inventory.md` | done |
@@ -39,7 +39,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 | 8 | W1.5 Baseline at temperatures 0, 0.7, 1.2 | evaluation and safety | `results/2026-11-16_baseline_openai-gpt-oss-120b/` | done |
 | 9 | W1.6 Cost estimate vs measured tokens | agent and tools | `docs/cost_estimate.md` | done |
 | 10 | W1.7 ≥ 5 predicted failures, each tied to a Module 1 concept | evaluation and safety | `docs/predicted_failures.md` | done |
-| 11 | W1.8 README, `reports/week-1.md`, tag `week-1`, submit link | evaluation and safety | `reports/week-1.md` | open |
+| 11 | W1.8 README, `reports/week-1.md`, tag `week-1`, submit link | evaluation and safety | `reports/week-1.md` | done |
 
 ## Area coverage (R2: every member needs code in ≥ 2 role areas by week 7)
 
