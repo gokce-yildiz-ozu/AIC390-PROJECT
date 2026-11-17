@@ -62,4 +62,4 @@ Each member adds their own row in their own commit.
 |---|---|
 | Serap Gökçe Yıldız | 2026-11-16 |
 | Mert Bozma | 2026-11-16 |
-| | |
+| Enes Kemal Köylü | 2026-11-17 |
