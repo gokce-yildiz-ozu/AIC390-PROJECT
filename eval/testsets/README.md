@@ -20,3 +20,12 @@ Line format (JSONL):
 | `expected` | Expected outcome in one line: the deadline(s) with date and time, the answer's source, or the correct refusal |
 
 All messages are synthetic (R10): invented courses, instructors and students.
+
+## Known issues in `week1_inputs.jsonl` (frozen; fix in the week-2 set)
+
+| Input | Issue | Fix in the next version |
+|---|---|---|
+| w1-17 | Expected reminder time 09:00 follows no stated rule; "one day before" a 23:59 deadline reads as 2026-11-22 23:59 | State the rule in `expected`, or use the deadline time minus 24 h |
+| w1-15 | Expected HW3 (2026-12-04 23:59) appears in no message; the answer depends on the database seed | Seed row listed in `docs/data_inventory.md` §2 |
+| all | 3 unanswerable and 2 adversarial cases; W2.3 needs at least 40 cases with at least 5 unanswerable, 5 adversarial and 5 edge cases | Week-2 set |
+| all | Every label is by one person (evaluation lead); no second rater yet | 20 cases labelled blind by a second member, Cohen's κ (W2.6) |

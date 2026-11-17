@@ -1,5 +1,8 @@
 # Use case preference form (handbook Appendix C)
 
+> **Superseded by D-003 (2026-11-11).** We build our own idea, Deadline Radar, instead of a handbook use case. Kept
+> as a record of the original preference; the instructor later allowed shared use cases (D-002 update).
+
 Submitted once per team in the first session. The instructor assigns one use case per team; no two teams share one.
 
 | Choice | Use case | Why this one? (one sentence) |
