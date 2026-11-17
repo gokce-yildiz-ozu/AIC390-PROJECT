@@ -102,3 +102,15 @@ def test_proportion_reports_both_intervals():
     p = aw.proportion(0, 3)
     assert p["value"] == 0 and p["ci95_normal"] == [0.0, 0.0]
     assert p["ci95_wilson"][1] > 0
+
+
+def test_scoreboard_leaves_unsupported_claims_null_in_week_1():
+    kinds = {"w1-01": "unanswerable", "w1-02": "untrusted-input"}
+    grades = {
+        (i, t): row(i, t, label="wrong", fabricated="y", ingredients=kind)
+        for i, kind in kinds.items()
+        for t in aw.TEMPS
+    }
+    board = aw.build_scoreboard(grades, {"usd_per_1000_requests": 0.3, "latency_p50_s": 1.0})
+    assert board["unsupported_claims"] is None
+    assert aw.fabricated_output_rate(grades)["value"] == 1.0

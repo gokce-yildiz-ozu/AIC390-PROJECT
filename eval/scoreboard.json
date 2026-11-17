@@ -19,15 +19,7 @@
     "n": 3,
     "script": "scripts/analyze_week1.py"
   },
-  "unsupported_claims": {
-    "value": 0.36,
-    "ci95": [
-      0.202,
-      0.555
-    ],
-    "n": 25,
-    "script": "scripts/analyze_week1.py"
-  },
+  "unsupported_claims": null,
   "hit_at_5": null,
   "mrr": null,
   "task_success": null,

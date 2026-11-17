@@ -1,0 +1,44 @@
+﻿id,temperature,ingredients,expected,output,label,note
+w1-01,0.0,extraction;exact-id,CS-301 · HW2 (Graph Algorithms) · 2026-11-20 23:59 · LMS'e PDF,CS‑301 · Homework 2 (Graph Algorithms) · 20 Nov 2026 23:59 · Upload a single PDF to the LMS.,,
+w1-12,0.0,question;needs-retrieval,Hayır: ECON-101 politikası geç teslimi kabul etmez; yönetmelik Madde 14 kuralı ders sorumlusuna bırakır · iki kaynak: ECON-101 ders politikası + Madde 14,"ECON‑101 raporunu bir gün gecikmeli teslim etme konusundaki karar, büyük ölçüde dersin **ders planı / syllabus** ve **üniversitenin akademik yönetmeliği**ne bağlıdır. İşte genel olarak göz önünde bulundurmanız gereken noktalar:
+
+| Kriter | Ne anlama geliyor? | Ne yapmalısınız? |
+|--------|-------------------|------------------|
+| **Ders planındaki teslim tarihleri** | Çoğu ders, her ödev ve rapor için kesin bir son tarih (örneğin “15 Mayıs 2026, 23:59”) belirtir. | Ders planını (genellikle Canvas, Moodle vb. platformda) kontrol edin. Eğer “gecikme cezası” ya da “gecikmeli teslim kabulü” hakkında bir not yoksa, varsayılan olarak son tarih kesin kabul edilir. |
+| **Üniversite akademik yönetmeliği** | Çoğu üniversitenin yönetmeliğinde “gecikmeli teslim”le ilgili genel bir madde bulunur. Örneğin: <br>• **Gecikme izni** ancak **doktor raporu, resmi izin belgesi** gibi geçerli bir gerekçe sunulursa verilir.<br>• **Gecikme cezası** (örneğin %10 puan kesintisi) uygulanabilir.<br>• **Bir gün gecikme** genellikle “gecikme izni” kapsamında değerlendirilmez, ancak istisnai durumlar (hastalık, ailevi acil durum) kabul edilebilir. | Üniversitenizin **Akademik İşler Dairesi** ya da **Öğrenci İşleri** web sitesinde “Ödev ve sınav gecikme politikası” başlıklı bölümü arayın. Çoğu kurumda bu politika PDF olarak yayınlanır. |
+| **Öğretim üyesinin (ders sorumlusu) takdiri** | Öğretim üyesi, ders planında belirtilmemiş bir gecikme durumunda “takdir yetkisi”yle puan kesintisi yapabilir ya da tamamen kabul edebilir. | Direkt olarak **ders sorumlusuna** (e‑posta, ofis saatleri vb.) ulaşarak durumu açıklayın. Gerekçenizi (örneğin hastalık, teknik arıza) belgeleyin. |
+| **Geçerli bir mazeret belgesi** | Hastalık raporu, resmi izin belgesi, ailevi acil durum gibi belgeler genellikle kabul edilir. | Belgeyi tarayıp e‑posta ile öğretim üyesine gönderin ve raporunuzu aynı anda ekleyin. |
+
+### Önerilen adımlar
+
+1. **Ders planını kontrol edin** – Eğer “gecikme cezası” ya da “gecikmeli teslim kabulü” hakkında bir not yoksa, varsayılan olarak son tarih kesin kabul edilir.
+2. **Üniversite yönetmeliğini inceleyin** – “Ödev ve sınav gecikme politikası” bölümünde “gecikme izni” şartları ve ceza oranları yer alır.
+3. **Öğretim üyesiyle iletişime geçin** – Durumunuzu (örneğin hastalık, teknik sorun) açıkça anlatın ve mümkünse belge ekleyin.  
+   - E‑posta örneği:  
+     ```
+     Sayın Prof. Dr. [Soyad],
+
+     ECON‑101 raporunun teslim tarihinin 15 Mayıs 2026 olduğunu biliyorum. Ancak [kısa gerekçe: ör. grip nedeniyle 24 Saat içinde doktor raporu aldım] nedeniyle raporu bir gün gecikmeli (16 Mayıs 2026) teslim edebileceğimi sormak istiyorum. Gerekli mazeret belgesini ekte sunuyorum.
+
+     Anlayışınız için teşekkür eder, geri dönüşünüzü bekliyorum.
+
+     Saygılarımla,
+     [Adınız Soyadınız]
+     ```
+4. **Mümkünse alternatif bir çözüm önerin** – Örneğin “raporu 23:59’a kadar tamamlayıp, geç teslim ettiğimde %10 puan kesintisi kabul edilebilir mi?” gibi bir öneri, öğretim üyesinin olumlu yanıt verme ihtimalini artırır.
+
+### Sonuç
+
+- **Yönetmelikte kesin bir “bir gün gecikme otomatik kabul edilir” maddesi genellikle bulunmaz.**  
+- **Geçerli bir mazeret belgesi ve öğretim üyesinin onayı olmadan raporu bir gün gecikmeli teslim etmek riskli** ve puan kaybına ya da reddedilmesine yol açabilir.  
+- **En güvenli yol**, önce ders planını ve üniversite politikalarını kontrol edip, ardından öğretim üyesine durumu bildirerek resmi bir izin almaktır.
+
+Umarım bu bilgiler yardımcı olur! Başka bir sorunuz olursa, lütfen çekinmeden sorun.",,
+w1-22,0.0,multi-step;look-up;question;action,Liste: ECON-101 Ödev 2 · bugün 23:59 (Lab Report 3 belirsiz) · kural: ECON-101 geç teslim kabul edilmez (kaynak) · önizleme: hatırlatma 2026-11-13 21:59 · onay bekler,"I’m happy to help you keep track of upcoming deadlines, but I need the source material (e.g., the email, course announcement, or syllabus excerpt) that contains the dates and submission details.  
+
+If you paste the relevant announcement or email here, I can:
+
+1. List every deadline that falls within this week (one line per deadline: **course · title · date time · how to submit**).  
+2. Identify the nearest deadline, tell you the late‑submission rule for that assignment, and set a reminder for you — e.g., “remind me 2 hours before it.”  
+
+Just share the text, and I’ll take it from there!",,

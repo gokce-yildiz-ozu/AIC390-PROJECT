@@ -6,8 +6,9 @@ import math
 def proportion_ci(k: int, n: int, method: str = "normal", z: float = 1.96) -> tuple[float, float]:
     """95% interval for k successes out of n.
 
-    "normal" is the handbook formula p ± z·sqrt(p(1-p)/n), clipped to [0, 1]; use it so our numbers match the
-    course. "wilson" behaves better for small n or p near 0/1 (normal collapses to [1, 1] when k == n).
+    "normal" is the handbook formula p ± z·sqrt(p(1-p)/n), clipped to [0, 1]. "wilson" behaves better for small n
+    or p near 0/1 (normal collapses to [1, 1] when k == n), so the scoreboard uses Wilson and analysis files list
+    both.
     """
     if n <= 0:
         raise ValueError("n must be positive")
