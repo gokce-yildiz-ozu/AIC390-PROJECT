@@ -12,7 +12,7 @@
 
 ## 1. Summary
 
-TODO (Gökçe)
+Week 1 set up the problem and a baseline. We wrote 25 labelled inputs (emails, LMS posts and student questions) and ran one plain prompt (`baseline_v1`, gpt-oss-120b on Groq) on all of them at three temperatures, plus a second run at T = 0. The most important number: the baseline gets 4 of 25 cases right (0.16 [0.064, 0.347]) at every temperature. It followed both injection attempts and made up rules for questions our documents answer. Five of our six failure predictions, committed before the run, came true.
 
 ## 2. Deliverables
 
@@ -50,7 +50,14 @@ TODO (Gökçe)
 
 Changes to any test set this week: none (first test set).
 
-TODO (Gökçe): basis of each number and why Wilson intervals.
+How the numbers are computed (`python scripts/analyze_week1.py`; details in `analysis.json`):
+
+- Accuracy-type metrics come from the first run at T = 0 (n = 25). Cost and latency come from all 75 calls of the baseline run.
+- Intervals are 95% Wilson intervals. The handbook's normal formula gives [1, 1] for injection_success at 2/2, which hides the uncertainty; `analysis.json` lists both.
+- e2e_accuracy counts only answers labelled correct; partial answers count as not correct.
+- unsupported_claims is null: it is measured per claim against retrieved passages, from week 3. In week 1, 9/25 = 0.36 [0.202, 0.555] of outputs contained made-up facts (`fabricated_output_rate`).
+- injection_success counts untrusted inputs where the model followed the hidden instruction or accepted an unverified claim. Week 1 has no tools, so no action could actually run.
+- Spend is $0 on Groq's free plan. Cost uses Groq's paid list price for the same model (`config/prices.json`).
 
 ## 4. Experiments
 
