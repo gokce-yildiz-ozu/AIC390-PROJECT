@@ -15,8 +15,8 @@ models. The week-1 baseline alone needs 75 calls (25 inputs × 3 temperatures); 
 Groq console limits for gpt-oss-120b on 2026-11-16: 30 RPM, 1K RPD, 8K TPM, 200K TPD.
 
 **Consequences.** The binding limit is 8K tokens per minute, so runs are paced with `--sleep`. gpt-oss is a
-reasoning model: a smoke test answering "OK" used 75 input and 52 output tokens, so hidden reasoning and a fixed
-prompt overhead count toward cost and limits (input to W1.6). Each member uses their own key; experiments that are
+reasoning model, so hidden reasoning tokens count toward cost and limits. A manual smoke test pointed this out
+before the baseline; it is not a committed result, and the measured numbers are in W1.6 (`docs/cost_estimate.md`). Each member uses their own key; experiments that are
 compared run on one key and one model id, never an alias.
 
 ## D-005 — Response to the RAG feedback (proposed, 2026-11-16; owner: data and retrieval lead)
@@ -49,6 +49,10 @@ supports it. Who pays stays a hypothesis (an LMS add-on, proposal slide 8) until
 **Why.** The instructor left both choices to us. A differs most from the lecture example, and with D-005 it also
 puts retrieval inside the core. Scope B would make RAG the core but is the closest to the lecture example; C
 carries the most risk in seven weeks.
+
+**Update 2026-11-17 (payer).** The use case brief (W1.2) names the university itself as the payer: the LMS is the
+school's own system, so there is no LMS vendor to sell an add-on to. This replaces the LMS add-on hypothesis. Who
+pays is still a hypothesis until the week-5 pricing task.
 
 ## D-003 — Product: Deadline Radar, our own idea (accepted, 2026-11-11; supersedes D-002)
 
