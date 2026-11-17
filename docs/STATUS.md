@@ -1,6 +1,6 @@
 # Status
 
-Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-16.
+Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-17.
 
 ## Now
 
@@ -29,27 +29,31 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 
 | # | Deliverable | Owner (role) | Evidence | Status |
 |---|---|---|---|---|
-| 1 | Decide the two remaining roles; all members have repo access | all | this file, README | open |
-| 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | open |
+| 1 | Decide the two remaining roles; all members have repo access | all | this file, README | done |
+| 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | 2 of 3 signed (Enes open) |
 | 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | done |
 | 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | done |
 | 5 | W1.4 Data inventory: documents and DB | data and retrieval | `docs/data_inventory.md` | done |
 | 6 | W1.4 Data inventory: tools and action API sketch | agent and tools | `docs/data_inventory.md` | done |
 | 7 | D-005 RAG plan detailed (corpus, metadata, stack) | data and retrieval | `docs/decisions.md` | proposed; stack open (week 2) |
-| 8 | W1.5 Baseline at temperatures 0, 0.7, 1.2 | evaluation and safety | `results/` | open |
+| 8 | W1.5 Baseline at temperatures 0, 0.7, 1.2 | evaluation and safety | `results/2026-11-16_baseline_openai-gpt-oss-120b/` | done |
 | 9 | W1.6 Cost estimate vs measured tokens | agent and tools | `docs/cost_estimate.md` | done |
-| 10 | W1.7 ≥ 5 predicted failures, each tied to a Module 1 concept | evaluation and safety | `docs/predicted_failures.md` | open |
+| 10 | W1.7 ≥ 5 predicted failures, each tied to a Module 1 concept | evaluation and safety | `docs/predicted_failures.md` | done |
 | 11 | W1.8 README, `reports/week-1.md`, tag `week-1`, submit link | evaluation and safety | `reports/week-1.md` | open |
 
-## Area coverage (R2: every member needs commits in ≥ 2 role areas by week 7)
+## Area coverage (R2: every member needs code in ≥ 2 role areas by week 7)
+
+✓ = code committed in that area (scripts, src, tests, data files). Markdown alone is listed as "docs".
 
 | Member | data | agent | eval |
 |---|---|---|---|
-| Serap Gökçe Yıldız | | | |
-| Enes Kemal Köylü | | | |
-| Mert Bozma | ✓ | | |
+| Serap Gökçe Yıldız | | | ✓ |
+| Enes Kemal Köylü | | docs | ✓ |
+| Mert Bozma | docs | | |
 
 ## Experiments
 
 | Date | Hypothesis | Result (value, n, CI) | Decision | Evidence |
 |---|---|---|---|---|
+| 2026-11-16 | Baseline prompt fails most week-1 inputs (P1–P5) | e2e accuracy 4/25 = 0.16 [0.064, 0.347] at T=0; P1, P3, P4, P5 true, P2 false | Week 2 builds the classifier and main prompt (W2.1, W2.2) | `results/2026-11-16_baseline_openai-gpt-oss-120b/analysis.json` |
+| 2026-11-16 | Temperature does not change accuracy (P6) | 4/25 correct at T = 0, 0.7 and 1.2; a second T=0 run changed the answer for 4 of 25 | Run every comparison more than once (W2.5) | `results/2026-11-16_baseline-t0-repeat_openai-gpt-oss-120b/` |
