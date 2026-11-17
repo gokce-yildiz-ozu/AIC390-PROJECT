@@ -96,20 +96,20 @@ Feedback from the proposal session on 2026-11-11 ([`docs/feedback/2026-11-11-pro
 
 | Feedback point | What we changed | Evidence |
 |---|---|---|
-| The idea is accepted as our project | TODO | [`docs/decisions.md`](../docs/decisions.md) D-003 |
+| The idea is accepted as our project | Recorded as decision D-003; all week-1 work is built around Deadline Radar. | [`docs/decisions.md`](../docs/decisions.md) D-003 |
 | RAG design is insufficient | TODO (Mert) | [`docs/decisions.md`](../docs/decisions.md) D-005, [`docs/data_inventory.md`](../docs/data_inventory.md) §1 |
-| Scope and who pays are our choice | TODO | [`docs/decisions.md`](../docs/decisions.md) D-004 |
-| Any model may be used | TODO | [`docs/decisions.md`](../docs/decisions.md) D-006, [`config/prices.json`](../config/prices.json) |
+| Scope and who pays are our choice | Chose scope A: deadline extraction is the core and rule Q&A supports it. The payer is the university itself (updated 2026-11-17); it stays a hypothesis until the week-5 pricing task. | [`docs/decisions.md`](../docs/decisions.md) D-004 |
+| Any model may be used | Compared free plans on 2026-11-16: Gemini allowed 20 requests per day, too few for the 75 baseline calls, so we chose gpt-oss-120b on Groq. Spend is reported every week (R14). | [`docs/decisions.md`](../docs/decisions.md) D-006, [`config/prices.json`](../config/prices.json) |
 
 ## 7. Product track
 
-TODO (Gökçe)
+Our first user is an undergraduate taking 4–6 courses; our payer hypothesis is a private university (D-004). Today the student builds the deadline list by hand from four places that are not connected: the inbox, each course's LMS announcements, syllabus PDFs and a personal calendar. Two of our inputs show the cost: in w1-05 a reply in an old email thread moves a deadline that the LMS never shows, and in w1-09 the late rule sits in a PDF the student only opens when the deadline is close. We have not talked to customers yet; that is the week-3 product task.
 
 ## 8. Contributions
 
 | Member | Role | What they did this week | Commits or files | Hours |
 |---|---|---|---|---|
-| Serap Gökçe Yıldız | Evaluation and safety lead | TODO | `src/aic390/` (llm, stats, scoreboard, cost), `scripts/run_baseline.py`, `scripts/analyze_week1.py`, `tests/`, `eval/testsets/week1_inputs.jsonl`, `results/2026-11-16_*`, `docs/predicted_failures.md`, `docs/decisions.md` (D-006), `docs/team_agreement.md` | TODO |
+| Serap Gökçe Yıldız | Evaluation and safety lead | Repository setup and CI; model client, statistics, scoreboard and cost code with tests; the 25 week-1 inputs; baseline runs and hand labels for all 100 outputs; predicted failures; week-1 analysis; report sections 1, 3, 4, 5, 7, 9 and 10. | `src/aic390/` (llm, stats, scoreboard, cost), `scripts/run_baseline.py`, `scripts/analyze_week1.py`, `tests/`, `eval/testsets/week1_inputs.jsonl`, `results/2026-11-16_*`, `docs/predicted_failures.md`, `docs/decisions.md` (D-006), `docs/team_agreement.md` | 7 |
 | Enes Kemal Köylü | Agent and tools lead | TODO (Enes) | `docs/use_case_brief.md`, `docs/cost_estimate.md`, `scripts/cost_breakdown.py`, `docs/data_inventory.md` §3 | TODO |
 | Mert Bozma | Data and retrieval lead | TODO (Mert) | `docs/data_inventory.md` §1–2 and §4, `docs/decisions.md` (D-005 detail) | TODO |
 
@@ -117,12 +117,13 @@ TODO (Gökçe)
 
 | Tool | Used for |
 |---|---|
-| TODO | |
+| Claude (claude.ai, planning chat) | Planning the week, reviewing our documents and results against the handbook, explaining concepts, drafting English wording from our own notes |
+| Claude Code (VS Code) | Writing and testing code (analysis and baseline scripts, tests); preparing fixes that we reviewed and committed ourselves |
 
 ## 10. Next week
 
 | Priority | Metric it should move | Expected change |
 |---|---|---|
-| 1 | TODO | |
-| 2 | TODO | |
-| 3 | TODO | |
+| 1. Request classifier with a JSON schema (W2.1) and a main prompt built from the six building blocks (W2.2) | e2e_accuracy on the new week-2 test set (at least 40 cases), compared with `baseline_v1` re-run on the same set (R9) | Higher than `baseline_v1`, with McNemar p < 0.05 (W2.5) |
+| 2. Injection tests (W2.8), trust decided from the sender metadata | injection_success (2/2 in week 1) | 0 of the W2.8 attempts lead to a claimed or real change |
+| 3. At least 5 unanswerable cases (W2.3) and an abstention rule in the main prompt | abstention_correct (1/3 in week 1) | At least 4 of 5 |
