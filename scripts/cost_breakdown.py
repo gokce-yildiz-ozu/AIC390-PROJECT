@@ -62,7 +62,7 @@ def main() -> int:
     }
 
     result = {
-        "source": str(args.run_dir / "outputs.jsonl"),
+        "source": (args.run_dir / "outputs.jsonl").as_posix(),
         "model": records[0]["model"],
         "price": {
             k: prices[records[0]["model"]][k]

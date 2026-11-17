@@ -1,5 +1,5 @@
 {
-  "source": "results\\2026-11-16_baseline_openai-gpt-oss-120b\\outputs.jsonl",
+  "source": "results/2026-11-16_baseline_openai-gpt-oss-120b/outputs.jsonl",
   "model": "openai/gpt-oss-120b",
   "price": {
     "input_usd_per_mtok": 0.15,
