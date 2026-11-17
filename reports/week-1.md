@@ -21,7 +21,7 @@ Week 1 set up the problem and a baseline. We wrote 25 labelled inputs (emails, L
 | W1.1 | done | [`docs/team_agreement.md`](../docs/team_agreement.md) | Signed by all three in their own commits |
 | W1.2 | done | [`docs/use_case_brief.md`](../docs/use_case_brief.md) | TODO (Enes) |
 | W1.3 | done | [`eval/testsets/week1_inputs.jsonl`](../eval/testsets/week1_inputs.jsonl), format in [`eval/testsets/README.md`](../eval/testsets/README.md) | 25 inputs, each labelled with ingredients and an expected outcome |
-| W1.4 | done | [`docs/data_inventory.md`](../docs/data_inventory.md) | TODO (Mert: documents, database; Enes: tools, action API) |
+| W1.4 | done | [`docs/data_inventory.md`](../docs/data_inventory.md) | Documents and database (Mert): 48 planned documents, 6 tables, seed rows. Tools and action API (Enes): 5 tools, one writes. Untrusted-input sources. |
 | W1.5 | done | [`results/2026-11-16_baseline_openai-gpt-oss-120b/`](../results/2026-11-16_baseline_openai-gpt-oss-120b/), [`results/2026-11-16_baseline-t0-repeat_openai-gpt-oss-120b/`](../results/2026-11-16_baseline-t0-repeat_openai-gpt-oss-120b/), [`scripts/run_baseline.py`](../scripts/run_baseline.py), [`scripts/analyze_week1.py`](../scripts/analyze_week1.py) | 75 calls (25 × T = 0, 0.7, 1.2) plus a second run at T = 0; every output hand-labelled |
 | W1.6 | done | [`docs/cost_estimate.md`](../docs/cost_estimate.md), [`scripts/cost_breakdown.py`](../scripts/cost_breakdown.py) | TODO (Enes) |
 | W1.7 | done | [`docs/predicted_failures.md`](../docs/predicted_failures.md) | Written before the baseline (commit `3bbdb25`); thresholds unchanged since |
@@ -97,7 +97,7 @@ Feedback from the proposal session on 2026-11-11 ([`docs/feedback/2026-11-11-pro
 | Feedback point | What we changed | Evidence |
 |---|---|---|
 | The idea is accepted as our project | Recorded as decision D-003; all week-1 work is built around Deadline Radar. | [`docs/decisions.md`](../docs/decisions.md) D-003 |
-| RAG design is insufficient | TODO (Mert) | [`docs/decisions.md`](../docs/decisions.md) D-005, [`docs/data_inventory.md`](../docs/data_inventory.md) §1 |
+| RAG design is insufficient | Planned for week 3 (D-005): the corpus grows from 28 to 48 documents (W3.1 needs at least 30) and is made harder with confusable course codes (CS-301 / CS-310 / CS-130, MATH-212 / MATH-221), revised syllabus versions and the regulation split by article. Every chunk gets "who may see it" metadata (`audience`). Retrieval moves inside extraction: when a message changes a date it does not state (w1-06 "extended by one week", w1-08 "before the make-up week"), the original date is retrieved from the syllabus or calendar. We did not record the instructor's exact words; we confirm our reading in the week-1 presentation. | [`docs/decisions.md`](../docs/decisions.md) D-005, [`docs/data_inventory.md`](../docs/data_inventory.md) §1 |
 | Scope and who pays are our choice | Chose scope A: deadline extraction is the core and rule Q&A supports it. The payer is the university itself (updated 2026-11-17); it stays a hypothesis until the week-5 pricing task. | [`docs/decisions.md`](../docs/decisions.md) D-004 |
 | Any model may be used | Compared free plans on 2026-11-16: Gemini allowed 20 requests per day, too few for the 75 baseline calls, so we chose gpt-oss-120b on Groq. Spend is reported every week (R14). | [`docs/decisions.md`](../docs/decisions.md) D-006, [`config/prices.json`](../config/prices.json) |
 
@@ -111,7 +111,7 @@ Our first user is an undergraduate taking 4–6 courses; our payer hypothesis is
 |---|---|---|---|---|
 | Serap Gökçe Yıldız | Evaluation and safety lead | Repository setup and CI; model client, statistics, scoreboard and cost code with tests; the 25 week-1 inputs; baseline runs and hand labels for all 100 outputs; predicted failures; week-1 analysis; report sections 1, 3, 4, 5, 7, 9 and 10. | `src/aic390/` (llm, stats, scoreboard, cost), `scripts/run_baseline.py`, `scripts/analyze_week1.py`, `tests/`, `eval/testsets/week1_inputs.jsonl`, `results/2026-11-16_*`, `docs/predicted_failures.md`, `docs/decisions.md` (D-006), `docs/team_agreement.md` | 7 |
 | Enes Kemal Köylü | Agent and tools lead | TODO (Enes) | `docs/use_case_brief.md`, `docs/cost_estimate.md`, `scripts/cost_breakdown.py`, `docs/data_inventory.md` §3 | TODO |
-| Mert Bozma | Data and retrieval lead | TODO (Mert) | `docs/data_inventory.md` §1–2 and §4, `docs/decisions.md` (D-005 detail) | TODO |
+| Mert Bozma | Data and retrieval lead | Data inventory (W1.4): 48-document corpus plan with the facts the expected outputs need, 6 database tables, seed rows and untrusted-input sources. D-005 detail (corpus size, metadata). Signed W1.1. Report §6 RAG row. | `docs/data_inventory.md` §1–2 and §4, `docs/decisions.md` (D-005 detail) | 5 |
 
 ## 9. AI tools used
 
