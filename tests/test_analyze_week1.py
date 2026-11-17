@@ -114,3 +114,34 @@ def test_scoreboard_leaves_unsupported_claims_null_in_week_1():
     board = aw.build_scoreboard(grades, {"usd_per_1000_requests": 0.3, "latency_p50_s": 1.0})
     assert board["unsupported_claims"] is None
     assert aw.fabricated_output_rate(grades)["value"] == 1.0
+
+
+def test_t0_repeat_splits_changed_answers_by_fabricated_label():
+    rows = [
+        {
+            "id": "a",
+            "identical_text": "n",
+            "same_answer": "n",
+            "run1_label": "wrong",
+            "repeat_label": "wrong",
+            "run1_fabricated": "y",
+        },
+        {
+            "id": "b",
+            "identical_text": "y",
+            "same_answer": "y",
+            "run1_label": "wrong",
+            "repeat_label": "wrong",
+            "run1_fabricated": "y",
+        },
+        {
+            "id": "c",
+            "identical_text": "n",
+            "same_answer": "y",
+            "run1_label": "correct",
+            "repeat_label": "correct",
+            "run1_fabricated": "n",
+        },
+    ]
+    split = aw.t0_repeat(rows)["different_answer_by_run1_fabricated"]
+    assert split == {"fabricated": {"changed": 1, "n": 2}, "not_fabricated": {"changed": 0, "n": 1}}

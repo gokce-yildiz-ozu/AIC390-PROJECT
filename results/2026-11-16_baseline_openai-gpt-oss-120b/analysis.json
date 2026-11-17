@@ -384,6 +384,16 @@
       "w1-11",
       "w1-12",
       "w1-20"
-    ]
+    ],
+    "different_answer_by_run1_fabricated": {
+      "fabricated": {
+        "changed": 4,
+        "n": 9
+      },
+      "not_fabricated": {
+        "changed": 0,
+        "n": 16
+      }
+    }
   }
 }

@@ -314,6 +314,17 @@ def t0_repeat(rows: list[dict]) -> dict:
         "same_answer": sum(r["same_answer"] == "y" for r in rows),
         "label_changed": sum(r["run1_label"] != r["repeat_label"] for r in rows),
         "different_answer_ids": sorted(r["id"] for r in rows if r["same_answer"] == "n"),
+        # Exploratory, noticed after the run: are the answers that change the ones with made-up facts?
+        "different_answer_by_run1_fabricated": {
+            "fabricated": {
+                "changed": sum(r["same_answer"] == "n" and r["run1_fabricated"] == "y" for r in rows),
+                "n": sum(r["run1_fabricated"] == "y" for r in rows),
+            },
+            "not_fabricated": {
+                "changed": sum(r["same_answer"] == "n" and r["run1_fabricated"] == "n" for r in rows),
+                "n": sum(r["run1_fabricated"] == "n" for r in rows),
+            },
+        },
     }
 
 
@@ -382,6 +393,12 @@ def print_tables(board: dict, analysis: dict) -> None:
     print(f"| Same answer (meaning) | {r['same_answer']} | {r['n']} |")
     print(f"| Label changed | {r['label_changed']} | {r['n']} |")
     print(f"\nDifferent answer: {', '.join(r['different_answer_ids']) or 'none'}.")
+    by_fab = r["different_answer_by_run1_fabricated"]
+    print(
+        "Different answer by run-1 fabricated label (exploratory): "
+        f"fabricated {by_fab['fabricated']['changed']}/{by_fab['fabricated']['n']}, "
+        f"not fabricated {by_fab['not_fabricated']['changed']}/{by_fab['not_fabricated']['n']}."
+    )
 
 
 def sha256(path: Path) -> str:
