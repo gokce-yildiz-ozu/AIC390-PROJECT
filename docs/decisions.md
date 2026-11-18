@@ -3,6 +3,56 @@
 One entry per decision that someone could later ask "why?" about. Newest first. Status: proposed, accepted,
 superseded (keep superseded entries; link the replacement).
 
+## D-008 — Corpus scale: at least 10,000 chunks (proposed, 2026-11-18; owner: data and retrieval lead)
+
+**Context.** The instructor asked for a corpus of at least 10,000 chunks (2026-11-18). The 48 documents of D-005 give
+a few hundred.
+
+**Decision.** Two layers.
+
+| Layer | What | Reviewed | Where |
+|---|---|---|---|
+| Core | The 48 documents of D-005: every fact the test sets depend on, the planned confusers, the regulation, the calendar | Every document, by hand | `data/corpus/` |
+| Bulk | Fictional courses across many departments: syllabi with revised versions, and course announcements, assembled by a seeded generator from a pool of hand-reviewed section texts with randomized values (penalties, dates, attendance rules, instructors) | The section pool by hand; a random sample of generated documents | `scripts/generate_bulk_corpus.py` → `data/corpus_bulk/` |
+
+Rules: the bulk generator never produces a core course code (CS-301, CS-310, CS-130, MATH-212, MATH-221,
+ECON-101, AIC-390), so no generated text contradicts a test fact; it never produces dormitory, tuition or fee
+content, so w1-20 stays unanswerable. Syllabi are `audience: all`, announcements `enrolled:<course>`. The count is
+reached by adding documents, not by shrinking chunks: chunk size is chosen on its own merits (W3.2).
+
+**Why.** A realistic university has hundreds of syllabi with the same structure and near-identical policy
+sections that differ only in numbers. That is where dense search confuses courses and where BM25, metadata and
+the reranker earn their place, so the ablations (W3.7) measure something real. Writing or reviewing thousands of
+documents by hand in a week is impossible; a seeded generator is reproducible (R8) and costs no API calls.
+
+**Consequences.** Retrieval is evaluated without the course filter as the main configuration (the question
+alone), and with it as an extra row, so the filter cannot hide the scale. Index build time grows (embedding
+10,000 chunks; slow on CPU). The bulk is visibly templated; the report says so in its limitations.
+
+## D-007 — Retrieval stack: in-memory hybrid search with a local reranker (proposed, 2026-11-18; owner: data and retrieval lead)
+
+**Decision.** No database for retrieval. Chunks live in `data/chunks.jsonl`; indexes are built by a script and
+cached locally (not committed).
+
+| Part | Choice |
+|---|---|
+| Keyword search | BM25 with `bm25s` |
+| Dense search | `BAAI/bge-m3` through `sentence-transformers`, normalized vectors, cosine in numpy |
+| Fusion | Reciprocal rank fusion, k = 60, over the top 20 of each |
+| Reranker | `BAAI/bge-reranker-v2-m3` cross-encoder on the fused top 20 |
+| Gold unit for evaluation | Document and section (`doc_id`, `section`), not chunk id |
+
+**Why.** About 10,000 chunks (D-008) × 1,024 dimensions is about 40 MB of float32: brute-force cosine in numpy is
+fast at this size, so a vector database adds setup (R19) and no measurable benefit. The corpus mixes Turkish and English, so both models are multilingual. Exact identifiers (CS-301 /
+CS-310, "Article 12") are what BM25 handles and embeddings handle badly (handbook, ingredient 7), so hybrid
+search is the default and dense-only is an ablation. Embedding and reranking run locally, so retrieval evaluation
+(W3.5) and both ablations (W3.7) cost no API calls and do not compete with the Groq limits (D-006). Gold passages
+are set at section level so that a change in chunk size does not invalidate the retrieval test set (R9).
+
+**Consequences.** The first index build downloads the two models (a few GB) and is slow on CPU; results record
+the model ids and revisions. Turkish casing needs explicit normalization (`İ`/`ı`) before BM25 tokenization.
+Replaces the PostgreSQL + pgvector idea from proposal slide 4 and closes the open item in D-005.
+
 ## D-006 — Model: gpt-oss-120b on Groq's free plan (accepted, 2026-11-16; owner: evaluation and safety lead)
 
 **Decision.** Main model `openai/gpt-oss-120b` via Groq's OpenAI-compatible endpoint, free plan. Backup and later
@@ -19,7 +69,7 @@ reasoning model, so hidden reasoning tokens count toward cost and limits. A manu
 before the baseline; it is not a committed result, and the measured numbers are in W1.6 (`docs/cost_estimate.md`). Each member uses their own key; experiments that are
 compared run on one key and one model id, never an alias.
 
-## D-005 — Response to the RAG feedback (proposed, 2026-11-16; owner: data and retrieval lead)
+## D-005 — Response to the RAG feedback (accepted, 2026-11-18; owner: data and retrieval lead)
 
 **Context.** At the proposal (2026-11-11) the instructor found our RAG design insufficient. We did not record his
 exact words; we confirm our reading in the week-1 presentation.
@@ -40,6 +90,8 @@ valid from, language, audience.
 
 **Open.** Storage and search stack: the proposal slide said PostgreSQL with pgvector; for a corpus this size BM25
 plus in-memory embeddings may be enough. Decide with the agent and tools lead and record the reason here. The stack question has been directed to Enes and will be resolved in week 2, before the RAG work starts in week 3.
+Closed by D-007 (2026-11-18). Accepted on 2026-11-18: the instructor asked for RAG in next week's live demo
+(`docs/feedback/2026-11-18-week1.md`).
 
 ## D-004 — Scope A, payer kept as a hypothesis (accepted, 2026-11-16)
 

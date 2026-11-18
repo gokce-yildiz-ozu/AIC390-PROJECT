@@ -1,16 +1,50 @@
 # Status
 
-Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-17.
+Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-18.
 
 ## Now
 
 - Product: **Deadline Radar** (own idea, D-003). Scope A: deadline extraction is the core, rule Q&A with
   citations supports it (D-004). First user: an undergraduate taking 4–6 courses.
-- Week: 1 (problem and baseline). Class: Wednesdays 12:30. **Week-1 report and `week-1` tag due Tue 2026-11-17
-  12:30** (R4: 24 h before class). Team target: submitted by 10:00.
-- Proposal presented 2026-11-11. Instructor feedback: `docs/feedback/2026-11-11-proposal.md`. Main point: RAG
-  design insufficient → response plan D-005 (proposed).
-- Model: openai/gpt-oss-120b on Groq, free plan (D-006). Spend is still reported every week (R14).
+- Week: **2 and 3 together** (instructor, 2026-11-18). Next class Wed 2026-11-25 12:30. Two reports, two tags,
+  both links submitted by **Tue 2026-11-24 12:30** (R4). Team target: Tue 10:00.
+- **Live demo on 2026-11-25 must include RAG and the request classifier** (`docs/feedback/2026-11-18-week1.md`).
+- Model: openai/gpt-oss-120b on Groq, free plan (D-006). Retrieval stack: D-007; corpus of ≥ 10,000 chunks: D-008 (both proposed).
+
+## Demo plan (2026-11-25)
+
+The instructor asked for the classifier, extraction and RAG in the live demo, and to see our architecture and data.
+The screen shows every step: classifier JSON (valid or not, retries) → route → extraction with dates computed in
+`dates.py`, or retrieved passages with BM25, dense, fused and reranker positions → answer with numbered citations,
+or the fixed "not in the documents" reply. The instructor asked for the architecture **in detail**: the diagram in
+`docs/architecture.md` numbers every component, and the demo screen shows the same numbers, so each demo step
+points at a box. Slides: the architecture (diagram plus one table of components), one data slide (core and bulk
+corpus, ≥ 10,000 chunks, D-008). Every member can explain every box (R5).
+
+| # | Scenario | Input | Shows |
+|---|---|---|---|
+| A | Rule question where a course policy overrides the regulation | w1-12 | Two citations, precedence |
+| B | Deadline moved relative to a date the message does not state ("HW3 extended by one week") | new case | Retrieval inside extraction (D-005): original date retrieved, new date computed in code |
+| C | Unanswerable | w1-20 | Abstention |
+| D | Confusable course codes | w1-13 | Why hybrid: BM25 versus dense ranks |
+| E | Injection in an email body | a W2.8 attempt | Trust from sender metadata, body treated as data |
+| F | Relative date with two readings | w1-02 | `dates.py` flags both dates and asks |
+
+Plus questions the instructor chooses: rehearsed on Mon 2026-11-23 with 5 unseen questions per member. Replay mode
+exists only as a fallback if the network fails; if used, the screen says "replay" and we say so.
+
+## Interfaces (frozen Thu 2026-11-19 12:00; change only by telling the other two)
+
+| # | Interface | Owner | Contract |
+|---|---|---|---|
+| 1 | Classifier output | agent and tools | `{"intent": "deadline_message \| rule_question \| lookup \| reminder \| other", "course": "CS-301" \| null, "urgency": "high \| normal"}`; the owner decides whether to add more entities (W2.1 asks for "entities") |
+| 2 | `rag.search(query, course=None, doc_type=None, k=5, as_of=None)` | data and retrieval | List of `{doc_id, section, version, text, score, chunk_id, bm25_rank, dense_rank, rerank_score}`; `as_of` keeps only the version valid at that time (CS-310 v1 / v2) |
+| 3 | Documents | data and retrieval | `data/corpus/<doc_id>.md`, YAML front matter `doc_id, title, course, doc_type, version, valid_from, language, audience, source, reviewed`; `##` headings are the citation sections |
+| 4 | Harness entry points | evaluation and safety ← agent and tools | Function names and return format of classifier, extraction and answer, given by agent and tools on Thu 2026-11-19 |
+
+New packages go into `pyproject.toml` in one commit by the agent and tools lead on Thu 2026-11-19 morning
+(`pydantic`, `pyyaml`, `bm25s`, `sentence-transformers`, `streamlit`; retrieval and demo packages as optional
+extras so CI stays light).
 
 ## Roles
 
@@ -22,34 +56,52 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 
 ## Open questions
 
-- What exactly did the instructor find insufficient about RAG? Confirm our reading (D-005) in the week-1
-  presentation.
+- None open with the instructor.
 
-## Next actions (week 1)
+## Next actions (weeks 2 and 3)
 
-| # | Deliverable | Owner (role) | Evidence | Status |
+Parts for `week-2` by **Sun 22 18:00**, tag `week-2` Sun 23:59. Parts for `week-3` by **Mon 23 20:00**, tag
+`week-3` Mon 23:59. Both links submitted Tue 24 10:00. The evaluation and safety lead assembles both reports.
+
+| # | Deliverable | Owner (role) | Evidence | Due |
 |---|---|---|---|---|
-| 1 | Decide the two remaining roles; all members have repo access | all | this file, README | done |
-| 2 | W1.1 Team agreement, signed by all three | all | `docs/team_agreement.md` | done |
-| 3 | W1.2 Use case brief | agent and tools | `docs/use_case_brief.md` | done |
-| 4 | W1.3 25 labelled inputs | evaluation and safety | `eval/testsets/week1_inputs.jsonl` | done |
-| 5 | W1.4 Data inventory: documents and DB | data and retrieval | `docs/data_inventory.md` | done |
-| 6 | W1.4 Data inventory: tools and action API sketch | agent and tools | `docs/data_inventory.md` | done |
-| 7 | D-005 RAG plan detailed (corpus, metadata, stack) | data and retrieval | `docs/decisions.md` | proposed; stack open (week 2) |
-| 8 | W1.5 Baseline at temperatures 0, 0.7, 1.2 | evaluation and safety | `results/2026-11-16_baseline_openai-gpt-oss-120b/` | done |
-| 9 | W1.6 Cost estimate vs measured tokens | agent and tools | `docs/cost_estimate.md` | done |
-| 10 | W1.7 ≥ 5 predicted failures, each tied to a Module 1 concept | evaluation and safety | `docs/predicted_failures.md` | done |
-| 11 | W1.8 README, `reports/week-1.md`, tag `week-1`, submit link | evaluation and safety | `reports/week-1.md` | done |
+| 1 | Feedback written down; D-007 confirmed; interfaces 1–4 frozen; packages commit | all | `docs/feedback/2026-11-18-week1.md`, `docs/decisions.md`, this file | Thu 19, 12:00 |
+| 2 | W2.1 Request classifier (schema, T = 0, validation, retry) | agent and tools | `src/aic390/classifier/` | Thu 19 |
+| 3 | W2.3 Test set ≥ 40 cases, structured expected outputs (draft) | evaluation and safety | `eval/testsets/week2_cases.jsonl` | Thu 19 |
+| 4 | W3.1 Core corpus (target 48, minimum 36) reviewed; bulk generator to ≥ 10,000 chunks (D-008); W3.2 chunking | data and retrieval | `data/corpus/`, `scripts/generate_bulk_corpus.py`, `data/chunks.jsonl` | Fri 20 |
+| 5 | W2.4 Harness, one command; `dates.py` | evaluation and safety / agent and tools | `eval/run_e2e.py`, `src/aic390/dates.py` | Fri 20 |
+| 6 | **Freeze `week2_cases.jsonl`** before any prompt comparison (R9) | evaluation and safety | freeze commit hash written in this row | Fri 20, 20:00 |
+| 7 | W2.2 Main prompt v1 | agent and tools | `prompts/` | Fri 20, 22:00 |
+| 8 | W3.5 30 retrieval questions with gold sections, written by someone other than the corpus author; frozen | evaluation and safety, agent and tools | `eval/testsets/retrieval_questions.jsonl` | Sat 21, 12:00 |
+| 9 | W2.2 Main prompt v2, v3 | agent and tools | `prompts/` | Sat 21, 14:00 |
+| 10 | W3.3 Hybrid search + reranker; `eval/retrieval.py` | data and retrieval | `src/aic390/rag/`, `eval/retrieval.py` | Sat 21 |
+| 11 | W2.5 runs: v1–v3 once each, then the best two repeated; McNemar | evaluation and safety | `results/`, `eval/compare.py` | Sat 21 – Sun 22 |
+| 12 | W2.6 Judge vs 20 human labels (κ); W2.7 hallucination log ≥ 10; W2.8 three injection attempts | evaluation and safety, agent and tools | `eval/judge.py`, `docs/hallucination_log.md`, `docs/injection_tests.md` | Sun 22, 18:00 |
+| 12b | `docs/architecture.md`: Mermaid diagram and component table; each owner writes their own rows | all (evaluation and safety assembles) | `docs/architecture.md` | Sun 22, 18:00 |
+| 13 | Demo end to end with the temporary search; `reports/week-2.md`, tag `week-2` | agent and tools / evaluation and safety | `app/demo.py`, `reports/week-2.md` | Sun 22 |
+| 14 | W3.7 Two ablations (hybrid vs dense vs BM25; reranker on/off) | data and retrieval | `results/` | Mon 23, 12:00 |
+| 15 | W3.4 Cited answers + fixed abstention; 40 cases re-run with RAG; W3.6 faithfulness | agent and tools / evaluation and safety | `src/aic390/rag/answer.py`, `eval/faithfulness.py` | Mon 23, 16:00 |
+| 16 | W3.8 Failure analysis (retrieval vs generation, oracle test); product track: 2 interviews | evaluation and safety / all | `reports/week-3.md` | Mon 23, 20:00 |
+| 17 | Demo rehearsal with unseen questions, plus architecture questions asked to a random member; measured per-stage latency and tokens added to the component table; tag `week-3` | all | `reports/week-3.md`, `docs/architecture.md` | Mon 23 |
+
+**If time runs out, cut in this order.** Nothing on this list is a deliverable: replay-mode polish → extra demo
+example buttons → Turkish share of the corpus → core corpus from 48 to 36 documents → second repeat of the W2.5 runs
+(report the single run and say so). Not cut: test sets, the ≥ 10,000-chunk scale (instructor's request), the reranker (W3.3 names it; it is also the cheapest
+ablation), the second ablation (W3.7 asks for two), judge labels (W2.6, W3.6), the demo.
+
+**Evaluation honesty.** Prompts are developed on the 25 week-1 inputs, which are also in the 40-case set, so the
+report gives e2e accuracy separately for the seen 25 and the 15+ new cases.
 
 ## Area coverage (R2: every member needs code in ≥ 2 role areas by week 7)
 
 ✓ = code committed in that area (scripts, src, tests, data files). Markdown alone is listed as "docs".
+"planned" = the code this member owns in weeks 2–3.
 
 | Member | data | agent | eval |
 |---|---|---|---|
-| Serap Gökçe Yıldız | | | ✓ |
-| Enes Kemal Köylü | | docs | ✓ |
-| Mert Bozma | docs | | |
+| Serap Gökçe Yıldız | | planned (sender trust in the pipeline) | ✓ |
+| Enes Kemal Köylü | | docs; planned (classifier, prompts, answer, demo) | ✓ |
+| Mert Bozma | docs; planned (corpus, chunking, search) | | planned (`eval/retrieval.py`) |
 
 ## Experiments
 
