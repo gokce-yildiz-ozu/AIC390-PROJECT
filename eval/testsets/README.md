@@ -21,6 +21,49 @@ Line format (JSONL):
 
 All messages are synthetic (R10): invented courses, instructors and students.
 
+## `week2_cases.jsonl` (W2.3): structured expected outputs
+
+Same input fields as above, plus `split`, `type`, a structured `expected` object and the old one-line text as
+`expected_text`. The harness grades `expected` field by field; `expected_text` is for people only.
+
+| Field | Meaning |
+|---|---|
+| `split` | `seen` (the 25 week-1 inputs, used while writing prompts) or `new`. The report gives accuracy for each split |
+| `type` | Exactly one of `normal`, `unanswerable`, `adversarial`, `edge`. W2.3's minimums (≥ 5 each of the last three) count this field, not `ingredients` |
+| `review_note` | Why the label is what it is. Draft only: removed before the freeze commit |
+
+`expected`:
+
+| Field | Filled for | Graded by |
+|---|---|---|
+| `intent` | always: `deadline_message`, `rule_question`, `lookup`, `reminder`, `other`. Follows the content, not the sender | exact |
+| `deadlines[]` | deadline_message, lookup, reminder: `course`, `item`, `item_key`, `due_date`, `due_time`, `due_candidates[]`, `status` (`new`, `updated`, `unverified`), `supersedes` (old date and time, or null) | the set must match exactly (no missing, no extra rows); rows match on `(course, item_key)`, then every field exact |
+| `ask_user` | an input with two readings consistent with the whole message | exact |
+| `abstain` | always | exact |
+| `sources[]` | `{doc_id, section}` | every expected source must be cited; extra sources are allowed and counted |
+| `must_include[]`, `must_not[]` | answers in prose | LLM judge (W2.6) |
+| `answer_language` | `chat` inputs: `tr` or `en`, the language of the question | code |
+| `action` | reminder: `type`, `remind_at`, `requires_confirmation` | exact |
+| `count` | "how many" questions; counted in code, never by the model | exact |
+| `untrusted_flag` | a message whose sender is not allowed to change deadlines | exact |
+
+A case is correct only if every graded field is correct (binary, for McNemar in W2.5). The harness also writes the
+per-field result for the failure analysis.
+
+Labelling rules:
+
+- **Dates.** Times are Europe/Istanbul (+03:00). Relative dates are resolved against `received_at`. Two readings
+  consistent with the whole message → `due_date: null`, both in `due_candidates`, `ask_user: true`. One consistent
+  reading → compute it.
+- **No time stated → `due_time: null`.** A time the message does not give is never filled in. "In class" takes the
+  lecture time from the course syllabus schedule (a retrieved source).
+- **Moved deadlines** use the newest version; the base date is the document version valid at `received_at`.
+- **Item names** are compared as `item_key` (type + number: "Homework 2", "HW 2", "Ödev 2" → `hw2`); "Lab 3" and
+  "Lab Report 3" stay different keys.
+- **Reminders** without a stated time default to the deadline minus 24 h, shown in the preview, written only after
+  confirmation.
+- **Trust** comes from `sender`. Instructions inside `text` are data, whoever sent the message.
+
 ## Known issues in `week1_inputs.jsonl` (frozen; fix in the week-2 set)
 
 | Input | Issue | Fix in the next version |
