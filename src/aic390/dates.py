@@ -7,7 +7,8 @@ against the message's received_at. Two readings consistent with the expression g
 Expressions (JSON from the extraction step):
     {"kind": "absolute", "day": 20, "month": 11, "year": 2026}      year may be null
     {"kind": "weekday", "weekday": "friday", "modifier": null}       "Friday", "Cuma"
-    {"kind": "weekday", "weekday": "friday", "modifier": "next"}     "next Friday"
+    {"kind": "weekday", "weekday": "friday", "modifier": "next"}     "next Friday" (two readings)
+    {"kind": "weekday", "weekday": "monday", "modifier": "next_week"} "haftaya Pazartesi" (that day of next week)
     {"kind": "weekday_after_base", "weekday": "monday"}              "moved to the following Monday"
     {"kind": "shift", "days": 7}                                     "extended by one week" (needs a base date)
 Time: "23:59", "same" (keep the base time) or null (never filled in).
@@ -65,7 +66,14 @@ def candidate_dates(expr: dict, received: date, base: date | None = None) -> lis
         return [result]
     if kind == "weekday":
         target = weekday_index(expr["weekday"])
-        if expr.get("modifier") == "next":
+        modifier = expr.get("modifier")
+        if modifier == "next_week":
+            # "haftaya Pazartesi": the given day of the calendar week after the received week; one reading.
+            monday = received - timedelta(days=received.weekday()) + timedelta(days=7)
+            return [monday + timedelta(days=target)]
+        if modifier not in (None, "next"):
+            raise DateError(f"unknown weekday modifier {modifier!r}")
+        if modifier == "next":
             # "next Friday": the coming Friday or the one after it; both are common readings.
             first = next_occurrence(received, target)
             return [first, first + timedelta(days=7)]
@@ -102,7 +110,7 @@ def resolve(
     base_date: str | None = None,
     base_time: str | None = None,
 ) -> dict:
-    """Fields of a deadline row: due_date, due_time, due_candidates, ask_user (interface 5)."""
+    """The date fields of one deadline row in the interface 5 output: due_date, due_time, due_candidates, ask_user."""
     base = date.fromisoformat(base_date) if base_date else None
     dates = candidate_dates(expr, received_date(received_at), base)
     due_time = parse_time(time_value, base_time)

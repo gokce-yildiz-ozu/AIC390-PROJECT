@@ -39,6 +39,18 @@ def test_w1_07_turkish_weekday_sent_on_wednesday_is_unambiguous():
     assert (out["due_date"], out["ask_user"]) == ("2026-11-13", False)
 
 
+def test_w2_09_haftaya_pazartesi_sent_on_wednesday_is_one_date():
+    out = resolve(
+        {"kind": "weekday", "weekday": "Pazartesi", "modifier": "next_week"}, "23:59", "2026-11-18T09:30:00+03:00"
+    )
+    assert out == {"due_date": "2026-11-23", "due_time": "23:59", "due_candidates": [], "ask_user": False}
+
+
+def test_next_week_sent_on_the_same_weekday_is_seven_days_later():
+    out = resolve({"kind": "weekday", "weekday": "friday", "modifier": "next_week"}, None, "2026-11-13T09:00:00+03:00")
+    assert out["due_date"] == "2026-11-20"
+
+
 def test_weekday_sent_on_the_same_weekday_asks_the_user():
     out = resolve({"kind": "weekday", "weekday": "friday", "modifier": None}, None, "2026-11-13T09:00:00+03:00")
     assert [c["date"] for c in out["due_candidates"]] == ["2026-11-13", "2026-11-20"]
@@ -77,6 +89,7 @@ def test_w1_22_reminder_two_hours_before():
     [
         {"kind": "shift", "days": 7},
         {"kind": "weekday", "weekday": "someday"},
+        {"kind": "weekday", "weekday": "friday", "modifier": "soonish"},
         {"kind": "absolute", "day": 31, "month": 11},
         {"kind": "tomorrow-ish"},
     ],
