@@ -19,18 +19,32 @@ identify the right passage.
 | FAQ | 5 | Withdrawal, make-up exams, LMS submission | Generic answers compete with course-specific ones |
 | **Total** | **48** | | |
 
-**Facts the corpus must contain** (from the expected outputs in `eval/testsets/week1_inputs.jsonl`):
+**Facts the corpus must contain** (from the expected outputs in `eval/testsets/week2_cases.jsonl`). The `doc_id`
+and `section` columns are the gold sources of the test sets: a file or heading named differently fails those cases.
 
-| Fact | Document | Input |
-|---|---|---|
-| Late penalty 10% per day, at most 3 days, then 0 | CS-301 syllabus, late policy | w1-09 |
-| Lab attendance of at least 70% is mandatory | CS-310 syllabus | w1-13 |
-| Lab 3 due 2026-11-13 23:59 | CS-310 syllabus | w1-06 |
-| Make-up week starts 2026-11-30 | Academic calendar | w1-08 |
-| Last day to withdraw: 2026-12-04 | Academic calendar (Article 9 points to it) | w1-10 |
-| Make-up exam: documented excuse, handed in within 3 working days | Regulation, Article 12 | w1-11 |
-| The course instructor sets the late-work rule | Regulation, Article 14 | w1-12, w1-21 |
-| ECON-101 does not accept late work | ECON-101 course policy | w1-12 |
+| Fact | `doc_id` | `section` | Cases |
+|---|---|---|---|
+| Late penalty 10% per day, at most 3 days, then 0 | `cs301-syllabus` | Late policy | w1-09 |
+| Lab attendance of at least 70% is mandatory (same text in v1 and v2) | `cs310-syllabus-v2` | Attendance | w1-13 |
+| v1, valid from the start of term: Lab 3 due 2026-11-06 23:59 | `cs310-syllabus-v1` | Schedule | w1-06 (outdated version, must not be the base) |
+| v2, valid from 2026-11-02: Lab 3 due 2026-11-13 23:59. Lab 4 is either not listed or due 2026-11-27 23:59 | `cs310-syllabus-v2` | Schedule | w1-06, w1-24 |
+| MATH-212 lectures: Tuesday and Thursday, 10:40–12:30 | `math212-syllabus` | Schedule | w1-03 |
+| Make-up week starts 2026-11-30 | `academic-calendar-fall-2026` | Make-up week | w1-08 |
+| Last day to withdraw: 2026-12-04 | `academic-calendar-fall-2026` | Withdrawal | w1-10 |
+| Withdrawal rule; the date is not in the article, it points to the calendar | `regulation-article-9` | Article 9 | w1-10 |
+| Make-up exam: documented excuse, handed in within 3 working days | `regulation-article-12` | Article 12 | w1-11 |
+| The course instructor sets the late-work rule | `regulation-article-14` | Article 14 | w1-12, w1-21 |
+| ECON-101 does not accept late work | `econ101-late-policy` | Late work | w1-12, w1-22 |
+
+**Naming rules** (fill a gap in interface 3; proposed 2026-11-19, data and retrieval lead to confirm):
+
+- `doc_id` is the file name without `.md`, lowercase, words joined by hyphens. Course documents start with the
+  course code without its hyphen (`cs301-syllabus`, `econ101-late-policy`); each regulation article is its own
+  document (`regulation-article-12`).
+- A document with more than one version gets `-v<N>` on every version, v1 included; front matter `version` and
+  `valid_from` match. Among the documents the test sets cite, only the CS-310 syllabus has versions. Versioning
+  another cited document changes gold sources: tell the evaluation and safety lead first.
+- `section` is the text of the `##` heading. The harness compares it after trimming and lowercasing, nothing more.
 
 **Deliberately not in the corpus:** dormitory, tuition and fee documents, so that w1-20 stays unanswerable.
 
