@@ -24,14 +24,16 @@ and `section` columns are the gold sources of the test sets: a file or heading n
 
 | Fact | `doc_id` | `section` | Cases |
 |---|---|---|---|
-| Late penalty 10% per day, at most 3 days, then 0 | `cs301-syllabus` | Late policy | w1-09 |
-| Lab attendance of at least 70% is mandatory (same text in v1 and v2) | `cs310-syllabus-v2` | Attendance | w1-13 |
+| Late penalty 10% per day, at most 3 days, then 0 | `cs301-syllabus` | Late policy | w1-09, w2-02 (confuser) |
+| Homework 3 due 2026-12-04 23:59 (same as the seed row in §2) | `cs301-syllabus` | Schedule | w2-01 |
+| Lab attendance of at least 70% is mandatory (same text in v1 and v2) | `cs310-syllabus-v2` | Attendance | w1-13, w2-12 (confuser) |
+| Late penalty 5% per day, at most 5 days, then 0 (same text in v1 and v2; deliberately different from CS-301) | `cs310-syllabus-v2` | Late policy | w2-02 |
 | v1, valid from the start of term: Lab 3 due 2026-11-06 23:59 | `cs310-syllabus-v1` | Schedule | w1-06 (outdated version, must not be the base) |
 | v2, valid from 2026-11-02: Lab 3 due 2026-11-13 23:59. Lab 4 is either not listed or due 2026-11-27 23:59 | `cs310-syllabus-v2` | Schedule | w1-06, w1-24 |
-| MATH-212 lectures: Tuesday and Thursday, 10:40–12:30 | `math212-syllabus` | Schedule | w1-03 |
+| MATH-212 lectures: Tuesday and Thursday, 10:40–12:30 | `math212-syllabus` | Schedule | w1-03, w2-15 |
 | Make-up week starts 2026-11-30 | `academic-calendar-fall-2026` | Make-up week | w1-08 |
-| Last day to withdraw: 2026-12-04 | `academic-calendar-fall-2026` | Withdrawal | w1-10 |
-| Withdrawal rule; the date is not in the article, it points to the calendar | `regulation-article-9` | Article 9 | w1-10 |
+| Last day to withdraw: 2026-12-04 | `academic-calendar-fall-2026` | Withdrawal | w1-10, w2-03 |
+| Withdrawal rule; the date is not in the article, it points to the calendar | `regulation-article-9` | Article 9 | w1-10, w2-03 |
 | Make-up exam: documented excuse, handed in within 3 working days | `regulation-article-12` | Article 12 | w1-11 |
 | The course instructor sets the late-work rule | `regulation-article-14` | Article 14 | w1-12, w1-21 |
 | ECON-101 does not accept late work | `econ101-late-policy` | Late work | w1-12, w1-22 |
@@ -46,7 +48,13 @@ and `section` columns are the gold sources of the test sets: a file or heading n
   another cited document changes gold sources: tell the evaluation and safety lead first.
 - `section` is the text of the `##` heading. The harness compares it after trimming and lowercasing, nothing more.
 
-**Deliberately not in the corpus:** dormitory, tuition and fee documents, so that w1-20 stays unanswerable.
+**Deliberately not in the corpus** (each one keeps an unanswerable case unanswerable):
+
+| Not anywhere in the corpus | Case |
+|---|---|
+| Dormitory, tuition and fee documents | w1-20, w2-11 |
+| An attendance rule for CS-130, in its syllabus or in any regulation article | w2-12 |
+| Curving or grade adjustment in MATH-212 | w2-13 |
 
 **Metadata per chunk:** `doc_id`, `course` (or null), `doc_type`, `section` (article or heading, used in
 citations), `version`, `valid_from`, `language` (tr / en), `audience` (all students, or students enrolled in the
@@ -65,7 +73,7 @@ course; W3.1 "who may see it").
 
 
 **Seed rows the week-1 expected outputs need.** Look-up and action inputs (w1-14 to w1-22) are answered from the
-`deadlines` table as it stands at their `received_at`, so the seed must contain the deadlines from the earlier
+`deadlines` table as it stands at their `received_at` (also w2-05 to w2-07), so the seed must contain the deadlines from the earlier
 messages (w1-01 to w1-08, including moved dates as `supersedes_id` rows) plus one deadline that appears in no message:
 
 | Row | Course | Due | Needed by |
