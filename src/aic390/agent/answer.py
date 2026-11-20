@@ -198,6 +198,8 @@ def lookup_answer(
         at = reminder_time(plan.reminder, targets[0], received_at)
         if at:
             action = {"type": "create_reminder", "remind_at": at, "requires_confirmation": True}
+    nearest = (targets[0] if targets else {}) if plan.pick == "nearest" else None
+    ask_user = any([needs_asking(r, received_at, plan.period, nearest) for r in rows])
     count = len(rows) if plan.count else None
     text = lookup_text(rows, count, action, language)
 
@@ -213,7 +215,7 @@ def lookup_answer(
         "abstain": abstain,
         "count": count,
         "deadlines": [as_listed(r) for r in rows],
-        "ask_user": any([needs_asking(r, received_at, plan.period) for r in rows]),
+        "ask_user": ask_user,
         "action": action,
         "valid": True,
         "trace": trace,

@@ -330,3 +330,46 @@ def test_run_case_email_with_no_deadline_makes_one_call():
     client = ScriptedClient(cls)
     out = run_case(CASES["w1-04"], client, search, TABLE)
     assert out["deadlines"] == [] and out["abstain"] is False and len(client.calls) == 1
+
+
+def nearest_case(received_at):
+    return {
+        "id": "t-nearest",
+        "channel": "chat",
+        "received_at": received_at,
+        "course": None,
+        "sender": "user",
+        "text": "What is my nearest deadline?",
+    }
+
+
+def test_nearest_asks_when_an_unclear_candidate_comes_first():
+    # 12 Nov 18:00: Lab Report 3 is 13 or 20 Nov 23:59; the nearest certain row is ECON-101 Ödev 2, 13 Nov 23:59.
+    # Its early candidate is at the same moment, so it may be the nearest one: ask.
+    result = answer(
+        nearest_case("2026-11-12T18:00:00+03:00"), ScriptedClient({"pick": "nearest"}), search, TABLE, intent="lookup"
+    )
+    assert result["ask_user"] is True
+
+
+def test_nearest_does_not_ask_when_both_candidates_come_after_it():
+    # 10 Nov 12:00: Quiz 3 on 12 Nov 10:40 comes before both readings of Lab Report 3.
+    result = answer(
+        nearest_case("2026-11-10T12:00:00+03:00"), ScriptedClient({"pick": "nearest"}), search, TABLE, intent="lookup"
+    )
+    assert result["ask_user"] is False
+
+
+def test_nearest_with_only_unclear_rows_asks():
+    table = DeadlineTable([r for r in TABLE.rows if r["item_key"] == "labreport3"])
+    result = answer(
+        nearest_case("2026-11-12T18:00:00+03:00"), ScriptedClient({"pick": "nearest"}), search, table, intent="lookup"
+    )
+    assert result["ask_user"] is True
+
+
+def test_a_full_list_still_does_not_ask_when_both_readings_are_ahead():
+    result = answer(
+        nearest_case("2026-11-12T18:00:00+03:00"), ScriptedClient({"pick": "all"}), search, TABLE, intent="lookup"
+    )
+    assert result["ask_user"] is False
