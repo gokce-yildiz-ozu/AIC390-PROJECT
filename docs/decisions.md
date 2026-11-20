@@ -3,6 +3,55 @@
 One entry per decision that someone could later ask "why?" about. Newest first. Status: proposed, accepted,
 superseded (keep superseded entries; link the replacement).
 
+## D-009 — Evaluation rules: keep measuring apart from building (proposed, 2026-11-21; owner: evaluation and safety lead)
+
+**Context.** A review of weeks 2–3 on 2026-11-21 found six gaps. None is anyone's fault; each would make a
+reported number weaker than it looks.
+
+| # | What happened | Why it matters |
+|---|---|---|
+| 1 | The 17 `new` cases were committed on 19 Nov 20:57; `prompts/extract_v1.md` and `dates.py` were written after them and contain their wording (w2-04 "ara rapor", w2-08 `termpaper`, w2-09 "haftaya") | The `new` split no longer measures unseen inputs, so it cannot predict the hidden test set (10%) |
+| 2 | Three prompt versions are due Sat 21 14:00, but which prompt is compared and what each version changes is written nowhere | A result explained after the run is not evidence; several changes per version make the cause unknowable |
+| 3 | Week-2 runs will use `search_stub` and a deadline table seeded with expected rows | Without saying so, the accuracy reads as the real system's |
+| 4 | The rule for `ask_user` changed in `tools/deadlines.py`, while `eval/testsets/README.md` still gave the old rule until `5a10169` | New cases get labelled by the wrong rule; two answers to the same question in a presentation |
+| 5 | The classifier returns `urgency`, which no case grades | A field nobody measures is either unproven or unneeded |
+| 6 | Three Friday deadlines in `docs/STATUS.md` (rows 4, 5 and 6) passed without a message to the team | The plan for weeks 2–3 learns about a delay a day late |
+
+**Decision.** These rules add to `CONTRIBUTING.md` (one change per experiment, frozen test sets, result files
+record their commit); they do not repeat it.
+
+1. **Held-out cases are written and run by the evaluation and safety lead only.** Whoever writes prompts or
+   pipeline code does not read them. Until their numbers are first reported, only the file's sha256, n and type
+   counts are committed (this proves the file did not change later); the file itself is committed at the tag
+   where its numbers are first reported (R8), and from then on it is development data. The next held-out set gets
+   a new version. Prompt authors see the aggregate score and, after their version is final, the failed case ids.
+2. **Plan before you run.** Before a comparison, its row goes into the Experiments table of `docs/STATUS.md` with
+   hypothesis, the one change, the test set, and the number that decides. The result and the decision are added
+   after the run; the plan is not rewritten.
+3. **Every number carries its conditions.** The harness writes them to `config.json`: commit, prompt versions,
+   model, temperature, test set path and sha256, search backend (`stub` or the index version), deadline table
+   source, n. A report sentence with a number names its condition when it is not the real system ("with the
+   stub search").
+4. **One written rule, one place.** Labelling rules live in `eval/testsets/README.md`, interfaces in
+   `docs/STATUS.md`, decisions here. A commit that changes behaviour updates the written rule in the same commit.
+5. **Built means measured, or said why not.** A new output field or feature comes with a test case that grades it,
+   or a line in the component table of `docs/architecture.md`: "not measured, because …".
+6. **A deadline you will miss is announced before it passes**, with the new date (team agreement §5: missing it
+   without telling the team is what counts as not delivering). The evaluation and safety lead checks the
+   next-actions table of `docs/STATUS.md` every evening and asks about rows past their date.
+
+**Consequences.**
+
+- The week-2 report treats all 42 cases as the development set: it gives accuracy for `seen` and `new` separately
+  but does not call `new` unseen, and says why (gap 1).
+- A held-out set of 10–15 cases (`heldout_v1`) is written by Sun 22 18:00; its sha256 is committed first, and it is
+  first run on the best week-2 prompt.
+- Before the W2.5 runs, the agent and tools lead writes the plan rows: which prompt is "the main prompt" and the one
+  change of v2 and of v3.
+- Gap 3 becomes a measurement in week 3: the same 42 cases with the stub and with the real search; every case that
+  passes with the stub and fails with real search is a retrieval failure (W3.8).
+- `urgency` gets graded cases or the "not measured" line (gap 5).
+
 ## D-008 — Corpus scale: at least 10,000 chunks (proposed, 2026-11-18; owner: data and retrieval lead)
 
 **Context.** The instructor asked for a corpus of at least 10,000 chunks (2026-11-18). The 48 documents of D-005 give
