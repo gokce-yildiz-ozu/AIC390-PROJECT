@@ -1,6 +1,6 @@
 # Status
 
-Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-18.
+Short and current. Rewrite lines rather than appending a diary. Last updated: 2026-11-21.
 
 ## Now
 
@@ -71,7 +71,7 @@ Parts for `week-2` by **Sun 22 18:00**, tag `week-2` Sun 23:59. Parts for `week-
 | 3 | W2.3 Test set ≥ 40 cases, structured expected outputs (draft) | evaluation and safety | `eval/testsets/week2_cases.jsonl` | Thu 19 |
 | 4 | W3.1 Core corpus (target 48, minimum 36) reviewed; bulk generator to ≥ 10,000 chunks (D-008); W3.2 chunking | data and retrieval | `data/corpus/`, `scripts/generate_bulk_corpus.py`, `data/chunks.jsonl` | Fri 20 |
 | 5 | W2.4 Harness, one command; `dates.py` | evaluation and safety / agent and tools | `eval/run_e2e.py`, `src/aic390/dates.py` | Fri 20 |
-| 6 | **Freeze `week2_cases.jsonl`** before any prompt comparison (R9) | evaluation and safety | freeze commit hash written in this row | Fri 20, 20:00 |
+| 6 | **Freeze `week2_cases.jsonl`** before any prompt comparison (R9) | evaluation and safety | ✓ frozen at `5a10169` (42 cases); sha256 in `eval/testsets/README.md`; label notes in `week2_review_notes.jsonl` | Fri 20, 20:00 (done Sat 21, 00:02) |
 | 7 | W2.2 Main prompt v1 | agent and tools | `prompts/` | Fri 20, 22:00 |
 | 8 | W3.5 30 retrieval questions with gold sections, written by someone other than the corpus author; frozen | evaluation and safety, agent and tools | `eval/testsets/retrieval_questions.jsonl` | Sat 21, 12:00 |
 | 9 | W2.2 Main prompt v2, v3 | agent and tools | `prompts/` | Sat 21, 14:00 |
