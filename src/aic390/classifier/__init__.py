@@ -4,19 +4,15 @@ Interface 1 (docs/STATUS.md): {"intent", "course", "urgency", "multi_step"}. `cl
 so the harness and the demo can show what happened; neither is graded.
 """
 
-import json
-import re
-from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field
 
+from aic390 import jsoncall
 from aic390.llm import ChatClient
 
 PROMPT_VERSION = "classifier_v1"
-PROMPTS_DIR = Path(__file__).resolve().parents[3] / "prompts"
-TEMPERATURE = 0.0
-MAX_ATTEMPTS = 2  # the first call plus one retry
+COURSE_PATTERN = r"^[A-Z]{2,5}-\d{3}$"
 
 Intent = Literal["deadline_message", "rule_question", "lookup", "reminder", "other"]
 
@@ -27,13 +23,13 @@ class ClassifierOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     intent: Intent
-    course: str | None = Field(pattern=r"^[A-Z]{2,5}-\d{3}$")
+    course: str | None = Field(pattern=COURSE_PATTERN)
     urgency: Literal["high", "normal"]
     multi_step: bool = False
 
 
 def load_prompt(version: str = PROMPT_VERSION) -> str:
-    return (PROMPTS_DIR / f"{version}.md").read_text(encoding="utf-8")
+    return jsoncall.load_prompt(version)
 
 
 def format_input(case: dict) -> str:
@@ -48,50 +44,13 @@ def format_input(case: dict) -> str:
 
 
 def parse(text: str) -> ClassifierOutput:
-    """The first {...} block in the reply, checked against the schema. Raises ValueError on any problem."""
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if match is None:
-        raise ValueError("no JSON object in the reply")
-    try:
-        data = json.loads(match.group(0))
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"invalid JSON: {exc.msg}") from exc
-    try:
-        return ClassifierOutput.model_validate(data)
-    except ValidationError as exc:
-        problems = "; ".join(f"{'.'.join(map(str, e['loc']))}: {e['msg']}" for e in exc.errors())
-        raise ValueError(f"schema: {problems}") from exc
+    return jsoncall.parse_json(text, ClassifierOutput)
 
 
 def classify(case: dict, client: ChatClient, prompt_version: str = PROMPT_VERSION) -> dict:
-    messages = [
-        {"role": "system", "content": load_prompt(prompt_version)},
-        {"role": "user", "content": format_input(case)},
-    ]
-    trace = []
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        resp = client.chat(messages, temperature=TEMPERATURE)
-        step = {
-            "step": "classifier",
-            "attempt": attempt,
-            "prompt_version": prompt_version,
-            "model": resp.model,
-            "input_tokens": resp.input_tokens,
-            "output_tokens": resp.output_tokens,
-            "latency_s": resp.latency_s,
-            "error": resp.error,
-        }
-        trace.append(step)
-        if resp.error is not None:
-            break  # a failed API call is not retried here; the client already retried rate limits
-        try:
-            output = parse(resp.text)
-        except ValueError as exc:
-            step["error"] = str(exc)
-            messages += [
-                {"role": "assistant", "content": resp.text},
-                {"role": "user", "content": f"Your reply was not valid ({exc}). Reply with the JSON object only."},
-            ]
-            continue
-        return {**output.model_dump(), "valid": True, "trace": trace}
-    return {**FALLBACK, "valid": False, "trace": trace}
+    output, trace = jsoncall.call_json(
+        client, load_prompt(prompt_version), format_input(case), ClassifierOutput, "classifier", prompt_version
+    )
+    if output is None:
+        return {**FALLBACK, "valid": False, "trace": trace}
+    return {**output.model_dump(), "valid": True, "trace": trace}
