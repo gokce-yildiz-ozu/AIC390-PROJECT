@@ -14,6 +14,7 @@ Expressions (JSON from the extraction step):
 Time: "23:59", "same" (keep the base time) or null (never filled in).
 """
 
+import re
 from datetime import date, datetime, time, timedelta, timezone
 
 ISTANBUL = timezone(timedelta(hours=3))  # Türkiye has had no daylight saving time since 2016
@@ -30,8 +31,85 @@ TURKISH_WEEKDAYS = {
 }
 
 
+MONTHS = {
+    **{
+        m: i
+        for i, m in enumerate(
+            [
+                "january",
+                "february",
+                "march",
+                "april",
+                "may",
+                "june",
+                "july",
+                "august",
+                "september",
+                "october",
+                "november",
+                "december",
+            ],
+            1,
+        )
+    },
+    **{
+        m: i
+        for i, m in enumerate(
+            [
+                "ocak",
+                "şubat",
+                "mart",
+                "nisan",
+                "mayıs",
+                "haziran",
+                "temmuz",
+                "ağustos",
+                "eylül",
+                "ekim",
+                "kasım",
+                "aralık",
+            ],
+            1,
+        )
+    },
+}
+_MONTH_NAMES = "|".join(sorted(MONTHS, key=len, reverse=True))
+_DATE_PATTERNS = [
+    (re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b"), ("y", "m", "d")),  # 2026-11-30
+    (
+        re.compile(rf"\b(\d{{1,2}})\.? ({_MONTH_NAMES}),? (\d{{4}})\b", re.IGNORECASE),
+        ("d", "mn", "y"),
+    ),  # 30 November 2026
+    (
+        re.compile(rf"\b({_MONTH_NAMES}) (\d{{1,2}}),? (\d{{4}})\b", re.IGNORECASE),
+        ("mn", "d", "y"),
+    ),  # November 30, 2026
+]
+
+
 class DateError(ValueError):
     """The expression cannot be resolved; the caller flags the deadline instead of guessing."""
+
+
+def _month(name: str) -> int:
+    """Month number from its name; Turkish capitals fold by Turkish rules ("KASIM" -> "kasım")."""
+    plain = name.casefold()
+    return MONTHS.get(plain) or MONTHS[name.replace("I", "ı").replace("İ", "i").casefold()]
+
+
+def find_date(text: str) -> date | None:
+    """The first full date written in a document: ISO, or with an English or Turkish month name
+    ("2026-11-30", "30 November 2026", "November 30, 2026", "30 Kasım 2026"). None if there is none."""
+    found = []
+    for pattern, order in _DATE_PATTERNS:
+        for match in pattern.finditer(text):
+            parts = dict(zip(order, match.groups(), strict=True))
+            month = int(parts["m"]) if "m" in parts else _month(parts["mn"])
+            try:
+                found.append((match.start(), date(int(parts["y"]), month, int(parts["d"]))))
+            except ValueError:
+                continue
+    return min(found)[1] if found else None
 
 
 def received_date(received_at: str) -> date:

@@ -2,7 +2,7 @@
 
 import pytest
 
-from aic390.dates import DateError, remind_at, resolve, week_range
+from aic390.dates import DateError, find_date, remind_at, resolve, week_range
 
 
 def test_w1_01_absolute_date_with_time():
@@ -102,3 +102,22 @@ def test_unresolvable_expressions_raise_instead_of_guessing(expr):
 def test_bad_time_raises():
     with pytest.raises(DateError):
         resolve({"kind": "absolute", "day": 1, "month": 12}, "late evening", "2026-11-13T12:00:00+03:00")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "The make-up week starts on 2026-11-30.",
+        "The make-up week starts on 30 November 2026. Make-up exams are held during this week.",
+        "The make-up week starts on November 30, 2026.",
+        "Telafi haftası 30 Kasım 2026 tarihinde başlar.",
+        "TELAFİ HAFTASI: 30 KASIM 2026",
+    ],
+)
+def test_find_date_reads_iso_and_month_names(text):
+    assert find_date(text).isoformat() == "2026-11-30"
+
+
+def test_find_date_takes_the_first_date_and_skips_impossible_ones():
+    assert find_date("From 1 Aralık 2026 to 2026-12-10").isoformat() == "2026-12-01"
+    assert find_date("31 November 2026, no year in 30 November") is None

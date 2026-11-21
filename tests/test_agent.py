@@ -427,3 +427,41 @@ def test_extract_prompt_examples_are_not_from_the_test_set():
     for case in CASES.values():
         for row in case["expected"]["deadlines"]:
             assert row["item"] not in examples and row["course"] not in examples
+
+
+def real_chunk_search(query, course=None, doc_type=None, k=5, as_of=None):
+    """Interface 2 over the real chunk file (data/chunks.jsonl), keyword match only: tests the date format of the
+    real documents without the embedding models."""
+    chunks = [
+        json.loads(line)
+        for line in (Path(__file__).resolve().parents[1] / "data/chunks.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    words = query.casefold().split()
+    hits = [
+        c
+        for c in chunks
+        if (doc_type is None or c["doc_type"] == doc_type) and all(w in c["text"].casefold() for w in words)
+    ]
+    return [{**c, "score": 1.0, "bm25_rank": None, "dense_rank": None, "rerank_score": None} for c in hits[:k]]
+
+
+def test_w1_08_anchor_date_from_the_real_calendar_chunk():
+    # The real calendar writes "30 November 2026", not "2026-11-30" (Mert's corpus, 438eed4).
+    assert real_chunk_search("make-up week", doc_type="calendar")[0]["text"].count("30 November 2026") == 1
+    client = ScriptedClient(
+        {
+            "deadlines": [
+                item(
+                    course="MATH-212",
+                    item="Problem Set 4",
+                    item_key="ps4",
+                    date={"kind": "shift", "days": -1},
+                    anchor="make-up week",
+                )
+            ]
+        }
+    )
+    result = extract(CASES["w1-08"], client, TABLE, real_chunk_search)
+    same_rows(result, "w1-08")
+    assert result["sources"] == CASES["w1-08"]["expected"]["sources"]

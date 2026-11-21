@@ -17,7 +17,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from aic390 import jsoncall
 from aic390.agent import search_stub
 from aic390.classifier import COURSE_PATTERN, format_input
-from aic390.dates import DateError, resolve
+from aic390.dates import DateError, find_date, resolve
 from aic390.llm import ChatClient
 from aic390.tools.deadlines import DeadlineTable
 
@@ -90,10 +90,13 @@ def resolve_row(item: ExtractedDeadline, case: dict, table: DeadlineTable, searc
         if found:
             sources.append(found[1])
     if item.anchor:
-        found = _first(r"(\d{4}-\d{2}-\d{2})", search(item.anchor, doc_type="calendar", as_of=received_at))
-        if found:
-            base_date = found[0]
-            sources.append(found[1])
+        # The calendar may write "2026-11-30", "30 November 2026" or "30 Kasım 2026"; find_date reads all three.
+        for hit in search(item.anchor, doc_type="calendar", as_of=received_at):
+            day = find_date(hit["text"])
+            if day:
+                base_date = day.isoformat()
+                sources.append({"doc_id": hit["doc_id"], "section": hit["section"]})
+                break
 
     row = {
         "course": item.course,
