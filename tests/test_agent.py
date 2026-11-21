@@ -401,3 +401,29 @@ def test_run_case_rejects_an_unknown_step():
 
     with pytest.raises(ValueError):
         run_case(CASES["w1-09"], ScriptedClient(), search, TABLE, prompts={"extractor": "extract_v1"})
+
+
+def test_extract_v2_and_v3_are_v1_plus_one_change_each():
+    from aic390 import jsoncall
+
+    v1, v2, v3 = (jsoncall.load_prompt(f"extract_v{n}") for n in (1, 2, 3))
+    assert v2.startswith(v1.rstrip()) and "Examples" in v2 and "Examples" not in v1
+    assert "<message>" in v3 and "<message>" not in v2
+
+
+def test_only_a_prompt_with_message_tags_gets_the_text_inside_them():
+
+    for version, tagged in (("extract_v2", False), ("extract_v3", True)):
+        client = ScriptedClient({"deadlines": []})
+        extract(CASES["w2-09"], client, TABLE, search, version)
+        user = client.calls[0][1]["content"]
+        assert ("<message>" in user) is tagged and ("Text:" in user) is not tagged
+
+
+def test_extract_prompt_examples_are_not_from_the_test_set():
+    from aic390 import jsoncall
+
+    examples = jsoncall.load_prompt("extract_v2").split("Examples", 1)[1]
+    for case in CASES.values():
+        for row in case["expected"]["deadlines"]:
+            assert row["item"] not in examples and row["course"] not in examples

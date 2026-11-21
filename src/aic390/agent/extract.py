@@ -47,7 +47,9 @@ def is_trusted(case: dict) -> bool:
     return (case.get("sender") or "").startswith("instructor:")
 
 
-def format_extract_input(case: dict, table: DeadlineTable) -> str:
+def format_extract_input(case: dict, table: DeadlineTable, delimited: bool = False) -> str:
+    """Metadata, the student's current rows for the course, then the text. A prompt that names <message> tags
+    (extract_v3 onwards) gets the text inside them; earlier versions get it after "Text:", as they were run."""
     rows = [r for r in table.current(case["received_at"]) if not case.get("course") or r["course"] == case["course"]]
     listed = [
         f"- {r['course']} {r['item_key']}: {r['item']}, due "
@@ -55,7 +57,8 @@ def format_extract_input(case: dict, table: DeadlineTable) -> str:
         for r in rows
     ]
     header, text = format_input(case).split("\n\n", 1)
-    return f"{header}\n\nAlready on the list:\n" + ("\n".join(listed) or "- nothing") + f"\n\nText:\n{text}"
+    body = f"<message>\n{text}\n</message>" if delimited else f"Text:\n{text}"
+    return f"{header}\n\nAlready on the list:\n" + ("\n".join(listed) or "- nothing") + f"\n\n{body}"
 
 
 def _first(pattern: str, hits: list[dict]) -> tuple[str, dict] | None:
@@ -132,10 +135,11 @@ def extract(
             "valid": True,
             "trace": [],
         }
+    system = jsoncall.load_prompt(prompt_version)
     output, trace = jsoncall.call_json(
         client,
-        jsoncall.load_prompt(prompt_version),
-        format_extract_input(case, table),
+        system,
+        format_extract_input(case, table, delimited="<message>" in system),
         ExtractOutput,
         "extract",
         prompt_version,
