@@ -3,10 +3,12 @@
 import zlib
 from pathlib import Path
 
-import numpy as np
 import pytest
 
+# CI installs only ".[dev]"; bm25s and numpy come with the optional "rag" extra, so skip before importing them.
 pytest.importorskip("bm25s")
+
+import numpy as np  # noqa: E402
 
 from aic390.rag.chunking import build_chunks  # noqa: E402
 from aic390.rag.search import CachedEmbedder, HybridSearch, normalize, tokenize  # noqa: E402
