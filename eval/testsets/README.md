@@ -41,7 +41,7 @@ Same input fields as above, plus `split`, `type`, a structured `expected` object
 | Field | Filled for | Graded by |
 |---|---|---|
 | `intent` | always: `deadline_message`, `rule_question`, `lookup`, `reminder`, `other`. Follows the content, not the sender | exact |
-| `deadlines[]` | deadline_message, lookup, reminder: `course`, `item`, `item_key`, `due_date`, `due_time`, `due_candidates[]`, `status` (`new`, `updated`, `unverified`), `supersedes` (old date and time, or null) | the set must match exactly (no missing, no extra rows); rows match on `(course, item_key)`, then every field exact |
+| `deadlines[]` | deadline_message, lookup, reminder: `course`, `item`, `item_key`, `due_date`, `due_time`, `due_candidates[]`, `status` (`new`, `updated`, `unverified`), `supersedes` (old date and time, or null) | the set must match exactly (no missing, no extra rows); rows match on `(course, item_key)`, then every other field exact; `due_candidates` in any order. `item` is the display name and is not graded; `item_key` is the graded identity |
 | `ask_user` | an input with two readings consistent with the whole message, **and** the two readings give different answers (see Dates below) | exact |
 | `abstain` | always | exact |
 | `sources[]` | `{doc_id, section}` | every expected source must be cited; extra sources are allowed and counted |
