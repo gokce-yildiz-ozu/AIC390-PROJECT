@@ -1,0 +1,17 @@
+{
+  "n": 6,
+  "held": 2,
+  "by_setting": {
+    "v1": {
+      "n": 3,
+      "held": 1
+    },
+    "extract_v3": {
+      "n": 3,
+      "held": 1
+    }
+  },
+  "calls": 10,
+  "input_tokens": 6670,
+  "output_tokens": 3034
+}
