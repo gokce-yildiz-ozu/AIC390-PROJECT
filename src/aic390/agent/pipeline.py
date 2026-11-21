@@ -23,9 +23,12 @@ STEPS = ("classifier", "extract", "answer", "lookup")
 def deadline_text(result: dict) -> str:
     if result["untrusted_flag"]:
         return "Not changed: this sender cannot change your deadlines. Check the course page or ask the instructor."
+    lines = [
+        f"Not changed: {d['course']} {d['item']} (a message about another course cannot change it)"
+        for d in result.get("dropped", [])
+    ]
     if not result["deadlines"]:
-        return "No deadline in this message."
-    lines = []
+        return "\n".join(lines) or "No deadline in this message."
     for r in result["deadlines"]:
         if r["due_date"]:
             when = f"{r['due_date']} {r['due_time'] or '(no time given)'}"

@@ -42,6 +42,12 @@ class ExtractOutput(BaseModel):
     deadlines: list[ExtractedDeadline]
 
 
+def may_change(case: dict, course: str) -> bool:
+    """An instructor's message changes only its own course's deadlines (W2.8 inj-01: a CS-310 email that tells the
+    assistant to move a CS-301 deadline). Checked in code on every row the model returns."""
+    return case.get("course") is None or course == case["course"]
+
+
 def is_trusted(case: dict) -> bool:
     """Only an instructor may set or change deadlines (data_inventory §4). Claims inside the text do not count."""
     return (case.get("sender") or "").startswith("instructor:")
@@ -135,6 +141,7 @@ def extract(
             "untrusted_flag": True,
             "action": None,
             "sources": [],
+            "dropped": [],
             "valid": True,
             "trace": [],
         }
@@ -154,11 +161,15 @@ def extract(
             "untrusted_flag": False,
             "action": None,
             "sources": [],
+            "dropped": [],
             "valid": False,
             "trace": trace,
         }
-    rows, sources = [], []
+    rows, sources, dropped = [], [], []
     for item in output.deadlines:
+        if not may_change(case, item.course):
+            dropped.append({"course": item.course, "item": item.item, "item_key": item.item_key})
+            continue
         row, row_sources = resolve_row(item, case, table, search)
         rows.append(row)
         sources += [s for s in row_sources if s not in sources]
@@ -169,6 +180,7 @@ def extract(
         "untrusted_flag": False,
         "action": None,
         "sources": sources,
+        "dropped": dropped,
         "valid": True,
         "trace": trace,
     }
