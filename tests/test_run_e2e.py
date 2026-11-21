@@ -407,6 +407,20 @@ def test_scoreboard_only_from_a_reportable_run():
         run_e2e.scoreboard_from(dirty, _config(dirty=["src/x.py"]))
 
 
+def test_scoreboard_spend_total_adds_this_run_to_the_previous_total():
+    summary = run_e2e.summarize([_record("n1", "normal", False, False, True)], _config(), prices=None)
+    week1 = {"week": 1, "spend_week_usd": 0.5, "spend_total_usd": 0.5}
+    board = run_e2e.scoreboard_from({**summary, "spend_usd": 0.25}, _config(), week1)
+    assert board["spend_week_usd"] == 0.25 and board["spend_total_usd"] == 0.75
+    # Writing week 2 again replaces its week spend instead of adding it twice.
+    again = run_e2e.scoreboard_from({**summary, "spend_usd": 0.1}, _config(), board)
+    assert again["spend_total_usd"] == 0.6
+    assert run_e2e.scoreboard_from(summary, _config(), None)["spend_total_usd"] is None
+    assert run_e2e.scoreboard_from(summary, _config(), {"week": 1, "spend_total_usd": None})["spend_total_usd"] is None
+    free = run_e2e.scoreboard_from(summary, _config(), {"week": 1, "spend_week_usd": 0, "spend_total_usd": 0})
+    assert free["spend_total_usd"] == 0
+
+
 # compare.py ---------------------------------------------------------------------------------------------------
 
 

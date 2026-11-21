@@ -550,8 +550,20 @@ def summary_markdown(summary: dict, config: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def scoreboard_from(summary: dict, config: dict) -> dict:
-    """Week-2 scoreboard: only what this run measured; every other key stays null."""
+def spend_total(previous: dict | None, run_spend: float, week: int) -> float | None:
+    """The previous board's total plus this run's spend. Rewriting a board of the same week replaces that week's
+    spend instead of adding it twice. Null when the previous total is unknown."""
+    if previous is None or previous.get("spend_total_usd") is None:
+        return None
+    base = previous["spend_total_usd"]
+    if previous.get("week") == week:
+        base -= previous.get("spend_week_usd") or 0
+    return round(base + run_spend, 6)
+
+
+def scoreboard_from(summary: dict, config: dict, previous: dict | None = None) -> dict:
+    """Week-2 scoreboard: only what this run measured, plus the running spend total from the previous board;
+    every other key stays null."""
     if not summary["for_reporting"]:
         raise ValueError("refusing --write-scoreboard: " + "; ".join(summary["not_for_reporting_reasons"]))
     board = empty_scoreboard(week=2, test_set_size=summary["n"])
@@ -567,6 +579,7 @@ def scoreboard_from(summary: dict, config: dict) -> dict:
     board["cost_per_task_usd"] = summary["cost_per_case_usd_at_list_price"]
     board["latency_p50_s"] = summary["latency_p50_s"]
     board["spend_week_usd"] = summary["spend_usd"]
+    board["spend_total_usd"] = spend_total(previous, summary["spend_usd"], board["week"])
     return board
 
 
@@ -760,7 +773,9 @@ def main(argv: list[str] | None = None) -> int:
         return 130
     if args.write_scoreboard:
         try:
-            write_scoreboard(scoreboard_from(summary, config), ROOT / SCOREBOARD_PATH)
+            board_path = ROOT / SCOREBOARD_PATH
+            previous = json.loads(board_path.read_text(encoding="utf-8")) if board_path.exists() else None
+            write_scoreboard(scoreboard_from(summary, config, previous), board_path)
         except ValueError as exc:
             return fail(str(exc))
         print("wrote eval/scoreboard.json")
