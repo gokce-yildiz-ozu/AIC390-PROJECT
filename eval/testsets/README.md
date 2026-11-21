@@ -80,3 +80,32 @@ Labelling rules:
 | w1-15 | Expected HW3 (2026-12-04 23:59) appears in no message; the answer depends on the database seed | Seed row listed in `docs/data_inventory.md` §2 |
 | all | 3 unanswerable and 2 adversarial cases; W2.3 needs at least 40 cases with at least 5 unanswerable, 5 adversarial and 5 edge cases | Week-2 set |
 | all | Every label is by one person (evaluation lead); no second rater yet | 20 cases labelled blind by a second member, Cohen's κ (W2.6) |
+
+## `retrieval_questions.jsonl` (W3.5)
+
+**Frozen on 2026-11-22** (R9): 30 questions, sha256 of the file with LF line endings
+`6f7d3b049dab8a817295956bb093b2c2d9a2c31ab6b907ec0519d1635663c9f1`. Changes go into
+`retrieval_questions_v2.jsonl`. Written by the evaluation lead, not the corpus author; checked with
+`eval/check_retrieval_questions.py`.
+
+| Field | Meaning |
+|---|---|
+| `id` | Question id |
+| `question` | The question text |
+| `language` | `tr` (12) or `en` (18) |
+| `kind` | `direct` (7), `paraphrase` (9), `confusable` (7), `version` (3), `multi` (4) |
+| `as_of` | Set for the CS-310 versions; passed to search as `as_of` |
+| `gold[]` | `{doc_id, section}`: the passages that answer it (several for `multi`) |
+
+Scoring:
+
+- **hit@k**: any gold passage in the top k. **all@k**: every gold passage in the top k (`multi` questions).
+  **MRR**: from the rank of the first gold passage.
+- Search is called with `course=None` (the course code is in the question) and `as_of` from the row.
+
+Known issues:
+
+| Question / section | Issue | How it is reported |
+|---|---|---|
+| r24 | Gold is `regulation-article-14`, but `econ101-late-policy` restates Article 14 | A hit on `econ101-late-policy` is a near-duplicate in the failure analysis |
+| `cs310-syllabus-v1` Course information, Attendance | No question: their text is identical to v2 | Not covered by this set |

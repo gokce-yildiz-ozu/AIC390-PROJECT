@@ -110,3 +110,4 @@ report gives e2e accuracy separately for the seen 25 and the 15+ new cases.
 |---|---|---|---|---|
 | 2026-11-16 | Baseline prompt fails most week-1 inputs (P1–P5) | e2e accuracy 4/25 = 0.16 [0.064, 0.347] at T=0; P1, P3, P4, P5 true, P2 false | Week 2 builds the classifier and main prompt (W2.1, W2.2) | `results/2026-11-16_baseline_openai-gpt-oss-120b/analysis.json` |
 | 2026-11-16 | Temperature does not change accuracy (P6) | 4/25 correct at T = 0, 0.7 and 1.2; a second T=0 run changed the answer for 4 of 25 | Run every comparison more than once (W2.5) | `results/2026-11-16_baseline-t0-repeat_openai-gpt-oss-120b/` |
+| 2026-11-22 | v1 end to end on the 42 frozen cases (measurement, no comparison) | 39/42 = 0.929 [0.810, 0.975] Wilson; stub search + seed table with expected rows | Extraction is at ceiling (42/42); W2.5 needs a decision rule beyond accuracy | `results/2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b/` |
