@@ -179,6 +179,7 @@ def lookup_answer(
     table: DeadlineTable,
     language: str,
     prompt_version: str = LOOKUP_PROMPT,
+    answer_prompt: str = ANSWER_PROMPT,
 ) -> dict:
     received_at = case["received_at"]
     plan, trace = jsoncall.call_json(
@@ -205,7 +206,9 @@ def lookup_answer(
 
     sources, abstain = [], False
     if plan.rule_question and targets:
-        rule = rule_answer(plan.rule_question, targets[0]["course"], received_at, language, client, search)
+        rule = rule_answer(
+            plan.rule_question, targets[0]["course"], received_at, language, client, search, answer_prompt
+        )
         trace += rule["trace"]
         sources = rule["sources"]
         text += "\n" + rule["text"]
@@ -237,15 +240,22 @@ def answer(
     table: DeadlineTable | None = None,
     intent: str | None = None,
     course: str | None = None,
+    prompts: dict[str, str] | None = None,
 ) -> dict:
-    """Interface 4. intent and course come from the classifier; run_case passes them in."""
+    """Interface 4. intent and course come from the classifier; run_case passes them in.
+    prompts: {"answer": "answer_v1", "lookup": "lookup_v1"}; a missing step uses its default version."""
+    prompts = prompts or {}
+    answer_prompt = prompts.get("answer", ANSWER_PROMPT)
+    lookup_prompt = prompts.get("lookup", LOOKUP_PROMPT)
     search = search or search_stub.search
     table = table or DeadlineTable.seed()
     language = answer_language(case) or "en"
     base = {"count": None, "deadlines": [], "ask_user": False, "action": None, "answer_language": answer_language(case)}
     if intent == "rule_question":
-        result = rule_answer(case["text"], course or case.get("course"), case["received_at"], language, client, search)
+        result = rule_answer(
+            case["text"], course or case.get("course"), case["received_at"], language, client, search, answer_prompt
+        )
         return {**base, **result}
     if intent in ("lookup", "reminder"):
-        return {**base, **lookup_answer(case, client, search, table, language)}
+        return {**base, **lookup_answer(case, client, search, table, language, lookup_prompt, answer_prompt)}
     return {**base, "text": DECLINE[language], "sources": [], "abstain": True, "valid": True, "trace": []}

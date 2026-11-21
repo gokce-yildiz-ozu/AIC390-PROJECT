@@ -10,10 +10,14 @@ from collections.abc import Callable
 
 from aic390.agent import search_stub
 from aic390.agent.answer import answer, answer_language
+from aic390.agent.extract import PROMPT_VERSION as extract_prompt
 from aic390.agent.extract import extract
+from aic390.classifier import PROMPT_VERSION as classifier_prompt
 from aic390.classifier import classify
 from aic390.llm import ChatClient
 from aic390.tools.deadlines import DeadlineTable
+
+STEPS = ("classifier", "extract", "answer", "lookup")
 
 
 def deadline_text(result: dict) -> str:
@@ -39,10 +43,17 @@ def run_case(
     client: ChatClient,
     search: Callable | None = None,
     table: DeadlineTable | None = None,
+    prompts: dict[str, str] | None = None,
 ) -> dict:
+    """prompts maps a step ("classifier", "extract", "answer", "lookup") to a prompt version, e.g.
+    {"extract": "extract_v2"}; a step left out uses its default version, so run_case(case, client) is unchanged."""
+    prompts = prompts or {}
+    unknown = set(prompts) - set(STEPS)
+    if unknown:
+        raise ValueError(f"unknown prompt steps: {sorted(unknown)}; expected {STEPS}")
     search = search or search_stub.search
     table = table or DeadlineTable.seed()
-    cls = classify(case, client)
+    cls = classify(case, client, prompts.get("classifier", classifier_prompt))
     out = {
         "intent": cls["intent"],
         "deadlines": [],
@@ -59,11 +70,11 @@ def run_case(
         "trace": list(cls["trace"]),
     }
     if cls["intent"] == "deadline_message":
-        result = extract(case, client, table, search)
+        result = extract(case, client, table, search, prompts.get("extract", extract_prompt))
         out.update({k: result[k] for k in ("deadlines", "ask_user", "untrusted_flag", "action", "sources")})
         out["answer_text"] = deadline_text(result)
     elif case.get("channel") == "chat":
-        result = answer(case, client, search, table, intent=cls["intent"], course=cls["course"])
+        result = answer(case, client, search, table, intent=cls["intent"], course=cls["course"], prompts=prompts)
         out.update({k: result[k] for k in ("deadlines", "ask_user", "abstain", "sources", "action", "count")})
         out["answer_text"] = result["text"]
     else:

@@ -373,3 +373,31 @@ def test_a_full_list_still_does_not_ask_when_both_readings_are_ahead():
         nearest_case("2026-11-12T18:00:00+03:00"), ScriptedClient({"pick": "all"}), search, TABLE, intent="lookup"
     )
     assert result["ask_user"] is False
+
+
+def test_run_case_passes_each_prompt_version_to_its_step(monkeypatch):
+    from aic390 import jsoncall
+
+    monkeypatch.setattr(jsoncall, "load_prompt", lambda version: f"PROMPT {version}")
+    cls = {"intent": "deadline_message", "course": "MATH-212", "urgency": "normal", "multi_step": False}
+    client = ScriptedClient(cls, {"deadlines": []})
+    out = run_case(CASES["w2-09"], client, search, TABLE, prompts={"extract": "extract_v9"})
+    assert [(t["step"], t["prompt_version"]) for t in out["trace"]] == [
+        ("classifier", "classifier_v1"),
+        ("extract", "extract_v9"),
+    ]
+    assert [c[0]["content"] for c in client.calls] == ["PROMPT classifier_v1", "PROMPT extract_v9"]
+
+
+def test_run_case_rule_question_uses_the_answer_version():
+    cls = {"intent": "rule_question", "course": "CS-301", "urgency": "normal", "multi_step": False}
+    reply = {"abstain": False, "answer": "10% per day.", "citations": [1]}
+    out = run_case(CASES["w1-09"], ScriptedClient(cls, reply), search, TABLE, prompts={"answer": "answer_v1"})
+    assert [t["prompt_version"] for t in out["trace"]] == ["classifier_v1", "answer_v1"]
+
+
+def test_run_case_rejects_an_unknown_step():
+    import pytest
+
+    with pytest.raises(ValueError):
+        run_case(CASES["w1-09"], ScriptedClient(), search, TABLE, prompts={"extractor": "extract_v1"})
