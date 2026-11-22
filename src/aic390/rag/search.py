@@ -158,19 +158,32 @@ def load_chunks(path: Path = DEFAULT_CHUNKS) -> list[dict]:
 class CachedEmbedder:
     """Wraps an encode function; vectors are cached on disk by a hash of model name and text (not committed)."""
 
-    def __init__(self, encode: Callable[[list[str]], np.ndarray], model_name: str, cache_dir: Path = DEFAULT_CACHE):
+    def __init__(
+        self,
+        encode: Callable[[list[str]], np.ndarray],
+        model_name: str,
+        cache_dir: Path = DEFAULT_CACHE,
+        save_every: int = 1024,
+    ):
         self._encode, self.model_name, self.cache_dir = encode, model_name, cache_dir
+        self.save_every = save_every
 
     def _key(self, text: str) -> str:
         return hashlib.sha256(f"{self.model_name}\n{text}".encode()).hexdigest()
+
+    def missing(self, texts: Sequence[str]) -> int:
+        """How many of these texts have no cached vector yet."""
+        return sum(not (self.cache_dir / f"{self._key(t)}.npy").exists() for t in texts)
 
     def encode(self, texts: Sequence[str]) -> np.ndarray:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         paths = [self.cache_dir / f"{self._key(t)}.npy" for t in texts]
         missing = [i for i, p in enumerate(paths) if not p.exists()]
-        if missing:
-            vectors = self._encode([texts[i] for i in missing])
-            for i, vector in zip(missing, vectors, strict=True):
+        # Saved in batches, so an interrupted run keeps the vectors it already computed.
+        for start in range(0, len(missing), self.save_every):
+            batch = missing[start : start + self.save_every]
+            vectors = self._encode([texts[i] for i in batch])
+            for i, vector in zip(batch, vectors, strict=True):
                 np.save(paths[i], np.asarray(vector, dtype=np.float32))
         return np.stack([np.load(p) for p in paths])
 
