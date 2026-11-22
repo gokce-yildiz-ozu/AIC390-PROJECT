@@ -42,15 +42,12 @@ record their commit); they do not repeat it.
 
 **Consequences.**
 
-- The week-2 report treats all 42 cases as the development set: it gives accuracy for `seen` and `new` separately
-  but does not call `new` unseen, and says why (gap 1).
-- A held-out set of 10–15 cases (`heldout_v1`) is written by Sun 22 18:00; its sha256 is committed first, and it is
-  first run on the best week-2 prompt.
-- Before the W2.5 runs, the agent and tools lead writes the plan rows: which prompt is "the main prompt" and the one
-  change of v2 and of v3.
-- Gap 3 becomes a measurement in week 3: the same 42 cases with the stub and with the real search; every case that
-  passes with the stub and fails with real search is a retrieval failure (W3.8).
+- The week-2 report treats all 42 cases as the development set: it gives accuracy for `seen` and `new` separately but does not call `new` unseen, and says why (gap 1).
+- A held-out set of 10–15 cases (`heldout_v1`) is written by Sun 22 18:00; its sha256 is committed first, and it is first run on the best week-2 prompt.
+- Before the W2.5 runs, the agent and tools lead writes the plan rows: which prompt is "the main prompt" and the one change of v2 and of v3.
+- Gap 3 becomes a measurement in week 3: the same 42 cases with the stub and with the real search; every case that passes with the stub and fails with real search is a retrieval failure (W3.8).
 - `urgency` gets graded cases or the "not measured" line (gap 5).
+- Unit tests in `tests/test_dates.py`, `test_agent.py` and `test_classifier.py` also take their expected values from `week2_cases.jsonl` (written before this decision). They stay as regression tests; no new test is derived from a test set, and no test reads a held-out file.
 
 ## D-008 — Corpus scale: at least 10,000 chunks (proposed, 2026-11-18; owner: data and retrieval lead)
 
