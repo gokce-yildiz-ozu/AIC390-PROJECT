@@ -19,12 +19,12 @@ Week 2 replaced the single week-1 prompt with a pipeline: a JSON classifier, ext
 | ID | Status | Evidence | Note |
 |---|---|---|---|
 | W2.1 | done | [`src/aic390/classifier/`](../src/aic390/classifier/), [`prompts/classifier_v1.md`](../prompts/classifier_v1.md), `tests/test_classifier.py` | JSON with intent, entities (course), urgency; T = 0; schema validation and one retry. `urgency` is not graded by any case: see `docs/architecture.md` |
-| W2.2 | done | [`prompts/extract_v1.md`](../prompts/extract_v1.md), [`extract_v2.md`](../prompts/extract_v2.md), [`extract_v3.md`](../prompts/extract_v3.md) | Versioned templates; v2 adds invented worked examples, v3 adds message delimiters (one change each) |
+| W2.2 | done | [`prompts/extract_v1.md`](../prompts/extract_v1.md), [`extract_v2.md`](../prompts/extract_v2.md), [`extract_v3.md`](../prompts/extract_v3.md) | Versioned templates; v2 adds invented worked examples, v3 adds message delimiters (one change each). All six building blocks of Module 2 are in v2; v1, the version we kept, has five (no examples). Adding them changed nothing measurable (W2.5), so the shorter prompt stays |
 | W2.3 | done | [`eval/testsets/week2_cases.jsonl`](../eval/testsets/week2_cases.jsonl), rules in [`eval/testsets/README.md`](../eval/testsets/README.md) | 42 cases: 22 normal, 8 edge, 6 unanswerable, 6 adversarial; frozen at `5a10169` (sha256 in the README) |
 | W2.4 | done | [`eval/run_e2e.py`](../eval/run_e2e.py), [`results/2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b/`](../results/2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b/) | One command; refuses an unfrozen test set or uncommitted code; writes `config.json` with every run condition |
 | W2.5 | done | `results/2026-11-22_e2e_w25-{v1-a,v2-a,v3-a,v1-b}_*`, `results/2026-11-22_compare_*`, `results/2026-11-22_repeat_*`, [`eval/compare.py`](../eval/compare.py) | Three versions, 39/42 each; exact McNemar p = 1.0 for both pairs; `extract_v1` kept by the planned token rule. Second runs of v2 and v3 cut by the free plan's rate limit (`docs/STATUS.md`, 11b) |
 | W2.6 | done | [`eval/judge.py`](../eval/judge.py), [`prompts/judge_v1.md`](../prompts/judge_v1.md), [`results/2026-11-22_judge-v1/`](../results/2026-11-22_judge-v1/) | Judge `qwen/qwen3.8-27b`; labels committed before the judge ran (`e13d61d`) |
-| W2.7 | done | [`docs/hallucination_log.md`](../docs/hallucination_log.md) | 12 typed examples from the week-1 outputs, with root cause and what prevents each now |
+| W2.7 | done | [`docs/hallucination_log.md`](../docs/hallucination_log.md) | 13 typed examples: 12 from the week-1 outputs, 1 from this week's pipeline (w1-21, answered instead of refused in 3 of 4 runs); root cause and what prevents each now |
 | W2.8 | done | [`docs/injection_tests.md`](../docs/injection_tests.md), `scripts/run_injection_tests.py`, `results/2026-11-22_injection_*` | 3 attempts × 2 prompt settings, graded in code; before and after a code fix |
 
 ## 3. Scoreboard
