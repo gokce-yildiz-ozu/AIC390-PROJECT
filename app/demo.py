@@ -51,6 +51,9 @@ search_kind = st.sidebar.selectbox(
     format_func=lambda k: demo.SEARCH_BACKENDS[k],
 )
 extract_version = st.sidebar.selectbox("Extraction prompt", ["extract_v1", "extract_v2", "extract_v3"])
+answer_version = st.sidebar.selectbox(
+    "Answer prompt", ["answer_v2", "answer_v1"], help="answer_v2 (W3.4): [n] citations and fixed abstentions"
+)
 st.sidebar.caption("Model: openai/gpt-oss-120b on Groq, temperature 0. Deadline table: data/db/deadlines_seed.jsonl.")
 
 # Input ---------------------------------------------------------------------------------------------------------
@@ -89,7 +92,11 @@ if st.button("Run", type="primary", disabled=not text.strip()):
         try:
             with st.spinner("Running the pipeline..."):
                 record = demo.run_demo(
-                    case, cached_client(), search_kind, cached_search(search_kind), prompts={"extract": extract_version}
+                    case,
+                    cached_client(),
+                    search_kind,
+                    cached_search(search_kind),
+                    prompts={"extract": extract_version, "answer": answer_version},
                 )
             if example_id in titles:
                 demo.save_replay(record, example_id)
@@ -130,7 +137,7 @@ st.subheader("3 · Extraction, retrieval and checks")
 if out["untrusted_flag"]:
     st.error(f"Sender '{record['case']['sender']}' may not change deadlines: nothing changed, the model was not asked.")
 if out["deadlines"]:
-    st.dataframe(pd.DataFrame(out["deadlines"]), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(out["deadlines"]), hide_index=True, width="stretch")
 if out["ask_user"]:
     st.warning("Two readings change the answer: the student is asked before anything is saved.")
 for call in record["retrieved"]:
@@ -142,7 +149,7 @@ for call in record["retrieved"]:
         hits = pd.DataFrame(call["hits"])[
             ["doc_id", "section", "score", "bm25_rank", "dense_rank", "rerank_score", "text"]
         ]
-        st.dataframe(hits, hide_index=True, use_container_width=True)
+        st.dataframe(hits, hide_index=True, width="stretch")
 if out["sources"]:
     st.markdown("**Cited:** " + "; ".join(f"`{s['doc_id']}` · {s['section']}" for s in out["sources"]))
 
@@ -165,10 +172,10 @@ if out["action"]:
 st.subheader("5 · Trace")
 trace = pd.DataFrame(out["trace"])
 if not trace.empty:
-    st.dataframe(trace, hide_index=True, use_container_width=True)
+    st.dataframe(trace, hide_index=True, width="stretch")
     st.caption(
         f"{len(trace)} model calls · {int(trace['input_tokens'].sum())} input and "
         f"{int(trace['output_tokens'].sum())} output tokens · {trace['latency_s'].sum():.1f} s in the model"
     )
 with st.expander("Deadline table as it stood at received_at"):
-    st.dataframe(pd.DataFrame(record["table_at_received"]), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(record["table_at_received"]), hide_index=True, width="stretch")
