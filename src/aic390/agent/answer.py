@@ -59,9 +59,55 @@ NOT_FOUND = {
     "işlerine sor.",
 }
 
+# W3.4: one fixed reply per kind of abstention (answer_v2 onwards). The model only names the kind; the words are
+# fixed here, so an abstention can never carry an invented fact.
+ABSTENTIONS = {
+    "not_in_documents": NOT_FOUND,
+    "grade_prediction": {
+        "en": "I cannot predict grades or whether you will pass. Please ask your instructor.",
+        "tr": "Not ya da dersi geçip geçmeyeceğin konusunda tahmin yapamam. Lütfen dersin hocasına sor.",
+    },
+    "legal_interpretation": {
+        "en": "I cannot interpret rules or decisions or say whether you can object. Please ask your advisor or "
+        "student affairs.",
+        "tr": "Kuralları ya da kararları yorumlayamam, itiraz hakkın olup olmadığını söyleyemem. Lütfen danışmanına "
+        "ya da öğrenci işlerine sor.",
+    },
+}
+
+MARKER = re.compile(r"\[(\d+)\]")
+
+
+class RuleAnswerV2(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["answered", "not_in_documents", "grade_prediction", "legal_interpretation"]
+    answer: str = ""
+
 
 def format_sources(hits: list[dict]) -> str:
     return "\n\n".join(f"[{i}] {h['doc_id']} · {h['section']}\n{h['text']}" for i, h in enumerate(hits, 1))
+
+
+def renumber(text: str, hits: list[dict]) -> tuple[str, list[dict]]:
+    """Citation markers renumbered in order of first use, so [1] in the text is sources[0], [2] is sources[1], and
+    so on. A marker that names no given source is removed. Two hits from the same section share one number."""
+    sources, numbers = [], {}
+    for match in MARKER.finditer(text):
+        n = int(match.group(1))
+        if 1 <= n <= len(hits) and n not in numbers:
+            source = {"doc_id": hits[n - 1]["doc_id"], "section": hits[n - 1]["section"]}
+            if source not in sources:
+                sources.append(source)
+            numbers[n] = sources.index(source) + 1
+
+    def swap(match: re.Match) -> str:
+        n = int(match.group(1))
+        return f"[{numbers[n]}]" if n in numbers else ""
+
+    cleaned = MARKER.sub(swap, text)
+    cleaned = re.sub(r"(\[\d+\])(?:\1)+", r"\1", cleaned)  # "[1][1]" after a merge becomes "[1]"
+    return re.sub(r" +([.,;:])", r"\1", cleaned).strip(), sources
 
 
 def rule_answer(
@@ -78,11 +124,27 @@ def rule_answer(
     if not hits:
         return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": True, "trace": []}
     user = f"course: {course or 'none'}\nquestion: {question}\n\nSources:\n{format_sources(hits)}"
+    numbered = prompt_version != "answer_v1"  # answer_v1 keeps its week-2 behaviour, so its runs stay comparable
+    schema = RuleAnswerV2 if numbered else RuleAnswer
     output, trace = jsoncall.call_json(
-        client, jsoncall.load_prompt(prompt_version), user, RuleAnswer, "answer", prompt_version
+        client, jsoncall.load_prompt(prompt_version), user, schema, "answer", prompt_version
     )
     if output is None:
         return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": False, "trace": trace}
+    if numbered:
+        if output.status != "answered":
+            return {
+                "text": ABSTENTIONS[output.status][language],
+                "sources": [],
+                "abstain": True,
+                "valid": True,
+                "trace": trace,
+            }
+        text, sources = renumber(output.answer, hits)
+        if not sources:
+            # An answer with no valid source number is not shown: no answer without a source.
+            return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": True, "trace": trace}
+        return {"text": text, "sources": sources, "abstain": False, "valid": True, "trace": trace}
     sources = []
     if not output.abstain:
         for n in output.citations:
