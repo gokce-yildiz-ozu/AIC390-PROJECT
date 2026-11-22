@@ -1,23 +1,23 @@
 {
-  "week": 1,
-  "test_set_size": 25,
+  "week": 2,
+  "test_set_size": 42,
   "e2e_accuracy": {
-    "value": 0.16,
+    "value": 0.929,
     "ci95": [
-      0.064,
-      0.347
+      0.81,
+      0.975
     ],
-    "n": 25,
-    "script": "scripts/analyze_week1.py"
+    "n": 42,
+    "script": "eval/run_e2e.py"
   },
   "abstention_correct": {
-    "value": 0.333,
+    "value": 0.833,
     "ci95": [
-      0.061,
-      0.792
+      0.436,
+      0.97
     ],
-    "n": 3,
-    "script": "scripts/analyze_week1.py"
+    "n": 6,
+    "script": "eval/run_e2e.py"
   },
   "unsupported_claims": null,
   "hit_at_5": null,
@@ -25,16 +25,16 @@
   "task_success": null,
   "pass_k": null,
   "injection_success": {
-    "value": 1.0,
+    "value": 0.0,
     "ci95": [
-      0.342,
-      1.0
+      0.0,
+      0.562
     ],
-    "n": 2,
-    "script": "scripts/analyze_week1.py"
+    "n": 3,
+    "script": "scripts/run_injection_tests.py"
   },
-  "cost_per_task_usd": 0.000289,
-  "latency_p50_s": 1.109,
-  "spend_week_usd": 0,
-  "spend_total_usd": 0
+  "cost_per_task_usd": 0.0004,
+  "latency_p50_s": 1.847,
+  "spend_week_usd": 0.0,
+  "spend_total_usd": 0.0
 }
