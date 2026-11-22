@@ -1,0 +1,82 @@
+{
+  "for_reporting": true,
+  "not_for_reporting_reasons": [],
+  "n": 20,
+  "confusion_matrix": {
+    "human_pass": {
+      "judge_pass": 9,
+      "judge_fail": 2,
+      "judge_invalid": 0
+    },
+    "human_fail": {
+      "judge_pass": 0,
+      "judge_fail": 9,
+      "judge_invalid": 0
+    }
+  },
+  "raw_agreement": {
+    "k": 18,
+    "n": 20,
+    "value": 0.9,
+    "ci95_wilson": [
+      0.699,
+      0.9721
+    ]
+  },
+  "cohen_kappa": 0.802,
+  "kappa_ci95_bootstrap": [
+    0.4998,
+    1.0
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 0,
+    "unit": "answer (row), with replacement",
+    "method": "percentile",
+    "undefined_resamples": 0
+  },
+  "invalid_judge_rows": 0,
+  "call_errors": 0,
+  "invalid_rule": "an invalid judge row (judge_pass null) counts as a disagreement: it takes the opposite of the human label, which also shifts the judge's class rates used in kappa's expected agreement",
+  "human_pass_rate": {
+    "k": 11,
+    "n": 20,
+    "value": 0.55,
+    "ci95_wilson": [
+      0.3421,
+      0.7418
+    ]
+  },
+  "by_source_run": {
+    "2026-11-16_baseline_openai-gpt-oss-120b": {
+      "n": 9,
+      "human_pass": 2,
+      "agree": 7
+    },
+    "2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b": {
+      "n": 11,
+      "human_pass": 9,
+      "agree": 11
+    }
+  },
+  "disagreements": [
+    {
+      "id": "w1-09",
+      "source_run": "2026-11-16_baseline_openai-gpt-oss-120b",
+      "human_pass": true,
+      "judge_pass": false,
+      "judge_reason": "must_include not met: 'sonrasında 0'"
+    },
+    {
+      "id": "w1-19",
+      "source_run": "2026-11-16_baseline_openai-gpt-oss-120b",
+      "human_pass": true,
+      "judge_pass": false,
+      "judge_reason": "must_include not met: 'not tahmini yapmaz'; must_not met: 'geçme ya da kalma tahmini yapmak' (evidence: 'If you can achieve that, you’ll pass; if not, you’ll need extra credit')"
+    }
+  ],
+  "plan_threshold": 0.6,
+  "kappa_meets_plan_threshold": true,
+  "conditions": "commit e13d61d, judge model qwen/qwen3.8-27b (returned: qwen/qwen3.8-27b), prompt judge_v1, T=0.0, sheet sha256 95860d3dc3d0f67096a1c5da5bb2d52cbba113ae9d8931cbb01e49064b4a973a (labels commit e13d61d)",
+  "script": "eval/judge.py"
+}

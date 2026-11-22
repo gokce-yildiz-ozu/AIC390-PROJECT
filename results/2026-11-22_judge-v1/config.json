@@ -1,0 +1,104 @@
+{
+  "commit": "e13d61d",
+  "dirty": [],
+  "untracked": [],
+  "judge_sha256": "e45471b595bc24f8815b2980d972e1f6a9d28549df3055502b9507221733e366",
+  "model": {
+    "requested": "qwen/qwen3.8-27b",
+    "returned": [
+      "qwen/qwen3.8-27b"
+    ]
+  },
+  "prompt_version": "judge_v1",
+  "prompt_sha256": "98625fc8d37c75660c29481ede828f45e70692ac3b52efd4099bb0531d99ae39",
+  "temperature": 0.0,
+  "labels_path": "results/2026-11-22_judge-v1/labels_human.csv",
+  "labels_sha256": "95860d3dc3d0f67096a1c5da5bb2d52cbba113ae9d8931cbb01e49064b4a973a",
+  "labels_commit": "e13d61d",
+  "sheet": {
+    "cases_path": "eval/testsets/week2_cases.jsonl",
+    "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+    "baseline": {
+      "run": "2026-11-16_baseline_openai-gpt-oss-120b",
+      "outputs_sha256": "93540e7d004b813f6b56f9a6312641eb5930ccdb5c570331d4e34cfc208574ac",
+      "inputs_path": "eval/testsets/week1_inputs.jsonl",
+      "temperature": 0.0,
+      "ids": [
+        "w1-09",
+        "w1-10",
+        "w1-11",
+        "w1-12",
+        "w1-13",
+        "w1-16",
+        "w1-19",
+        "w1-21",
+        "w1-22"
+      ]
+    },
+    "v1": {
+      "run": "2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b",
+      "outputs_sha256": "c89fe27ebd54b4b288cc15cb72dc449c84cf17a4552ce66f3dd1fed7a1d5c341",
+      "sample": "random.Random(0).sample(ids with judge criteria in file order, 11)",
+      "ids": [
+        "w2-11",
+        "w2-12",
+        "w1-10",
+        "w1-13",
+        "w1-22",
+        "w1-21",
+        "w1-19",
+        "w2-13",
+        "w2-17",
+        "w1-16",
+        "w1-12"
+      ]
+    },
+    "n": 20
+  },
+  "n": 20,
+  "verdict_rule": "pass = every must_include met and no must_not met, computed in code from the items",
+  "invalid_rule": "an invalid judge row (judge_pass null) counts as a disagreement: it takes the opposite of the human label, which also shifts the judge's class rates used in kappa's expected agreement",
+  "smoke": [
+    {
+      "valid": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "qwen/qwen3.8-27b",
+          "input_tokens": 926,
+          "output_tokens": 134,
+          "latency_s": 0.8689646000275388,
+          "api_error": null,
+          "invalid_reason": null,
+          "reply": "{\"items\": [\n{\"criterion\": \"mazeret belgesi gerektiği\", \"type\": \"must_include\", \"met\": true, \"evidence\": \"mazeret belgesi sunması gerekir\"},\n{\"criterion\": \"bölüm sekreterliğine başvurulduğu\", \"type\": \"must_include\", \"met\": false, \"evidence\": \"\"},\n{\"criterion\": \"mazeret sınavı tarihini kesin olarak vermek\", \"type\": \"must_not\", \"met\": true, \"evidence\": \"Mazeret sınavı 15 Ocak'ta yapılacak.\"}\n]}"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "started_at": "2026-11-22T12:52:28+03:00",
+      "commit": "e13d61d",
+      "argv": [
+        "eval/judge.py",
+        "run",
+        "--sleep",
+        "13",
+        "--yes"
+      ],
+      "rows": 20
+    }
+  ],
+  "started_at": "2026-11-22T12:52:28+03:00",
+  "finished_at": "2026-11-22T12:57:01+03:00",
+  "complete": true,
+  "stopped": null,
+  "n_calls": 21,
+  "call_errors": 0,
+  "input_tokens": 24321,
+  "output_tokens": 1821,
+  "sleep_s": 13.0,
+  "dry_run": false,
+  "not_for_reporting_reasons": [],
+  "script": "eval/judge.py"
+}
