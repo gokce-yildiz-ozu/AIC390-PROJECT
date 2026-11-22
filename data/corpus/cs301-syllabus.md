@@ -8,7 +8,7 @@ valid_from: 2026-09-21
 language: en
 audience: all
 source: synthetic, written by the team
-reviewed: false
+reviewed: true
 ---
 
 # CS-301 Algorithms and Data Structures II, Syllabus, Fall 2026

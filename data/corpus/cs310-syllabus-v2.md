@@ -8,7 +8,7 @@ valid_from: 2026-11-02
 language: en
 audience: all
 source: synthetic, written by the team
-reviewed: false
+reviewed: true
 ---
 
 # CS-310 Operating Systems, Syllabus (version 2), Fall 2026

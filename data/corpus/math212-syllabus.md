@@ -8,7 +8,7 @@ valid_from: 2026-09-21
 language: en
 audience: all
 source: synthetic, written by the team
-reviewed: false
+reviewed: true
 ---
 
 # MATH-212 Linear Algebra, Syllabus, Fall 2026

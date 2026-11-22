@@ -8,7 +8,7 @@ valid_from: 2026-09-01
 language: en
 audience: all
 source: synthetic, written by the team
-reviewed: false
+reviewed: true
 ---
 
 # Undergraduate Education Regulation
