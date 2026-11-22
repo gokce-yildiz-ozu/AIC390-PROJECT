@@ -1,0 +1,42 @@
+---
+doc_id: "ee464-syllabus"
+title: "EE-464 Digital Design, Syllabus, Fall 2026"
+course: "EE-464"
+doc_type: "syllabus"
+version: 1
+valid_from: "2026-09-21"
+language: "en"
+audience: "all"
+source: "synthetic, scripts/generate_bulk_corpus.py seed 20261122"
+reviewed: false
+---
+
+# EE-464 Digital Design, Syllabus, Fall 2026
+
+## Course information
+
+Instructor: Dr. Oğuz Doğan. Lectures on Monday and Thursday, 13:40–15:30. This course is offered by the Department of Electrical Engineering.
+
+## Grading
+
+Assignments 35%, midterm exam 30%, final exam 35%.
+
+## Schedule
+
+Submissions are uploaded to the LMS. Project milestone 3 is due on 16 October 2026 at 23:59. Homework 1 is due on 4 December 2026 at 23:59. Lab 5 is due on 14 December 2026 at 23:59.
+
+## Late policy
+
+Late submissions lose 20% of their grade for each day they are late, for at most 1 days. A submission more than 1 days late receives 0.
+
+## Office hours
+
+Dr. Oğuz Doğan holds office hours on Monday, 13:40–15:30, or by appointment through the LMS.
+
+## Academic integrity
+
+All submitted work must be your own. Copying from other students or from online sources is reported to the disciplinary committee.
+
+## Course materials
+
+Lecture slides and readings are posted on the LMS each week.

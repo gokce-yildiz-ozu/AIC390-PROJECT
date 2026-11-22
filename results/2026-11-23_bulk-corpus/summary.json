@@ -1,0 +1,16 @@
+{
+  "seed": 20261122,
+  "courses": 900,
+  "documents": 3879,
+  "chunks": 11361,
+  "documents_by_type": {
+    "announcement": 2721,
+    "syllabus": 1158
+  },
+  "chunks_by_language": {
+    "en": 9130,
+    "tr": 2231
+  },
+  "revised_syllabi": 258,
+  "out": "data\\corpus_bulk"
+}

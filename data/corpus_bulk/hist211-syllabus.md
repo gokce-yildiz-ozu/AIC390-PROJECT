@@ -1,0 +1,46 @@
+---
+doc_id: "hist211-syllabus"
+title: "HIST-211 Ottoman History, Syllabus, Fall 2026"
+course: "HIST-211"
+doc_type: "syllabus"
+version: 1
+valid_from: "2026-09-21"
+language: "en"
+audience: "all"
+source: "synthetic, scripts/generate_bulk_corpus.py seed 20261122"
+reviewed: false
+---
+
+# HIST-211 Ottoman History, Syllabus, Fall 2026
+
+## Course information
+
+Ottoman History is taught by Dr. Kerem Doğan (History). Lectures: Tuesday and Wednesday, 09:40–11:30.
+
+## Grading
+
+Assignments 20%, midterm exam 25%, final exam 55%.
+
+## Schedule
+
+Submissions are uploaded to the LMS. Quiz 1 is due on 12 October 2026 at 23:59. Project milestone 5 is due on 5 November 2026 at 23:59. Essay 1 is due on 23 November 2026 at 23:59.
+
+## Late policy
+
+Late submissions lose 25% of their grade for each day they are late, for at most 2 days. A submission more than 2 days late receives 0.
+
+## Attendance
+
+Students who attend less than 70% of the sessions cannot take the final exam.
+
+## Office hours
+
+Dr. Kerem Doğan holds office hours on Tuesday, 08:40–10:30, or by appointment through the LMS.
+
+## Academic integrity
+
+All submitted work must be your own. Copying from other students or from online sources is reported to the disciplinary committee.
+
+## Course materials
+
+Lecture slides and readings are posted on the LMS each week.
