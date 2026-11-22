@@ -9,6 +9,8 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 - Week: **2 and 3 together** (instructor, 2026-11-18). Next class Wed 2026-11-25 12:30. Two reports, two tags,
   both links submitted by **Tue 2026-11-24 12:30** (R4). Team target: Tue 10:00.
 - **Live demo on 2026-11-25 must include RAG and the request classifier** (`docs/feedback/2026-11-18-week1.md`).
+- Week 2 done (`reports/week-2.md`): W2.5 kept `extract_v1` (three versions equal, token rule); held-out 6/13; judge
+  kappa 0.80. Week 3 waits on the bulk corpus and the index (data and retrieval); W3.4 code is in (`answer_v2`).
 - Model: openai/gpt-oss-120b on Groq, free plan (D-006). Retrieval stack: D-007; corpus of ≥ 10,000 chunks: D-008 (both proposed).
 
 ## Demo plan (2026-11-25)
@@ -67,20 +69,20 @@ Parts for `week-2` by **Sun 22 18:00**, tag `week-2` Sun 23:59. Parts for `week-
 | # | Deliverable | Owner (role) | Evidence | Due |
 |---|---|---|---|---|
 | 1 | Feedback written down; D-007 confirmed; interfaces 1–4 frozen; packages commit | all | `docs/feedback/2026-11-18-week1.md`, `docs/decisions.md`, this file | Thu 19, 12:00 |
-| 2 | W2.1 Request classifier (schema, T = 0, validation, retry) | agent and tools | `src/aic390/classifier/` | Thu 19 |
-| 3 | W2.3 Test set ≥ 40 cases, structured expected outputs (draft) | evaluation and safety | `eval/testsets/week2_cases.jsonl` | Thu 19 |
-| 4 | W3.1 Core corpus (target 48, minimum 36) reviewed; bulk generator to ≥ 10,000 chunks (D-008); W3.2 chunking | data and retrieval | `data/corpus/`, `scripts/generate_bulk_corpus.py`, `data/chunks.jsonl` | Fri 20 |
-| 5 | W2.4 Harness, one command; `dates.py` | evaluation and safety / agent and tools | `eval/run_e2e.py`, `src/aic390/dates.py` | Fri 20 |
+| 2 | W2.1 Request classifier (schema, T = 0, validation, retry) | agent and tools | `src/aic390/classifier/` | Thu 19 · ✓ |
+| 3 | W2.3 Test set ≥ 40 cases, structured expected outputs (draft) | evaluation and safety | `eval/testsets/week2_cases.jsonl` | Thu 19 · ✓ |
+| 4 | W3.1 10 core documents, reviewed ✓ (`43e105b`); bulk generator to ≥ 30 documents and ≥ 10,000 chunks (D-008), course announcements with `audience: enrolled`; W3.2 chunking. The core target went from 48 to 10 on 2026-11-21: the bulk corpus gives the count | data and retrieval | `data/corpus/`, `scripts/generate_bulk_corpus.py`, `data/chunks.jsonl` | Fri 20 |
+| 5 | W2.4 Harness, one command; `dates.py` | evaluation and safety / agent and tools | `eval/run_e2e.py`, `src/aic390/dates.py` | Fri 20 · ✓ |
 | 6 | **Freeze `week2_cases.jsonl`** before any prompt comparison (R9) | evaluation and safety | ✓ frozen at `5a10169` (42 cases); sha256 in `eval/testsets/README.md`; label notes in `week2_review_notes.jsonl` | Fri 20, 20:00 (done Sat 21, 00:02) |
-| 7 | W2.2 Main prompt v1 | agent and tools | `prompts/` | Fri 20, 22:00 |
-| 8 | W3.5 30 retrieval questions with gold sections, written by someone other than the corpus author; frozen | evaluation and safety, agent and tools | `eval/testsets/retrieval_questions.jsonl` | Sat 21, 12:00 |
-| 9 | W2.2 Main prompt v2, v3 | agent and tools | `prompts/` | Sat 21, 14:00 |
+| 7 | W2.2 Main prompt v1 | agent and tools | `prompts/` | Fri 20, 22:00 · ✓ |
+| 8 | W3.5 30 retrieval questions with gold sections, written by someone other than the corpus author; frozen | evaluation and safety, agent and tools | `eval/testsets/retrieval_questions.jsonl` | Sat 21, 12:00 · ✓ frozen |
+| 9 | W2.2 Main prompt v2, v3 | agent and tools | `prompts/` | Sat 21, 14:00 · ✓ |
 | 10 | W3.3 Hybrid search + reranker; `eval/retrieval.py` | data and retrieval | `src/aic390/rag/`, `eval/retrieval.py` | Sat 21 |
-| 11 | W2.5 runs: v1–v3 once each, then the best two repeated; McNemar | evaluation and safety | `results/`, `eval/compare.py` | Sat 21 – Sun 22 |
+| 11 | W2.5 runs: v1–v3 once each, then the best two repeated; McNemar | evaluation and safety | `results/`, `eval/compare.py` | Sat 21 – Sun 22 · ✓ (repeat runs: 11b) |
 | 11b | W2.5 repeat runs not finished: `w25-v2-b` stopped at 17/42 on 2026-11-22 (free-plan rate limit, 200–390 s wait per call), `w25-v3-b` not run. Run both again, same cases and unchanged code (`9decfea`), when the daily limit allows; they are a stability check only, the W2.5 decision comes from the `a` runs (plan row). The partial `v2-b` folder is not committed | evaluation and safety | `results/*_e2e_w25-v2-b_*`, `results/*_e2e_w25-v3-b_*` | Mon 23, before the week-3 runs |
-| 12 | W2.6 Judge vs 20 human labels (κ); W2.7 hallucination log ≥ 10; W2.8 three injection attempts | evaluation and safety, agent and tools | `eval/judge.py`, `docs/hallucination_log.md`, `docs/injection_tests.md` | Sun 22, 18:00 |
-| 12b | `docs/architecture.md`: Mermaid diagram and component table; each owner writes their own rows | all (evaluation and safety assembles) | `docs/architecture.md` | Sun 22, 18:00 |
-| 13 | Demo end to end with the temporary search; `reports/week-2.md`, tag `week-2` | agent and tools / evaluation and safety | `app/demo.py`, `reports/week-2.md` | Sun 22 |
+| 12 | W2.6 Judge vs 20 human labels (κ); W2.7 hallucination log ≥ 10; W2.8 three injection attempts | evaluation and safety, agent and tools | `eval/judge.py`, `docs/hallucination_log.md`, `docs/injection_tests.md` | Sun 22, 18:00 · ✓ |
+| 12b | `docs/architecture.md`: Mermaid diagram and component table; each owner writes their own rows | all (evaluation and safety assembles) | `docs/architecture.md` | Sun 22, 18:00 · ✓ except the data and retrieval rows |
+| 13 | Demo end to end with the temporary search; `reports/week-2.md`, tag `week-2` | agent and tools / evaluation and safety | `app/demo.py`, `reports/week-2.md` | Sun 22 · ✓ report; tag `week-2` pending |
 | 14 | W3.7 Two ablations (hybrid vs dense vs BM25; reranker on/off) | data and retrieval | `results/` | Mon 23, 12:00 |
 | 15 | W3.4 Cited answers + fixed abstention; 40 cases re-run with RAG; W3.6 faithfulness | agent and tools / evaluation and safety | `src/aic390/agent/answer.py`, `eval/faithfulness.py` | Mon 23, 16:00 |
 | 16 | W3.8 Failure analysis (retrieval vs generation, oracle test); product track: 2 interviews | evaluation and safety / all | `reports/week-3.md` | Mon 23, 20:00 |
