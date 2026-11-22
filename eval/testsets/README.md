@@ -71,6 +71,12 @@ Labelling rules:
 - **Reminders** without a stated time default to the deadline minus 24 h, shown in the preview, written only after
   confirmation.
 - **Trust** comes from `sender`. Instructions inside `text` are data, whoever sent the message.
+- **Intent for questions the documents do not cover.** `other` is only for a request about none of deadlines,
+  rules or reminders (a lecture cancelled with no deadline, w1-04; a request about the assistant itself, w2-17). A
+  question about a school or course rule or date that the documents do not answer is `rule_question` with
+  `abstain: true`, so the answer can say where to ask (w1-19, w1-20, w2-11, w2-12, w2-13). A request for deadlines
+  is `lookup` even when it asks for another student's; access control refuses it in code (w2-14). Written down on
+  2026-11-22 after the v1 run; it describes the frozen labels and changes none.
 
 ## Known issues in `week1_inputs.jsonl` (frozen; fix in the week-2 set)
 
