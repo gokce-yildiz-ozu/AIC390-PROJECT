@@ -1,0 +1,90 @@
+{
+  "mode": "repeat",
+  "for_reporting": true,
+  "not_for_reporting_reasons": [],
+  "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+  "A": {
+    "folder": "results/2026-11-22_e2e_w25-v1-a_openai-gpt-oss-120b",
+    "label": "w25-v1-a",
+    "commit": "9decfea",
+    "prompts": {
+      "classifier": "classifier_v1",
+      "extract": "extract_v1",
+      "answer": "answer_v1",
+      "lookup": "lookup_v1"
+    },
+    "accuracy": {
+      "k": 39,
+      "n": 42,
+      "value": 0.9286,
+      "ci95_wilson": [
+        0.8099,
+        0.9754
+      ],
+      "ci95_normal": [
+        0.8507,
+        1.0
+      ]
+    }
+  },
+  "B": {
+    "folder": "results/2026-11-22_e2e_w25-v1-b_openai-gpt-oss-120b",
+    "label": "w25-v1-b",
+    "commit": "9decfea",
+    "prompts": {
+      "classifier": "classifier_v1",
+      "extract": "extract_v1",
+      "answer": "answer_v1",
+      "lookup": "lookup_v1"
+    },
+    "accuracy": {
+      "k": 39,
+      "n": 42,
+      "value": 0.9286,
+      "ci95_wilson": [
+        0.8099,
+        0.9754
+      ],
+      "ci95_normal": [
+        0.8507,
+        1.0
+      ]
+    }
+  },
+  "n": 42,
+  "b": 1,
+  "c": 1,
+  "b_ids": [
+    "w1-19"
+  ],
+  "c_ids": [
+    "w1-08"
+  ],
+  "p_value": 1.0,
+  "test": "exact McNemar, two-sided (aic390.stats.mcnemar_exact), on outputs regraded by eval/run_e2e.py",
+  "note": "too few discordant pairs to detect a difference",
+  "script": "eval/compare.py",
+  "correct_flips": 2,
+  "correct_flip_ids": [
+    "w1-08",
+    "w1-19"
+  ],
+  "graded_output_changed": 3,
+  "graded_output_changed_ids": [
+    "w1-08",
+    "w1-19",
+    "w1-21"
+  ],
+  "answer_text_changed": 9,
+  "answer_text_changed_ids": [
+    "w1-08",
+    "w1-10",
+    "w1-11",
+    "w1-12",
+    "w1-19",
+    "w1-21",
+    "w1-22",
+    "w2-02",
+    "w2-11"
+  ]
+}
