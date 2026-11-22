@@ -142,6 +142,6 @@ def build_chunks(corpus_dirs: list[Path], max_words: int = DEFAULT_MAX_WORDS) ->
 
 def write_jsonl(chunks: list[dict], out: Path) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
-    with out.open("w", encoding="utf-8") as handle:
+    with out.open("w", encoding="utf-8", newline="\n") as handle:  # LF on every OS, so the sha256 is the same
         for chunk in chunks:
             handle.write(json.dumps(chunk, ensure_ascii=False) + "\n")
