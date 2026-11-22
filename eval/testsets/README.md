@@ -45,7 +45,7 @@ Same input fields as above, plus `split`, `type`, a structured `expected` object
 | `ask_user` | an input with two readings consistent with the whole message, **and** the two readings give different answers (see Dates below) | exact |
 | `abstain` | always | exact |
 | `sources[]` | `{doc_id, section}` | every expected source must be cited; extra sources are allowed and counted |
-| `must_include[]`, `must_not[]` | answers in prose | LLM judge (W2.6) |
+| `must_include[]`, `must_not[]` | answers in prose | LLM judge (W2.6, `eval/judge.py`): the judge decides each criterion, code decides the field. Pass = every `must_include` met and no `must_not` met |
 | `answer_language` | `chat` inputs: `tr` or `en`, the language of the question | code |
 | `action` | reminder, or a `multi_step` request that asks for a reminder (w1-22): `type`, `remind_at`, `requires_confirmation` | exact |
 | `count` | "how many" questions; counted in code, never by the model | exact |
