@@ -3,6 +3,63 @@
 Each owner writes the rows of their own components; the evaluation and safety lead assembles the file and the
 diagram (STATUS row 12b). Numbers name their run and its conditions (D-009 rule 3).
 
+## Diagram
+
+As built at the `week-2` tag. The numbers are the steps on the demo screen (`app/demo.py`). Dashed lines are not
+built yet or not used on the request path.
+
+```mermaid
+flowchart TD
+    IN["Input: email, LMS post or chat question<br/>metadata: channel, received_at, course, sender"]
+    C1["1 · Classifier (model)<br/>classifier_v1, JSON schema, T = 0"]
+    R2{"2 · Route (code)<br/>by intent"}
+    T["Trust check (code)<br/>only instructor: senders may change deadlines"]
+    X3["3a · Extraction (model)<br/>extract_v1: rows with date expressions"]
+    D3["3a · Checks (code)<br/>dates.py computes every date<br/>may_change: only the message's own course"]
+    S3["3b · Search (interface 2)<br/>week 2: stub or BM25 over 10 core documents<br/>hybrid BM25 + bge-m3 + RRF + reranker: built, not yet at 10,000 chunks"]
+    A3["3b · Rule answer (model)<br/>answer_v1: numbered sources, or abstain"]
+    L3["3c · Look-up plan (model)<br/>lookup_v1: which rows, count asked, reminder timing"]
+    TB[("Deadline table<br/>data/db/deadlines_seed.jsonl")]
+    LC["3c · Look-up (code)<br/>rows, count, needs_asking, reminder preview"]
+    F["Fixed reply (code)<br/>no further model call"]
+    A4["4 · Answer<br/>text, sources, abstain, count, action preview"]
+    W["Write action<br/>week 5, sandbox only"]
+    TR["5 · Trace<br/>per call: tokens, latency, prompt version, errors"]
+
+    IN --> C1 --> R2
+    R2 -- deadline_message --> T
+    T -- trusted --> X3 --> D3 --> A4
+    T -- untrusted --> F
+    R2 -- rule_question --> S3 --> A3 --> A4
+    R2 -- "lookup, reminder" --> L3 --> LC --> A4
+    R2 -- other --> F --> A4
+    TB --> LC
+    TB --> D3
+    S3 -. "calendar anchors, in-class times" .-> D3
+    A4 -. "requires_confirmation" .-> W
+    A4 --> TR
+```
+
+Evaluation runs the same pipeline from outside; nothing in it is on the request path.
+
+```mermaid
+flowchart LR
+    TS["Frozen test set<br/>sha256 checked before a run<br/>held-out: only the .sha256 is committed"]
+    H["E2E harness<br/>eval/run_e2e.py"]
+    P["Pipeline run_case<br/>(diagram above)"]
+    RS["results folder<br/>config, outputs, summary"]
+    CMP["Paired comparison<br/>eval/compare.py, exact McNemar"]
+    J["LLM judge<br/>eval/judge.py, qwen/qwen3.8-27b"]
+    HL["Blind human labels<br/>committed before the judge runs"]
+    SB["eval/scoreboard.json"]
+
+    TS --> H -- run_case --> P -- outputs --> RS
+    RS --> CMP
+    RS --> J
+    HL --> J
+    RS --> SB
+```
+
 ## Components: agent and tools
 
 Entry point: `aic390.agent.pipeline.run_case(case, client, search=None, table=None, prompts=None)` (interface 4).
@@ -21,3 +78,18 @@ version and error are in `trace`.
 
 Security checks in code, measured in `docs/injection_tests.md` (W2.8): untrusted sender, course check. Nothing is
 written anywhere yet: a reminder is only a preview with `requires_confirmation: true` (the write action is week 5).
+
+## Components: evaluation and safety
+
+Every reported number comes from one of these scripts and names its results folder and conditions (D-009 rule 3).
+Statistics are in `aic390.stats`: Wilson intervals, exact McNemar, Cohen's kappa with a bootstrap interval.
+
+| Component | Input | Output | Model, T | Prompt | The model decides | The code decides | On failure | Measured (run, conditions) |
+|---|---|---|---|---|---|---|---|---|
+| E2E harness `eval/run_e2e.py` | a frozen test set (its sha256 is checked; for a held-out set only the committed `.sha256`), prompt versions, search backend, table source | `results/<date>_e2e_<label>_<model>/`: `config.json` with every run condition, `outputs.jsonl` per case, `summary.json`, `summary.md`; `eval/scoreboard.json` with `--write-scoreboard` | the pipeline's models (gpt-oss-120b, 0); no model in grading | the versions under test (`--prompts`) | nothing | refuses an unfrozen test set or uncommitted code for a reported run; grades every code-graded field exactly (rules in `eval/testsets/README.md`); a case is correct only if every graded field is; Wilson 95% intervals, by split and by type; latency without sleeps and rate-limit waits | a crash keeps every finished case; an API error is recorded for its case; a run with `--allow-dirty` or `--unfrozen` is marked not for reporting | v1 run 2026-11-22: 39/42 = 0.929 [0.810, 0.975], stub search, seed table with expected rows (an upper bound) |
+| Paired comparison `eval/compare.py` | two e2e results folders | `results/<date>_compare_<A>_vs_<B>/compare.json`: b, c, exact McNemar p; `--repeat` for run-to-run flips | none | none | nothing | everything; both runs must have the same test-set sha256 and case ids; regrades the saved outputs with the current rules | refuses and lists the mismatches | W2.5: PENDING |
+| LLM judge `eval/judge.py` | answers with their `must_include` / `must_not` criteria; blind human labels | per criterion: met, with a quote from the answer; per answer: pass; kappa report | qwen/qwen3.8-27b, 0 (another family than the main model, D-006) | `judge_v1` | whether each criterion is met | pass = every `must_include` met and no `must_not` met; the schema (each criterion exactly once); refuses to run until the human labels are committed; kappa with a bootstrap interval | invalid twice → `judge_pass: null`, counted as a disagreement; an API error stops the run, `--resume` continues | 2026-11-22, n = 20: kappa 0.802 [0.500, 1.000], raw agreement 18/20; both disagreements human pass, judge fail. Easy sample and one human rater: see `reports/week-2.md` |
+
+## Components: data and retrieval
+
+Not written yet (data and retrieval lead).
