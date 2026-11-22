@@ -69,8 +69,9 @@ def test_as_of_keeps_only_the_version_valid_then(chunks):
     engine = HybridSearch(chunks, mode="bm25", rerank=False)
     before = engine.search("CS-310 Lab 3 schedule", course="CS-310", as_of="2026-10-20T10:00:00+03:00", k=10)
     after = engine.search("CS-310 Lab 3 schedule", course="CS-310", as_of="2026-11-10T10:00:00+03:00", k=10)
-    assert {r["doc_id"] for r in before} == {"cs310-syllabus-v1"}
-    assert {r["doc_id"] for r in after} == {"cs310-syllabus-v2"}
+    # General documents (course: null) also pass the course filter; the version check is about CS-310 only.
+    assert {r["doc_id"] for r in before if r["doc_id"].startswith("cs310")} == {"cs310-syllabus-v1"}
+    assert {r["doc_id"] for r in after if r["doc_id"].startswith("cs310")} == {"cs310-syllabus-v2"}
 
 
 def test_filters_by_course_and_doc_type(chunks):
@@ -81,7 +82,18 @@ def test_filters_by_course_and_doc_type(chunks):
         "regulation-article-12",
         "regulation-article-14",
     }
-    assert all(r["doc_id"].startswith("econ101") for r in engine.search("late work", course="ECON-101", k=10))
+    ecn = engine.search("late work", course="ECON-101", k=10)
+    assert all(r["doc_id"].startswith("econ101") or r["doc_id"].startswith(("regulation", "academic")) for r in ecn)
+
+
+def test_course_filter_keeps_general_documents(chunks):
+    """A course question can depend on the regulation too: the ECON-101 late-work policy and Article 14."""
+    engine = HybridSearch(chunks, mode="bm25", rerank=False)
+    results = engine.search("ECON-101 late work rule regulation", course="ECON-101", k=10)
+    doc_ids = {r["doc_id"] for r in results}
+    assert {"econ101-late-policy", "regulation-article-14"} <= doc_ids
+    other_courses = {c["doc_id"] for c in chunks if c["course"] not in (None, "ECON-101")}
+    assert not doc_ids & other_courses
 
 
 def test_rrf_fuses_both_rankings(chunks):

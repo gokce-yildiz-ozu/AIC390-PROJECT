@@ -2,6 +2,9 @@
 
 Interface 2: `search(query, course=None, doc_type=None, k=5, as_of=None)` returns a list of
 `{doc_id, section, version, text, score, chunk_id, bm25_rank, dense_rank, rerank_score}`.
+`course` keeps that course's chunks plus the general ones (`course: null`: regulation, calendar), because a course
+question can depend on both (w1-12: the ECON-101 policy and Article 14). `as_of` keeps, per document, only the
+version valid at that time.
 
 The embedder and the reranker are passed in, so tests use small fakes and the real models (BAAI/bge-m3,
 BAAI/bge-reranker-v2-m3) load only where they are needed. `mode` and `rerank` exist for the W3.7 ablations.
@@ -90,7 +93,7 @@ class HybridSearch:
     def _allowed(self, course: str | None, doc_type: str | None, as_of: str | None) -> np.ndarray:
         allowed = np.array(
             [
-                (course is None or c["course"] == course) and (doc_type is None or c["doc_type"] == doc_type)
+                (course is None or c["course"] in (None, course)) and (doc_type is None or c["doc_type"] == doc_type)
                 for c in self.chunks
             ]
         )
