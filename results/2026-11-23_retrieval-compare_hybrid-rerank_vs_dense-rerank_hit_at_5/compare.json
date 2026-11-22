@@ -1,0 +1,22 @@
+{
+  "a": "results/2026-11-23_retrieval_hybrid-rerank",
+  "b": "results/2026-11-23_retrieval_dense-rerank",
+  "metric": "hit_at_5",
+  "n": 30,
+  "a_correct": 29,
+  "b_correct": 28,
+  "b_count": 1,
+  "c_count": 0,
+  "only_a_ids": [
+    "r09"
+  ],
+  "only_b_ids": [],
+  "mcnemar_exact_p": 1.0,
+  "note": "with b + c < 6 no split can reach p < 0.05",
+  "median_latency_s": {
+    "a": 0.2556,
+    "b": 0.2012
+  },
+  "same_device": true,
+  "reportable": true
+}

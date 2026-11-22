@@ -1,0 +1,26 @@
+{
+  "a": "results/2026-11-23_retrieval_hybrid-rerank",
+  "b": "results/2026-11-23_retrieval_hybrid-norerank",
+  "metric": "hit_at_1",
+  "n": 30,
+  "a_correct": 27,
+  "b_correct": 25,
+  "b_count": 3,
+  "c_count": 1,
+  "only_a_ids": [
+    "r15",
+    "r17",
+    "r29"
+  ],
+  "only_b_ids": [
+    "r24"
+  ],
+  "mcnemar_exact_p": 0.625,
+  "note": "with b + c < 6 no split can reach p < 0.05",
+  "median_latency_s": {
+    "a": 0.2556,
+    "b": 0.0066
+  },
+  "same_device": true,
+  "reportable": true
+}

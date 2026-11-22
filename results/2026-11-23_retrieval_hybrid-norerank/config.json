@@ -1,0 +1,45 @@
+{
+  "script": "eval/retrieval.py",
+  "date": "2026-11-23",
+  "label": "hybrid-norerank",
+  "git_commit": "1bde1de",
+  "dirty": [],
+  "untracked": [],
+  "questions": {
+    "path": "eval/testsets/retrieval_questions.jsonl",
+    "sha256": "6f7d3b049dab8a817295956bb093b2c2d9a2c31ab6b907ec0519d1635663c9f1",
+    "recorded_sha256": "6f7d3b049dab8a817295956bb093b2c2d9a2c31ab6b907ec0519d1635663c9f1",
+    "frozen": true,
+    "n": 30
+  },
+  "subset": false,
+  "chunks": {
+    "path": "data/chunks.jsonl",
+    "sha256": "3cdd826ef7eca932eda01647928c4226505ae77245aa26ba235595a983572e20",
+    "n_chunks": 11388
+  },
+  "search": {
+    "mode": "hybrid",
+    "rerank": false,
+    "top_n": 20,
+    "rrf_k": 60,
+    "k": 10,
+    "course": null,
+    "embedding_model": "BAAI/bge-m3",
+    "embedding_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "reranker_model": null,
+    "reranker_revision": null
+  },
+  "fake": false,
+  "device": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "packages": {
+    "python": "3.12.10",
+    "numpy": "2.5.4",
+    "bm25s": "0.3.16",
+    "torch": "2.15.0+cu132",
+    "sentence_transformers": "6.3.0",
+    "transformers": "5.24.0"
+  },
+  "index_build_s": 5.51,
+  "problems": []
+}
