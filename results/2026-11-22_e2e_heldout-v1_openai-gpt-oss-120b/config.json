@@ -1,0 +1,73 @@
+{
+  "commit": "0b20cd7",
+  "dirty": [],
+  "untracked": [],
+  "harness_sha256": "08976ac9bfc27ab6a43e9d27fd69e989c465db180a3892515c5be87a598f91de",
+  "model": {
+    "requested": "openai/gpt-oss-120b",
+    "returned": [
+      "openai/gpt-oss-120b"
+    ]
+  },
+  "temperature": 0.0,
+  "prompts": {
+    "classifier": "classifier_v1",
+    "extract": "extract_v1",
+    "answer": "answer_v1",
+    "lookup": "lookup_v1"
+  },
+  "cases_path": "eval/testsets/heldout_v1.jsonl",
+  "cases_sha256": "2636231e3907ad1392c6aacdf1cf97b6239868a342ed7661af5344a559aba629",
+  "frozen": true,
+  "split_filter": "all",
+  "ids": [
+    "h-01",
+    "h-02",
+    "h-03",
+    "h-04",
+    "h-05",
+    "h-06",
+    "h-07",
+    "h-08",
+    "h-09",
+    "h-10",
+    "h-11",
+    "h-12",
+    "h-13"
+  ],
+  "subset": false,
+  "n": 13,
+  "search": {
+    "backend": "stub",
+    "chunks_sha256": null,
+    "n_chunks": null,
+    "embedding_model": null,
+    "reranker_model": null
+  },
+  "table": {
+    "source": "seed",
+    "path": "data/db/deadlines_seed.jsonl",
+    "sha256": "2cf6db13dce75310a131e6b8ffdd36fb957fa0f2ec91bae6020aa50895050314",
+    "rows": 19,
+    "rows_from_cases": 16
+  },
+  "judge_fields": "not graded",
+  "started_at": "2026-11-22T17:05:52+03:00",
+  "finished_at": "2026-11-22T19:04:54+03:00",
+  "wall_time_s": 7142.0,
+  "n_calls": 24,
+  "sleep_s": 13.0,
+  "argv": [
+    "eval/run_e2e.py",
+    "--cases",
+    "eval/testsets/heldout_v1.jsonl",
+    "--label",
+    "heldout-v1",
+    "--sleep",
+    "13",
+    "--yes"
+  ],
+  "label": "heldout-v1",
+  "dry_run": false,
+  "script": "eval/run_e2e.py"
+}

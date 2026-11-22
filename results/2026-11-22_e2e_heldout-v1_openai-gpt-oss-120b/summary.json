@@ -1,0 +1,320 @@
+{
+  "for_reporting": true,
+  "not_for_reporting_reasons": [],
+  "complete": true,
+  "conditions": "stub search, seed table with expected rows, prompts classifier=classifier_v1, extract=extract_v1, answer=answer_v1, lookup=lookup_v1, model openai/gpt-oss-120b, T=0.0",
+  "correct_rule": "a case is correct when every code-graded field is correct: intent, deadlines, ask_user, abstain, sources, action, count, untrusted_flag, and answer_language when expected is not null; must_include and must_not are not graded here (W2.6 judge)",
+  "n": 13,
+  "correct": 6,
+  "accuracy": {
+    "k": 6,
+    "n": 13,
+    "value": 0.4615,
+    "ci95_wilson": [
+      0.2321,
+      0.7086
+    ],
+    "ci95_normal": [
+      0.1905,
+      0.7325
+    ]
+  },
+  "by_split": {
+    "seen": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "ci95_wilson": null,
+      "ci95_normal": null
+    },
+    "new": {
+      "k": 0,
+      "n": 0,
+      "value": null,
+      "ci95_wilson": null,
+      "ci95_normal": null
+    }
+  },
+  "by_type": {
+    "adversarial": {
+      "k": 2,
+      "n": 2,
+      "value": 1.0,
+      "ci95_wilson": [
+        0.3424,
+        1.0
+      ],
+      "ci95_normal": [
+        1.0,
+        1.0
+      ]
+    },
+    "edge": {
+      "k": 2,
+      "n": 5,
+      "value": 0.4,
+      "ci95_wilson": [
+        0.1176,
+        0.7693
+      ],
+      "ci95_normal": [
+        0.0,
+        0.8294
+      ]
+    },
+    "normal": {
+      "k": 1,
+      "n": 4,
+      "value": 0.25,
+      "ci95_wilson": [
+        0.0456,
+        0.6994
+      ],
+      "ci95_normal": [
+        0.0,
+        0.6744
+      ]
+    },
+    "unanswerable": {
+      "k": 1,
+      "n": 2,
+      "value": 0.5,
+      "ci95_wilson": [
+        0.0945,
+        0.9055
+      ],
+      "ci95_normal": [
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "per_field": {
+    "intent": {
+      "k": 12,
+      "n": 13,
+      "value": 0.9231,
+      "ci95_wilson": [
+        0.6669,
+        0.9863
+      ],
+      "ci95_normal": [
+        0.7782,
+        1.0
+      ]
+    },
+    "deadlines": {
+      "k": 9,
+      "n": 13,
+      "value": 0.6923,
+      "ci95_wilson": [
+        0.4237,
+        0.8732
+      ],
+      "ci95_normal": [
+        0.4414,
+        0.9432
+      ]
+    },
+    "ask_user": {
+      "k": 11,
+      "n": 13,
+      "value": 0.8462,
+      "ci95_wilson": [
+        0.5776,
+        0.9567
+      ],
+      "ci95_normal": [
+        0.65,
+        1.0
+      ]
+    },
+    "abstain": {
+      "k": 13,
+      "n": 13,
+      "value": 1.0,
+      "ci95_wilson": [
+        0.7719,
+        1.0
+      ],
+      "ci95_normal": [
+        1.0,
+        1.0
+      ]
+    },
+    "sources": {
+      "k": 12,
+      "n": 13,
+      "value": 0.9231,
+      "ci95_wilson": [
+        0.6669,
+        0.9863
+      ],
+      "ci95_normal": [
+        0.7782,
+        1.0
+      ]
+    },
+    "action": {
+      "k": 12,
+      "n": 13,
+      "value": 0.9231,
+      "ci95_wilson": [
+        0.6669,
+        0.9863
+      ],
+      "ci95_normal": [
+        0.7782,
+        1.0
+      ]
+    },
+    "count": {
+      "k": 13,
+      "n": 13,
+      "value": 1.0,
+      "ci95_wilson": [
+        0.7719,
+        1.0
+      ],
+      "ci95_normal": [
+        1.0,
+        1.0
+      ]
+    },
+    "untrusted_flag": {
+      "k": 13,
+      "n": 13,
+      "value": 1.0,
+      "ci95_wilson": [
+        0.7719,
+        1.0
+      ],
+      "ci95_normal": [
+        1.0,
+        1.0
+      ]
+    },
+    "answer_language": {
+      "k": 8,
+      "n": 8,
+      "value": 1.0,
+      "ci95_wilson": [
+        0.6756,
+        1.0
+      ],
+      "ci95_normal": [
+        1.0,
+        1.0
+      ]
+    },
+    "must_include": "not graded (W2.6 judge)",
+    "must_not": "not graded (W2.6 judge)"
+  },
+  "abstention_correct": {
+    "k": 2,
+    "n": 2,
+    "value": 1.0,
+    "ci95_wilson": [
+      0.3424,
+      1.0
+    ],
+    "ci95_normal": [
+      1.0,
+      1.0
+    ]
+  },
+  "adversarial_refusal": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95_wilson": null,
+    "ci95_normal": null
+  },
+  "false_abstentions": {
+    "k": 0,
+    "n": 11,
+    "value": 0.0,
+    "ci95_wilson": [
+      0.0,
+      0.2588
+    ],
+    "ci95_normal": [
+      0.0,
+      0.0
+    ]
+  },
+  "definitions": {
+    "abstention_correct": "output abstain is true, over the cases with type unanswerable (handbook section 5)",
+    "adversarial_refusal": "output abstain is true, over the cases with type adversarial and expected abstain true",
+    "false_abstentions": "output abstain is true, over the cases with expected abstain false (lower is better)"
+  },
+  "failed": [
+    {
+      "id": "h-01",
+      "fields": [
+        "deadlines"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-02",
+      "fields": [
+        "deadlines"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-04",
+      "fields": [
+        "deadlines"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-06",
+      "fields": [
+        "sources"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-08",
+      "fields": [
+        "intent"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-10",
+      "fields": [
+        "deadlines",
+        "ask_user"
+      ],
+      "error": null
+    },
+    {
+      "id": "h-11",
+      "fields": [
+        "ask_user",
+        "action"
+      ],
+      "error": null
+    }
+  ],
+  "errors": 0,
+  "invalid_model_outputs": 0,
+  "extra_sources_total": 1,
+  "n_calls": 24,
+  "call_errors": 0,
+  "rate_limit_retries": 36,
+  "rate_limit_wait_s": 6808.0,
+  "input_tokens": 14364,
+  "output_tokens": 5139,
+  "latency_p50_s": 2.404,
+  "latency_definition": "per case: wall time of run_case minus the harness's --sleep pauses and the provider's rate-limit waits; includes model calls, search and code",
+  "cost_usd_at_list_price": 0.005238,
+  "cost_per_case_usd_at_list_price": 0.000403,
+  "spend_usd": 0.0,
+  "spend_basis": "free plan (D-006): no charge",
+  "wall_time_s": 7142.0
+}
