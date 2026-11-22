@@ -3,7 +3,7 @@
 One entry per decision that someone could later ask "why?" about. Newest first. Status: proposed, accepted,
 superseded (keep superseded entries; link the replacement).
 
-## D-009 — Evaluation rules: keep measuring apart from building (proposed, 2026-11-21; owner: evaluation and safety lead)
+## D-009 — Evaluation rules: keep measuring apart from building (accepted, 2026-11-22; proposed 2026-11-21; owner: evaluation and safety lead)
 
 **Context.** A review of weeks 2–3 on 2026-11-21 found six gaps. None is anyone's fault; each would make a
 reported number weaker than it looks.
