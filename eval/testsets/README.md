@@ -99,7 +99,9 @@ set is `heldout_v2`.
   results are reported per type next to the development set.
 - Same fields and labelling rules as `week2_cases.jsonl`; `split` is `heldout`.
 - sha256 (LF): `2636231e3907ad1392c6aacdf1cf97b6239868a342ed7661af5344a559aba629`
-- Run once, on the prompt chosen in W2.5, under the same conditions as that comparison.
+- Run once, on the prompt chosen in W2.5 (`extract_v1`), under the same conditions as that comparison: 6/13 = 0.462,
+  Wilson 95% [0.232, 0.709] (`results/2026-11-22_e2e_heldout-v1_openai-gpt-oss-120b/`). Reported in `reports/week-2.md`;
+  the file is committed at `week-2` and is development data from here. The next held-out set is `heldout_v2`.
 
 ## `retrieval_questions.jsonl` (W3.5)
 
