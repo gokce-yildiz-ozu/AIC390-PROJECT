@@ -81,6 +81,20 @@ Labelling rules:
 | all | 3 unanswerable and 2 adversarial cases; W2.3 needs at least 40 cases with at least 5 unanswerable, 5 adversarial and 5 edge cases | Week-2 set |
 | all | Every label is by one person (evaluation lead); no second rater yet | 20 cases labelled blind by a second member, Cohen's κ (W2.6) |
 
+## `heldout_v1.jsonl` (D-009 rule 1): held-out set, only its hash is committed
+
+Written on 2026-11-22 by the evaluation and safety lead alone; nobody who writes prompts or pipeline code has read
+it. Until its numbers are first reported, the repository holds only `heldout_v1.sha256` (sha256 of the file with
+LF line endings), so anyone can check later that the file did not change after a run. The file itself is committed
+at the tag where its numbers are first reported (R8); from then on it is development data, and the next held-out
+set is `heldout_v2`.
+
+- n = 13: normal 4, edge 5, unanswerable 2, adversarial 2. More edge cases than `week2_cases.jsonl` by design, so
+  results are reported per type next to the development set.
+- Same fields and labelling rules as `week2_cases.jsonl`; `split` is `heldout`.
+- sha256 (LF): `2636231e3907ad1392c6aacdf1cf97b6239868a342ed7661af5344a559aba629`
+- Run once, on the prompt chosen in W2.5, under the same conditions as that comparison.
+
 ## `retrieval_questions.jsonl` (W3.5)
 
 **Frozen on 2026-11-22** (R9): 30 questions, sha256 of the file with LF line endings
