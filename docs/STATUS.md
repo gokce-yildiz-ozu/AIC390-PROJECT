@@ -84,6 +84,7 @@ Parts for `week-2` by **Sun 22 18:00**, tag `week-2` Sun 23:59. Parts for `week-
 | 15 | W3.4 Cited answers + fixed abstention; 40 cases re-run with RAG; W3.6 faithfulness | agent and tools / evaluation and safety | `src/aic390/rag/answer.py`, `eval/faithfulness.py` | Mon 23, 16:00 |
 | 16 | W3.8 Failure analysis (retrieval vs generation, oracle test); product track: 2 interviews | evaluation and safety / all | `reports/week-3.md` | Mon 23, 20:00 |
 | 17 | Demo rehearsal with unseen questions, plus architecture questions asked to a random member; measured per-stage latency and tokens added to the component table; tag `week-3` | all | `reports/week-3.md`, `docs/architecture.md` | Mon 23 |
+| 18 | Red-team rerun of W2.8 inj-02 with the real model, forcing the look-up path (classified `lookup`), so the access rule itself is what refuses; today it held only because the classifier said `other` (`docs/injection_tests.md`) | agent and tools | `results/`, `docs/injection_tests.md` | week 4 |
 
 **If time runs out, cut in this order.** Nothing on this list is a deliverable: replay-mode polish → extra demo
 example buttons → Turkish share of the corpus → core corpus from 48 to 36 documents → second repeat of the W2.5 runs
