@@ -1,0 +1,56 @@
+{
+  "cases_path": "eval/testsets/week2_cases.jsonl",
+  "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+  "baseline": {
+    "run": "2026-11-16_baseline_openai-gpt-oss-120b",
+    "outputs_sha256": "93540e7d004b813f6b56f9a6312641eb5930ccdb5c570331d4e34cfc208574ac",
+    "inputs_path": "eval/testsets/week1_inputs.jsonl",
+    "temperature": 0.0,
+    "ids": [
+      "w1-09",
+      "w1-10",
+      "w1-11",
+      "w1-12",
+      "w1-13",
+      "w1-16",
+      "w1-19",
+      "w1-21",
+      "w1-22"
+    ]
+  },
+  "v1": {
+    "run": "2026-11-22_e2e_v1-stub-seed_openai-gpt-oss-120b",
+    "outputs_sha256": "c89fe27ebd54b4b288cc15cb72dc449c84cf17a4552ce66f3dd1fed7a1d5c341",
+    "sample": "random.Random(0).sample(ids with judge criteria in file order, 11)",
+    "ids": [
+      "w2-11",
+      "w2-12",
+      "w1-10",
+      "w1-13",
+      "w1-22",
+      "w1-21",
+      "w1-19",
+      "w2-13",
+      "w2-17",
+      "w1-16",
+      "w1-12"
+    ]
+  },
+  "n": 20,
+  "commit": "e5541cf",
+  "dirty": [],
+  "untracked": [],
+  "written_at": "2026-11-22T12:35:33+03:00",
+  "script": "eval/judge.py",
+  "columns": [
+    "id",
+    "source_run",
+    "question",
+    "answer",
+    "must_include",
+    "must_not",
+    "human_pass",
+    "human_note"
+  ],
+  "how_to_label": "human_pass: true or false; edit as UTF-8 with comma separators (VS Code or LibreOffice)"
+}
