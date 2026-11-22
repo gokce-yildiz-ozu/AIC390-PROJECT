@@ -90,7 +90,7 @@ Labelling rules:
 ## `heldout_v1.jsonl` (D-009 rule 1): held-out set, only its hash is committed
 
 Written on 2026-11-22 by the evaluation and safety lead alone; nobody who writes prompts or pipeline code has read
-it. Until its numbers are first reported, the repository holds only `heldout_v1.sha256` (sha256 of the file with
+it. Until its numbers are first reported, the repository holds only `heldout_v1.jsonl.sha256` (sha256 of the file with
 LF line endings), so anyone can check later that the file did not change after a run. The file itself is committed
 at the tag where its numbers are first reported (R8); from then on it is development data, and the next held-out
 set is `heldout_v2`.
