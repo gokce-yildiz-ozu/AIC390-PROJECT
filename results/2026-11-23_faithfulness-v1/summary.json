@@ -1,0 +1,153 @@
+{
+  "for_reporting": true,
+  "not_for_reporting_reasons": [],
+  "n": 13,
+  "claims_without_marker": 0,
+  "sample": {
+    "rule": "all eligible claims if there are at most 40; otherwise random.Random(0).sample(the eligible claims in file order, 40), shown in file order",
+    "eligible_claims": 13,
+    "sampled": false
+  },
+  "pairs": {
+    "judge_vs_rater1": {
+      "n": 13,
+      "cohen_kappa": 0.6286,
+      "meets_plan_threshold": true,
+      "kappa_ci95_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "bootstrap_undefined_resamples": 227,
+      "raw_agreement": {
+        "k": 12,
+        "n": 13,
+        "value": 0.9231,
+        "ci95_wilson": [
+          0.6669,
+          0.9863
+        ]
+      },
+      "confusion_matrix": {
+        "rater1_supported": {
+          "judge_supported": 11,
+          "judge_unsupported": 0,
+          "judge_invalid": 0
+        },
+        "rater1_unsupported": {
+          "judge_supported": 1,
+          "judge_unsupported": 1,
+          "judge_invalid": 0
+        }
+      }
+    },
+    "judge_vs_rater2": {
+      "n": 13,
+      "cohen_kappa": 0.6286,
+      "meets_plan_threshold": true,
+      "kappa_ci95_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "bootstrap_undefined_resamples": 227,
+      "raw_agreement": {
+        "k": 12,
+        "n": 13,
+        "value": 0.9231,
+        "ci95_wilson": [
+          0.6669,
+          0.9863
+        ]
+      },
+      "confusion_matrix": {
+        "rater2_supported": {
+          "judge_supported": 11,
+          "judge_unsupported": 0,
+          "judge_invalid": 0
+        },
+        "rater2_unsupported": {
+          "judge_supported": 1,
+          "judge_unsupported": 1,
+          "judge_invalid": 0
+        }
+      }
+    },
+    "rater1_vs_rater2": {
+      "n": 13,
+      "cohen_kappa": 1.0,
+      "meets_plan_threshold": true,
+      "kappa_ci95_bootstrap": [
+        1.0,
+        1.0
+      ],
+      "bootstrap_undefined_resamples": 227,
+      "raw_agreement": {
+        "k": 13,
+        "n": 13,
+        "value": 1.0,
+        "ci95_wilson": [
+          0.7719,
+          1.0
+        ]
+      },
+      "confusion_matrix": {
+        "rater1_supported": {
+          "rater2_supported": 11,
+          "rater2_unsupported": 0
+        },
+        "rater1_unsupported": {
+          "rater2_supported": 0,
+          "rater2_unsupported": 2
+        }
+      }
+    }
+  },
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 0,
+    "unit": "claim (row), with replacement",
+    "method": "percentile"
+  },
+  "invalid_judge_rows": 0,
+  "call_errors": 0,
+  "invalid_rule": "an invalid judge reply (supported null) counts as a disagreement in each kappa: it takes the opposite of that rater's label, which also shifts the judge's class rates used in kappa's expected agreement",
+  "plan_threshold": 0.6,
+  "judge_meets_threshold_against_both": true,
+  "unsupported_claims": {
+    "source": "judge",
+    "rule": "claims the judge marked unsupported / claims with a valid judge reply",
+    "k": 1,
+    "n": 13,
+    "value": 0.0769,
+    "ci95_wilson": [
+      0.0137,
+      0.3331
+    ],
+    "judge_invalid": 0,
+    "worst_case": {
+      "rule": "judge unsupported + invalid replies / all claims",
+      "k": 1,
+      "n": 13,
+      "value": 0.0769,
+      "ci95_wilson": [
+        0.0137,
+        0.3331
+      ]
+    }
+  },
+  "disagreements": [
+    {
+      "claim_id": "w1-12#2",
+      "case_id": "w1-12",
+      "claim": "Bu durum, Yönetmelik Madde 14 kapsamında dersin öğretim üyesinin belirlediği kurala göre uygulanır ve ders politikası bu şekilde belirtilmiştir.",
+      "rater1": false,
+      "rater2": false,
+      "judge": true,
+      "pairs": [
+        "judge_vs_rater1",
+        "judge_vs_rater2"
+      ]
+    }
+  ],
+  "conditions": "commit 3226f8f, judge model qwen/qwen3.8-27b (returned: qwen/qwen3.8-27b), prompt faithfulness_v1, T=0.0, answers from results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b, labels rater1 sha256 33d4d95b7b41f310611ff219789a3f865e69f1a7e6501418421ed09dd3c0f8f7; rater2 sha256 4fd435297e0e2baa48ba65cc123d642fb52cbfecb974392ce468e57111aa5a05 (labels commit 3226f8f)",
+  "script": "eval/faithfulness.py"
+}

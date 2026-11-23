@@ -1,0 +1,125 @@
+{
+  "commit": "3226f8f",
+  "dirty": [],
+  "untracked": [],
+  "script_sha256": "daefdead2ee82639ea4704f778dd22d3c1150c26a36bd50798004fcc8d7f7f4b",
+  "model": {
+    "requested": "qwen/qwen3.8-27b",
+    "returned": [
+      "qwen/qwen3.8-27b"
+    ]
+  },
+  "prompt_version": "faithfulness_v1",
+  "prompt_sha256": "bcdfb37bc833bd93593b2b1b4e30247defbff3c8aaf3d6ee9a75c2529c969026",
+  "temperature": 0.0,
+  "labels": {
+    "rater1": {
+      "path": "results/2026-11-23_faithfulness-v1/labels_rater1.csv",
+      "rater": "Serap Gökçe Yıldız",
+      "sha256": "33d4d95b7b41f310611ff219789a3f865e69f1a7e6501418421ed09dd3c0f8f7",
+      "commit": "3226f8f"
+    },
+    "rater2": {
+      "path": "results/2026-11-23_faithfulness-v1/labels_rater2.csv",
+      "rater": "Mert Bozma",
+      "sha256": "4fd435297e0e2baa48ba65cc123d642fb52cbfecb974392ce468e57111aa5a05",
+      "commit": "3226f8f"
+    }
+  },
+  "labels_commit": "3226f8f",
+  "sheet": {
+    "run": "results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b",
+    "run_commit": "26c35ad",
+    "run_prompts": {
+      "classifier": "classifier_v1",
+      "extract": "extract_v1",
+      "answer": "answer_v2",
+      "lookup": "lookup_v1"
+    },
+    "run_model": "openai/gpt-oss-120b",
+    "outputs_sha256": "49991bb236fcf80af609bd3aa27cd955ebc9510f6bde626768a6a21d00d9aa39",
+    "cases_path": "eval/testsets/week2_cases.jsonl",
+    "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+    "chunks_path": "data/chunks.jsonl",
+    "chunks_sha256": "3cdd826ef7eca932eda01647928c4226505ae77245aa26ba235595a983572e20",
+    "eligibility": "classifier intent rule_question, abstain false, valid true, no error",
+    "eligible_case_ids": [
+      "w1-09",
+      "w1-10",
+      "w1-12",
+      "w1-13",
+      "w1-21",
+      "w2-02",
+      "w2-03"
+    ],
+    "eligible_claims": 13,
+    "sample_rule": "all eligible claims if there are at most 40; otherwise random.Random(0).sample(the eligible claims in file order, 40), shown in file order",
+    "sampled": false,
+    "cases": 7,
+    "n": 13,
+    "claims_without_marker": 0,
+    "plan_minimum_claims": 20,
+    "meets_plan_minimum": false,
+    "claim_ids": [
+      "w1-09#1",
+      "w1-09#2",
+      "w1-10#1",
+      "w1-10#2",
+      "w1-12#1",
+      "w1-12#2",
+      "w1-13#1",
+      "w1-21#1",
+      "w1-21#2",
+      "w2-02#1",
+      "w2-02#2",
+      "w2-03#1",
+      "w2-03#2"
+    ]
+  },
+  "sample_rule": "all eligible claims if there are at most 40; otherwise random.Random(0).sample(the eligible claims in file order, 40), shown in file order",
+  "n": 13,
+  "invalid_rule": "an invalid judge reply (supported null) counts as a disagreement in each kappa: it takes the opposite of that rater's label, which also shifts the judge's class rates used in kappa's expected agreement",
+  "smoke": [
+    {
+      "valid": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "model": "qwen/qwen3.8-27b",
+          "input_tokens": 713,
+          "output_tokens": 6,
+          "latency_s": 0.4819081000168808,
+          "api_error": null,
+          "invalid_reason": null,
+          "reply": "{\"supported\": false}"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "started_at": "2026-11-24T01:17:17+03:00",
+      "commit": "3226f8f",
+      "argv": [
+        "eval/faithfulness.py",
+        "run",
+        "--sleep",
+        "13",
+        "--yes"
+      ],
+      "claims": 13
+    }
+  ],
+  "started_at": "2026-11-24T01:17:17+03:00",
+  "finished_at": "2026-11-24T01:20:11+03:00",
+  "complete": true,
+  "stopped": null,
+  "n_calls": 14,
+  "call_errors": 0,
+  "input_tokens": 10017,
+  "output_tokens": 84,
+  "sleep_s": 13.0,
+  "dry_run": false,
+  "not_for_reporting_reasons": [],
+  "script": "eval/faithfulness.py"
+}
