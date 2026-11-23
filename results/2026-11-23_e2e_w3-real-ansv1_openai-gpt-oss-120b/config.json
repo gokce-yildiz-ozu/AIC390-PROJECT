@@ -1,0 +1,84 @@
+{
+  "commit": "8fe2a9d",
+  "dirty": [],
+  "untracked": [],
+  "harness_sha256": "08976ac9bfc27ab6a43e9d27fd69e989c465db180a3892515c5be87a598f91de",
+  "model": {
+    "requested": "openai/gpt-oss-120b",
+    "returned": [
+      "openai/gpt-oss-120b"
+    ]
+  },
+  "temperature": 0.0,
+  "prompts": {
+    "classifier": "classifier_v1",
+    "extract": "extract_v1",
+    "answer": "answer_v1",
+    "lookup": "lookup_v1"
+  },
+  "cases_path": "eval/testsets/week2_cases.jsonl",
+  "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+  "frozen": true,
+  "split_filter": "all",
+  "ids": [
+    "w1-03",
+    "w1-06",
+    "w1-08",
+    "w1-09",
+    "w1-10",
+    "w1-11",
+    "w1-12",
+    "w1-13",
+    "w1-19",
+    "w1-20",
+    "w1-21",
+    "w1-22",
+    "w2-01",
+    "w2-02",
+    "w2-03",
+    "w2-11",
+    "w2-12",
+    "w2-13",
+    "w2-15"
+  ],
+  "subset": true,
+  "n": 19,
+  "search": {
+    "backend": "real",
+    "chunks_path": "data/chunks.jsonl",
+    "chunks_sha256": "3cdd826ef7eca932eda01647928c4226505ae77245aa26ba235595a983572e20",
+    "n_chunks": 11388,
+    "embedding_model": "BAAI/bge-m3",
+    "reranker_model": "BAAI/bge-reranker-v2-m3"
+  },
+  "table": {
+    "source": "seed",
+    "path": "data/db/deadlines_seed.jsonl",
+    "sha256": "2cf6db13dce75310a131e6b8ffdd36fb957fa0f2ec91bae6020aa50895050314",
+    "rows": 19,
+    "rows_from_cases": 16
+  },
+  "judge_fields": "not graded",
+  "started_at": "2026-11-23T16:37:36+03:00",
+  "finished_at": "2026-11-23T16:54:40+03:00",
+  "wall_time_s": 524.3,
+  "n_calls": 38,
+  "sleep_s": 13.0,
+  "argv": [
+    "eval/run_e2e.py",
+    "--search",
+    "real",
+    "--table",
+    "seed",
+    "--label",
+    "w3-real-ansv1",
+    "--sleep",
+    "13",
+    "--yes",
+    "--ids",
+    "w1-03,w1-06,w1-08,w1-09,w1-10,w1-11,w1-12,w1-13,w1-19,w1-20,w1-21,w1-22,w2-01,w2-02,w2-03,w2-11,w2-12,w2-13,w2-15"
+  ],
+  "label": "w3-real-ansv1",
+  "dry_run": false,
+  "script": "eval/run_e2e.py"
+}
