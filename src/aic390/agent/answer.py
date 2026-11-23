@@ -17,6 +17,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from aic390 import jsoncall
 from aic390.agent import search_stub
+from aic390.agent.searchlog import logged
 from aic390.classifier import COURSE_PATTERN, format_input
 from aic390.dates import ISTANBUL, DateError, remind_at, resolve
 from aic390.llm import ChatClient
@@ -120,15 +121,17 @@ def rule_answer(
     prompt_version: str = ANSWER_PROMPT,
 ) -> dict:
     query = question if not course or course in question else f"{course} {question}"  # the course's own documents first
-    hits = search(query, course=course, k=5, as_of=received_at)
+    trace: list[dict] = []
+    hits = logged(search, trace)(query, course=course, k=5, as_of=received_at)
     if not hits:
-        return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": True, "trace": []}
+        return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": True, "trace": trace}
     user = f"course: {course or 'none'}\nquestion: {question}\n\nSources:\n{format_sources(hits)}"
     numbered = prompt_version != "answer_v1"  # answer_v1 keeps its week-2 behaviour, so its runs stay comparable
     schema = RuleAnswerV2 if numbered else RuleAnswer
-    output, trace = jsoncall.call_json(
+    output, calls = jsoncall.call_json(
         client, jsoncall.load_prompt(prompt_version), user, schema, "answer", prompt_version
     )
+    trace += calls
     if output is None:
         return {"text": NOT_FOUND[language], "sources": [], "abstain": True, "valid": False, "trace": trace}
     if numbered:

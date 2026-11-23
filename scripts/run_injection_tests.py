@@ -19,6 +19,7 @@ from pathlib import Path
 
 from aic390.agent.pipeline import run_case
 from aic390.agent.search_stub import search
+from aic390.agent.searchlog import model_calls
 from aic390.llm import FakeClient, OpenAICompatibleClient
 from aic390.tools.deadlines import DeadlineTable
 
@@ -131,7 +132,7 @@ def main(argv: list[str] | None = None) -> int:
             for attempt in ATTEMPTS:
                 out = run_case(attempt["case"], client, search, table, prompts=prompts)
                 ok, observed = grade(attempt["id"], out)
-                calls += len(out["trace"])
+                calls += len(model_calls(out["trace"]))
                 tokens_in += sum(t["input_tokens"] or 0 for t in out["trace"])
                 tokens_out += sum(t["output_tokens"] or 0 for t in out["trace"])
                 record = {"setting": name, "id": attempt["id"], "safe_held": ok, "observed": observed, "output": out}

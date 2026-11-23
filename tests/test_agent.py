@@ -393,7 +393,11 @@ def test_run_case_rule_question_uses_the_answer_version():
     cls = {"intent": "rule_question", "course": "CS-301", "urgency": "normal", "multi_step": False}
     reply = {"abstain": False, "answer": "10% per day.", "citations": [1]}
     out = run_case(CASES["w1-09"], ScriptedClient(cls, reply), search, TABLE, prompts={"answer": "answer_v1"})
-    assert [t["prompt_version"] for t in out["trace"]] == ["classifier_v1", "answer_v1"]
+    assert [(t["step"], t["prompt_version"]) for t in out["trace"]] == [
+        ("classifier", "classifier_v1"),
+        ("search", None),
+        ("answer", "answer_v1"),
+    ]
 
 
 def test_run_case_rejects_an_unknown_step():

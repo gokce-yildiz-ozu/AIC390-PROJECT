@@ -16,6 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from aic390 import jsoncall
 from aic390.agent import search_stub
+from aic390.agent.searchlog import logged
 from aic390.classifier import COURSE_PATTERN, format_input
 from aic390.dates import DateError, find_date, resolve
 from aic390.llm import ChatClient
@@ -165,6 +166,7 @@ def extract(
             "valid": False,
             "trace": trace,
         }
+    search = logged(search, trace)
     rows, sources, dropped = [], [], []
     for item in output.deadlines:
         if not may_change(case, item.course):
