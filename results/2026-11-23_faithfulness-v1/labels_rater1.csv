@@ -1,28 +1,28 @@
 ﻿claim_id,case_id,question,claim,markers,has_marker,passages,supported,note
 w1-09#1,w1-09,What is the late penalty in CS-301?,"In CS-301, each day a submission is late reduces its grade by 10%.",1,true,"[1] cs301-syllabus · Late policy
-Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",,
+Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",true,
 w1-09#2,w1-09,What is the late penalty in CS-301?,This penalty applies for up to three days; after that the submission receives a zero.,1,true,"[1] cs301-syllabus · Late policy
-Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",,
+Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",true,
 w1-10#1,w1-10,"According to Article 9 of the regulation, what is the last day to withdraw from a course this semester?",Article 9 states that a student may withdraw from a course until the last day to withdraw announced in the academic calendar of that term.,1,true,"[1] regulation-article-9 · Article 9
-Withdrawal from a course. A student may withdraw from a course until the last day to withdraw announced in the academic calendar of that term. The course appears on the transcript with the grade W. A withdrawal cannot be cancelled.",,
+Withdrawal from a course. A student may withdraw from a course until the last day to withdraw announced in the academic calendar of that term. The course appears on the transcript with the grade W. A withdrawal cannot be cancelled.",true,
 w1-10#2,w1-10,"According to Article 9 of the regulation, what is the last day to withdraw from a course this semester?",The academic calendar for this semester lists the last day to withdraw as 4 December 2026.,2,true,"[2] academic-calendar-fall-2026 · Withdrawal
-The last day to withdraw from a course is 4 December 2026.",,
+The last day to withdraw from a course is 4 December 2026.",true,
 w1-12#1,w1-12,ECON-101 raporunu bir gün geç teslim edersem kabul edilir mi? Yönetmelikte bu konuda bir şey var mı?,"ECON-101 raporu geç teslim edildiğinde kabul edilmez, teslim tarihinden sonra gönderilen çalışmaya 0 puan verilir.",1,true,"[1] econ101-late-policy · Late work
 ECON-101 does not accept late work. Assignments and reports must be uploaded to the LMS by their deadline; a submission after the deadline receives 0.
-This course policy applies under Article 14 of the regulation, which leaves the late-work rule to the course instructor.",,
+This course policy applies under Article 14 of the regulation, which leaves the late-work rule to the course instructor.",true,
 w1-12#2,w1-12,ECON-101 raporunu bir gün geç teslim edersem kabul edilir mi? Yönetmelikte bu konuda bir şey var mı?,"Bu durum, Yönetmelik Madde 14 kapsamında dersin öğretim üyesinin belirlediği kurala göre uygulanır ve ders politikası bu şekilde belirtilmiştir.",2,true,"[2] regulation-article-14 · Article 14
-Late work. The course instructor sets the rule for late submissions and states it in the syllabus or in a course policy.",,
+Late work. The course instructor sets the rule for late submissions and states it in the syllabus or in a course policy.",false,
 w1-13#1,w1-13,Is attendance mandatory in CS-310?,"Evet, CS-310 dersinde laboratuvar oturumlarına katılım zorunludur; öğrencilerin laboratuvar oturumlarının en az %70'ine katılması gerekir.",1,true,"[1] cs310-syllabus-v2 · Attendance
-Attendance at lab sessions is mandatory: students must attend at least 70% of the lab sessions.",,
+Attendance at lab sessions is mandatory: students must attend at least 70% of the lab sessions.",true,
 w1-21#1,w1-21,Can the instructor just move the HW2 deadline like that? Can I object?,Article 14 states that the instructor sets the rule for late submissions and must state it in the syllabus or a course policy.,1,true,"[1] regulation-article-14 · Article 14
-Late work. The course instructor sets the rule for late submissions and states it in the syllabus or in a course policy.",,
+Late work. The course instructor sets the rule for late submissions and states it in the syllabus or in a course policy.",true,rater 1 read the Run B review of w1-21 before labelling
 w1-21#2,w1-21,Can the instructor just move the HW2 deadline like that? Can I object?,"The CS‑301 syllabus already defines a late‑submission penalty of 10 % per day for up to three days, so any change to the HW2 deadline would have to be communicated as a new rule consistent with that policy.",2,true,"[2] cs301-syllabus · Late policy
-Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",,
+Late submissions lose 10% of their grade for each day they are late, for at most 3 days. A submission more than 3 days late receives 0.",false,rater 1 read the Run B review of w1-21 before labelling
 w2-02#1,w2-02,What is the late penalty in CS-310?,Late lab reports lose 5% of the grade for each day they are submitted after the deadline.,1,true,"[1] cs310-syllabus-v2 · Late policy
-Late lab reports lose 5% of their grade for each day they are late, for at most 5 days. A report more than 5 days late receives 0.",,
+Late lab reports lose 5% of their grade for each day they are late, for at most 5 days. A report more than 5 days late receives 0.",true,
 w2-02#2,w2-02,What is the late penalty in CS-310?,"This reduction applies for up to five days, and a report more than five days late receives a grade of zero.",1,true,"[1] cs310-syllabus-v2 · Late policy
-Late lab reports lose 5% of their grade for each day they are late, for at most 5 days. A report more than 5 days late receives 0.",,
+Late lab reports lose 5% of their grade for each day they are late, for at most 5 days. A report more than 5 days late receives 0.",true,
 w2-03#1,w2-03,Bu dönem bir dersten çekilmek için son gün ne zaman?,Bu dönemde bir dersten çekilmek için son gün 4 Aralık 2026 tarihidir.,1,true,"[1] academic-calendar-fall-2026 · Withdrawal
-The last day to withdraw from a course is 4 December 2026.",,
+The last day to withdraw from a course is 4 December 2026.",true,
 w2-03#2,w2-03,Bu dönem bir dersten çekilmek için son gün ne zaman?,"Öğrenciler, akademik takvimde ilan edilen bu tarihe kadar derslerinden çekilebilirler.",2,true,"[2] regulation-article-9 · Article 9
-Withdrawal from a course. A student may withdraw from a course until the last day to withdraw announced in the academic calendar of that term. The course appears on the transcript with the grade W. A withdrawal cannot be cancelled.",,
+Withdrawal from a course. A student may withdraw from a course until the last day to withdraw announced in the academic calendar of that term. The course appears on the transcript with the grade W. A withdrawal cannot be cancelled.",true,
