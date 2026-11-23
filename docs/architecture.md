@@ -5,7 +5,7 @@ diagram (STATUS row 12b). Numbers name their run and its conditions (D-009 rule 
 
 ## Diagram
 
-As built at the `week-2` tag. The numbers are the steps on the demo screen (`app/demo.py`). Dashed lines are not
+As built at the `week-3` tag. The numbers are the steps on the demo screen (`app/demo.py`). Dashed lines are not
 built yet or not used on the request path.
 
 ```mermaid
@@ -16,7 +16,7 @@ flowchart TD
     T["Trust check (code)<br/>only instructor: senders may change deadlines"]
     X3["3a · Extraction (model)<br/>extract_v1: rows with date expressions"]
     D3["3a · Checks (code)<br/>dates.py computes every date<br/>may_change: only the message's own course"]
-    S3["3b · Search (interface 2)<br/>week 2: stub or BM25 over 10 core documents<br/>hybrid BM25 + bge-m3 + RRF + reranker: built, not yet at 10,000 chunks"]
+    S3["3b · Search (interface 2)<br/>hybrid: BM25 + bge-m3, RRF k = 60, top 20 each, bge-reranker-v2-m3<br/>11,388 chunks: 10 core + 3,879 bulk documents (D-008)"]
     A3["3b · Rule answer (model)<br/>answer_v1: numbered sources, or abstain"]
     L3["3c · Look-up plan (model)<br/>lookup_v1: which rows, count asked, reminder timing"]
     TB[("Deadline table<br/>data/db/deadlines_seed.jsonl")]
