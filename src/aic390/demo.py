@@ -11,12 +11,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from aic390.agent.pipeline import run_case
+from aic390.agent.search_stub import STUB_SECTIONS
 from aic390.agent.search_stub import search as stub_search
 from aic390.llm import ChatClient
 from aic390.tools.deadlines import DeadlineTable
 
 ROOT = Path(__file__).resolve().parents[2]
 REPLAY_FILE = ROOT / "app" / "replay_runs.jsonl"
+CHUNKS_FILE = ROOT / "data" / "chunks.jsonl"
 
 SEARCH_BACKENDS = {
     "stub": "Stub: the gold sections only (oracle, not real retrieval)",
@@ -144,8 +146,16 @@ def make_search(kind: str) -> Callable:
         engine = rag.HybridSearch(rag.load_chunks(), mode="bm25", rerank=False)
         return engine.search
     if kind == "hybrid":
+        rag.search("warm up", k=1)  # loads both models and the index now, not on the first question
         return rag.search
     raise ValueError(f"unknown search backend {kind!r}")
+
+
+def n_chunks(kind: str) -> int:
+    """How many chunks the backend searches, kept with every saved run so a replay shows its corpus."""
+    if kind == "stub":
+        return len(STUB_SECTIONS)
+    return sum(1 for line in CHUNKS_FILE.read_text(encoding="utf-8").splitlines() if line.strip())
 
 
 def route(out: dict, case: dict) -> str:
@@ -172,6 +182,7 @@ def run_demo(case: dict, client: ChatClient, search_kind: str, search: Callable,
         "mode": "live",
         "ran_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "search_backend": search_kind,
+        "n_chunks": n_chunks(search_kind),
         "prompts": prompts or {},
         "case": case,
         "route": route(out, case),

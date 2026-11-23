@@ -7,10 +7,13 @@ Live mode calls the model (2 to 3 calls per run). Replay mode shows a saved live
 so on screen; use it only if the network fails.
 """
 
+import time
+
 import pandas as pd
 import streamlit as st
 
 from aic390 import demo
+from aic390.agent.searchlog import model_calls
 from aic390.llm import OpenAICompatibleClient
 
 st.set_page_config(page_title="Deadline Radar", layout="wide")
@@ -18,7 +21,9 @@ st.set_page_config(page_title="Deadline Radar", layout="wide")
 
 @st.cache_resource(show_spinner="Loading the search index...")
 def cached_search(kind: str):
-    return demo.make_search(kind)
+    start = time.perf_counter()
+    search = demo.make_search(kind)
+    return search, time.perf_counter() - start
 
 
 @st.cache_resource
@@ -47,13 +52,15 @@ kinds = [k for k in demo.SEARCH_BACKENDS if backend_available(k)]
 search_kind = st.sidebar.selectbox(
     "Search backend",
     kinds,
-    index=kinds.index("bm25") if "bm25" in kinds else 0,
+    index=len(kinds) - 1,
     format_func=lambda k: demo.SEARCH_BACKENDS[k],
 )
 extract_version = st.sidebar.selectbox("Extraction prompt", ["extract_v1", "extract_v2", "extract_v3"])
 answer_version = st.sidebar.selectbox(
     "Answer prompt", ["answer_v2", "answer_v1"], help="answer_v2 (W3.4): [n] citations and fixed abstentions"
 )
+if mode == "Live":
+    st.sidebar.caption(f"Search index ready in {cached_search(search_kind)[1]:.1f} s (loaded once).")
 st.sidebar.caption("Model: openai/gpt-oss-120b on Groq, temperature 0. Deadline table: data/db/deadlines_seed.jsonl.")
 
 # Input ---------------------------------------------------------------------------------------------------------
@@ -95,7 +102,7 @@ if st.button("Run", type="primary", disabled=not text.strip()):
                     case,
                     cached_client(),
                     search_kind,
-                    cached_search(search_kind),
+                    cached_search(search_kind)[0],
                     prompts={"extract": extract_version, "answer": answer_version},
                 )
             if example_id in titles:
@@ -115,7 +122,8 @@ if not record:
 
 out = record["output"]
 if record["mode"] == "replay":
-    st.warning(f"REPLAY of a live run from {record['ran_at']} (not a new model call).")
+    chunks = record.get("n_chunks") or "an earlier, smaller number of"
+    st.warning(f"REPLAY of a live run from {record['ran_at']}, {chunks} chunks searched (not a new model call).")
 
 # 1. Classifier -------------------------------------------------------------------------------------------------
 
@@ -170,12 +178,15 @@ if out["action"]:
 # 5. Trace ------------------------------------------------------------------------------------------------------
 
 st.subheader("5 · Trace")
-trace = pd.DataFrame(out["trace"])
-if not trace.empty:
-    st.dataframe(trace, hide_index=True, width="stretch")
+calls = pd.DataFrame(model_calls(out["trace"]))
+searches = [t for t in out["trace"] if t["step"] == "search"]
+if not calls.empty:
+    st.dataframe(calls, hide_index=True, width="stretch")
     st.caption(
-        f"{len(trace)} model calls · {int(trace['input_tokens'].sum())} input and "
-        f"{int(trace['output_tokens'].sum())} output tokens · {trace['latency_s'].sum():.1f} s in the model"
+        f"{len(calls)} model calls · {int(calls['input_tokens'].sum())} input and "
+        f"{int(calls['output_tokens'].sum())} output tokens · {calls['latency_s'].sum():.1f} s in the model"
     )
+if searches:
+    st.caption(f"{len(searches)} search calls · {sum(t['latency_s'] for t in searches):.2f} s in search")
 with st.expander("Deadline table as it stood at received_at"):
     st.dataframe(pd.DataFrame(record["table_at_received"]), hide_index=True, width="stretch")

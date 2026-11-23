@@ -1,0 +1,6 @@
+# The demo uses a real API key: only this computer may open it.
+[server]
+address = "localhost"
+
+[browser]
+gatherUsageStats = false
