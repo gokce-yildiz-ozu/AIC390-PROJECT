@@ -561,12 +561,12 @@ def spend_total(previous: dict | None, run_spend: float, week: int) -> float | N
     return round(base + run_spend, 6)
 
 
-def scoreboard_from(summary: dict, config: dict, previous: dict | None = None) -> dict:
-    """Week-2 scoreboard: only what this run measured, plus the running spend total from the previous board;
+def scoreboard_from(summary: dict, config: dict, previous: dict | None = None, week: int = 2) -> dict:
+    """Scoreboard for `week`: only what this run measured, plus the running spend total from the previous board;
     every other key stays null."""
     if not summary["for_reporting"]:
         raise ValueError("refusing --write-scoreboard: " + "; ".join(summary["not_for_reporting_reasons"]))
-    board = empty_scoreboard(week=2, test_set_size=summary["n"])
+    board = empty_scoreboard(week=week, test_set_size=summary["n"])
     for key in ("e2e_accuracy", "abstention_correct"):
         p = summary["accuracy" if key == "e2e_accuracy" else key]
         if p["n"]:
