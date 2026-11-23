@@ -20,7 +20,13 @@ from aic390.tools.deadlines import DeadlineTable
 STEPS = ("classifier", "extract", "answer", "lookup")
 
 
+# A failed model call is never shown as "no deadline": the student would stop looking.
+UNREADABLE = "I could not read this message reliably, so nothing was added or changed. Please check it yourself."
+
+
 def deadline_text(result: dict) -> str:
+    if not result["valid"]:
+        return UNREADABLE
     if result["untrusted_flag"]:
         return "Not changed: this sender cannot change your deadlines. Check the course page or ask the instructor."
     lines = [
@@ -81,7 +87,7 @@ def run_case(
         out.update({k: result[k] for k in ("deadlines", "ask_user", "abstain", "sources", "action", "count")})
         out["answer_text"] = result["text"]
     else:
-        out["answer_text"] = "No deadline in this message."
+        out["answer_text"] = "No deadline in this message." if cls["valid"] else UNREADABLE
         return out
     out["valid"] = out["valid"] and result["valid"]
     out["trace"] += result["trace"]

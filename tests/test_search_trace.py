@@ -96,3 +96,38 @@ def test_the_harness_does_not_read_a_search_step_as_a_wrong_prompt_version():
     trace = []
     logged(search, trace)("late?")
     assert run_e2e.prompt_mismatches([{"output": {"trace": trace}}], {"answer": "answer_v1"}) == []
+
+
+def test_a_failed_extraction_is_not_shown_as_no_deadline():
+    from aic390.agent.pipeline import UNREADABLE, run_case
+
+    class Replies:
+        model = "scripted"
+
+        def __init__(self):
+            self.replies = [
+                json.dumps({"intent": "deadline_message", "course": "XX-100", "urgency": "normal"}),
+                '{"deadlines": []]}',
+                '{"deadlines": []]}',
+            ]
+
+        def chat(self, messages, temperature):
+            return LLMResponse(self.replies.pop(0), self.model, 10, 5, 0.1)
+
+    case = {
+        "channel": "email",
+        "received_at": NOW,
+        "course": "XX-100",
+        "sender": "instructor:Dr. Test",
+        "text": "Essay 1 is due on 1 December.",
+    }
+    out = run_case(case, Replies(), search, DeadlineTable([]))
+    assert out["valid"] is False and out["answer_text"] == UNREADABLE
+
+
+def test_a_failed_classification_is_not_shown_as_no_deadline():
+    from aic390.agent.pipeline import UNREADABLE, run_case
+
+    case = {"channel": "email", "received_at": NOW, "course": None, "sender": "instructor:Dr. Test", "text": "Hi."}
+    out = run_case(case, OneReply("not an object"), search, DeadlineTable([]))
+    assert out["valid"] is False and out["answer_text"] == UNREADABLE
