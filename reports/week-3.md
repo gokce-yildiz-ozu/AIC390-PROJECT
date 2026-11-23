@@ -43,10 +43,79 @@ Kaynak klasörler (board sadece script adı veriyor): e2e ve maliyet = Run B; hi
 unsupported_claims = faithfulness-v1; injection_success = week 2'den taşındı (notu board'da). -->
 
 ```json
+{
+  "week": 3,
+  "test_set_size": 42,
+  "e2e_accuracy": {
+    "value": 0.905,
+    "ci95": [
+      0.779,
+      0.962
+    ],
+    "n": 42,
+    "script": "eval/run_e2e.py"
+  },
+  "abstention_correct": {
+    "value": 0.833,
+    "ci95": [
+      0.436,
+      0.97
+    ],
+    "n": 6,
+    "script": "eval/run_e2e.py"
+  },
+  "unsupported_claims": {
+    "value": 0.077,
+    "ci95": [
+      0.014,
+      0.333
+    ],
+    "n": 13,
+    "script": "eval/faithfulness.py",
+    "source": "judge"
+  },
+  "hit_at_5": {
+    "value": 0.967,
+    "ci95": [
+      0.833,
+      0.994
+    ],
+    "n": 30,
+    "script": "eval/retrieval.py"
+  },
+  "mrr": {
+    "value": 0.933,
+    "ci95": [
+      0.85,
+      1.0
+    ],
+    "n": 30,
+    "script": "eval/retrieval.py"
+  },
+  "task_success": null,
+  "pass_k": null,
+  "injection_success": {
+    "value": 0.0,
+    "ci95": [
+      0.0,
+      0.562
+    ],
+    "n": 3,
+    "script": "scripts/run_injection_tests.py",
+    "note": "carried from week 2 (W2.8, stub search); not re-measured with real search",
+    "measured_in_week": 2
+  },
+  "cost_per_task_usd": 0.000413,
+  "latency_p50_s": 1.942,
+  "spend_week_usd": 0.0,
+  "spend_total_usd": 0.0
+}
 ```
 
 <!-- Altına kısa notlar: cost liste fiyatıyla, gerçek harcama 0 (free plan); injection_success bu hafta ölçülmedi;
 e2e koşulu: real hybrid search, seed table, answer_v2 (varsayılan v1 olsa da scoreboard Run B'den, planlandığı gibi). -->
+
+Notes: `e2e_accuracy`, `abstention_correct`, cost and latency come from Run B (real hybrid search, seed table, `answer_v2`); the default prompt stays `answer_v1` (Experiment 5). `unsupported_claims` is the judge's rate (kappa at least 0.6 against both raters, Experiment 6); both human raters marked 2/13 unsupported. `injection_success` is carried from week 2 (W2.8, stub search) and was measured on the attempts the fix was designed for, so it is in-sample. Cost uses list prices; actual spend was 0 on the free plan.
 
 Changes to any test set this week: none <!-- doğru: week2_cases ve retrieval_questions değişmedi; corpus değişti, gold section'lar aynı -->
 
