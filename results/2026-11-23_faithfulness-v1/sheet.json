@@ -1,0 +1,76 @@
+{
+  "run": "results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b",
+  "run_commit": "26c35ad",
+  "run_prompts": {
+    "classifier": "classifier_v1",
+    "extract": "extract_v1",
+    "answer": "answer_v2",
+    "lookup": "lookup_v1"
+  },
+  "run_model": "openai/gpt-oss-120b",
+  "outputs_sha256": "49991bb236fcf80af609bd3aa27cd955ebc9510f6bde626768a6a21d00d9aa39",
+  "cases_path": "eval/testsets/week2_cases.jsonl",
+  "cases_sha256": "787059b6aa2be9411a6dc135480f948453f008bc1ab6b92d3f3b63542b75f8b4",
+  "chunks_path": "data/chunks.jsonl",
+  "chunks_sha256": "3cdd826ef7eca932eda01647928c4226505ae77245aa26ba235595a983572e20",
+  "eligibility": "classifier intent rule_question, abstain false, valid true, no error",
+  "eligible_case_ids": [
+    "w1-09",
+    "w1-10",
+    "w1-12",
+    "w1-13",
+    "w1-21",
+    "w2-02",
+    "w2-03"
+  ],
+  "eligible_claims": 13,
+  "sample_rule": "all eligible claims if there are at most 40; otherwise random.Random(0).sample(the eligible claims in file order, 40), shown in file order",
+  "sampled": false,
+  "cases": 7,
+  "n": 13,
+  "claims_without_marker": 0,
+  "plan_minimum_claims": 20,
+  "meets_plan_minimum": false,
+  "claim_ids": [
+    "w1-09#1",
+    "w1-09#2",
+    "w1-10#1",
+    "w1-10#2",
+    "w1-12#1",
+    "w1-12#2",
+    "w1-13#1",
+    "w1-21#1",
+    "w1-21#2",
+    "w2-02#1",
+    "w2-02#2",
+    "w2-03#1",
+    "w2-03#2"
+  ],
+  "commit": "b475e7e",
+  "dirty": [],
+  "untracked": [],
+  "written_at": "2026-11-23T19:02:20+03:00",
+  "script": "eval/faithfulness.py",
+  "label_files": {
+    "rater1": {
+      "file": "labels_rater1.csv",
+      "rater": "Serap Gökçe Yıldız"
+    },
+    "rater2": {
+      "file": "labels_rater2.csv",
+      "rater": "Mert Bozma"
+    }
+  },
+  "columns": [
+    "claim_id",
+    "case_id",
+    "question",
+    "claim",
+    "markers",
+    "has_marker",
+    "passages",
+    "supported",
+    "note"
+  ],
+  "how_to_label": "supported = true when the passages state every fact in the claim; a paraphrase, another language or another number or date format counts; any fact the passages do not state makes it false; use only the passages, not what you know; the question is context, not evidence (the same rule as prompts/faithfulness_v1.md); write true or false; edit as UTF-8 with comma separators (VS Code or LibreOffice)"
+}
