@@ -203,17 +203,17 @@ def write_sheet(rows: list[dict], path: Path) -> None:
 # Labels --------------------------------------------------------------------------------------------------------
 
 
-def read_sheet(path: Path) -> list[dict]:
+def read_sheet(path: Path, columns: tuple[str, ...] = COLUMNS, how_to_label: str = HOW_TO_LABEL) -> list[dict]:
     """Raises ValueError when the file is not UTF-8 or not a comma-separated sheet with the expected columns."""
     try:
         with path.open(encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             rows = list(reader)
-            columns = tuple(reader.fieldnames or ())
+            found = tuple(reader.fieldnames or ())
     except (UnicodeDecodeError, csv.Error) as exc:
-        raise ValueError(f"{path.name} cannot be read ({exc}); {HOW_TO_LABEL}") from exc
-    if columns != COLUMNS:
-        raise ValueError(f"{path.name} has columns {list(columns)}, expected {list(COLUMNS)}; {HOW_TO_LABEL}")
+        raise ValueError(f"{path.name} cannot be read ({exc}); {how_to_label}") from exc
+    if found != tuple(columns):
+        raise ValueError(f"{path.name} has columns {list(found)}, expected {list(columns)}; {how_to_label}")
     return rows
 
 
@@ -557,8 +557,8 @@ def now() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
 
-def latest_folder(results_dir: Path) -> Path | None:
-    folders = sorted(p for p in results_dir.glob(f"*{FOLDER_SUFFIX}") if p.is_dir())
+def latest_folder(results_dir: Path, suffix: str = FOLDER_SUFFIX) -> Path | None:
+    folders = sorted(p for p in results_dir.glob(f"*{suffix}") if p.is_dir())
     return folders[-1] if folders else None
 
 
