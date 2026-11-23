@@ -1,11 +1,11 @@
 {
-  "week": 2,
+  "week": 3,
   "test_set_size": 42,
   "e2e_accuracy": {
-    "value": 0.929,
+    "value": 0.905,
     "ci95": [
-      0.81,
-      0.975
+      0.779,
+      0.962
     ],
     "n": 42,
     "script": "eval/run_e2e.py"
@@ -19,9 +19,34 @@
     "n": 6,
     "script": "eval/run_e2e.py"
   },
-  "unsupported_claims": null,
-  "hit_at_5": null,
-  "mrr": null,
+  "unsupported_claims": {
+    "value": 0.077,
+    "ci95": [
+      0.014,
+      0.333
+    ],
+    "n": 13,
+    "script": "eval/faithfulness.py",
+    "source": "judge"
+  },
+  "hit_at_5": {
+    "value": 0.967,
+    "ci95": [
+      0.833,
+      0.994
+    ],
+    "n": 30,
+    "script": "eval/retrieval.py"
+  },
+  "mrr": {
+    "value": 0.933,
+    "ci95": [
+      0.85,
+      1.0
+    ],
+    "n": 30,
+    "script": "eval/retrieval.py"
+  },
   "task_success": null,
   "pass_k": null,
   "injection_success": {
@@ -31,10 +56,12 @@
       0.562
     ],
     "n": 3,
-    "script": "scripts/run_injection_tests.py"
+    "script": "scripts/run_injection_tests.py",
+    "note": "carried from week 2 (W2.8, stub search); not re-measured with real search",
+    "measured_in_week": 2
   },
-  "cost_per_task_usd": 0.0004,
-  "latency_p50_s": 1.847,
+  "cost_per_task_usd": 0.000413,
+  "latency_p50_s": 1.942,
   "spend_week_usd": 0.0,
   "spend_total_usd": 0.0
 }
