@@ -111,20 +111,23 @@ Olgular planlama sohbetinde (W3.8 tablosu). Faithfulness'ta desteksiz iddia çı
 
 | # | Input (short) | What happened | Root cause | Fix (done or planned) |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
+| 1 | w1-11 (TR, make-up exam rule); same pattern in r02 (TR, make-up week, W3.5) | Gold `regulation-article-12` not in the top 5; all five are bulk `Attendance` sections. The model abstained: Run B's only false abstention (1/34). With stub search the case passes. r02: gold section not in the top 10. Both are Turkish questions on English regulations | retrieval | Planned, week 4: translate the query before search; measured on hit@5 for the Turkish questions (now 11/12) and on w1-11. Not measured yet |
+| 2 | w1-21 (EN, "Can the instructor move the HW2 deadline? Can I object?"); expected: abstain | Run B (`answer_v2`) answered: it stretched Article 14's late-work rule to deadline changes and cited it as [1]. The refusal rule for this kind of question is in the prompt, but the model did not follow it; the code check only asks for a valid source number, not that the source supports the sentence ([hallucination log #14](../docs/hallucination_log.md)) | generation | Planned, week 6 (hardening): a code check that the cited source supports the sentence, not only that the number is valid; measured on `unsupported_claims` and abstention. `answer_v1` stays the default (Run B rule), but it is not shown to be safer here: it answered this case in 3 of 4 W2.5 runs (log #13); in Run A (real search) it abstained correctly |
+| 3 | w1-20 (TR, dorm application deadline); w1-19 (EN, "45 on the midterm, will I pass?") | The classifier says `other`, so the student gets the fixed out-of-scope reply with no pointer to where to ask (no invented date). w1-20: 6 of 6 runs (4 W2.5 runs, Run A, Run B). w1-19: `rule_question` in Run A, `other` in Run B, same `classifier_v1`, T = 0. Recurring: [week-2 failure 1](week-2.md) | prompt | Planned, week 4 (unchanged from week 2): `classifier_v2`, one change to the `rule_question` definition, measured on the 42 cases and on `heldout_v2` |
 
-**W3.8: every failure this week, labelled.** <!-- etiket kuralı bir cümle: gold top-5'te yoksa retrieval, varsa ve cevap yanlışsa generation; stub sadece gold section'ları tuttuğu için oracle, ama kelime örtüşmeli bir arama, tam oracle değil -->
+**W3.8: every failure this week, labelled.**
+We compared each end-to-end failure with stub search, which searches only the gold sections: close to an ideal retriever, but not a full oracle, since it still matches by keywords. If the gold section was missing from the top k, we labelled the failure retrieval; if it was there but the answer was wrong, generation. `w1-21` has no gold section: the right topic was retrieved, the documents contain no answer, and the model answered instead of abstaining, so it is also generation. Intent errors (`w1-19`, `w1-20`) happen before search and never reach retrieval or generation, so we label them prompt. <!-- etiket kuralı bir cümle: gold top-5'te yoksa retrieval, varsa ve cevap yanlışsa generation; stub sadece gold section'ları tuttuğu için oracle, ama kelime örtüşmeli bir arama, tam oracle değil -->
 
 | Case | Run | Label | Evidence |
 |---|---|---|---|
-| w1-11 | Run A, Run B | | |
-| r02 | W3.5 | | |
-| w1-21 | Run B | | |
-| w1-20 | stub, Run A, Run B | | |
-| w1-19 | Run B | | |
-| r24 | W3.7 | | |
+| w1-11 | Run A, Run B | retrieval | Trace: gold not in top 5; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/) |
+| r02 | W3.5 | retrieval | Gold not in top 10; [W3.5](../results/2026-11-23_retrieval_hybrid-rerank/) |
+| w1-21 | Run B | generation | [Hallucination log #14](../docs/hallucination_log.md), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/) |
+| w1-20 | stub, Run A, Run B | prompt | Intent `other` in all runs; [week-2 §5](week-2.md) |
+| w1-19 | Run B | prompt (run-to-run noise) | Run A `rule_question`, Run B `other`; [STATUS](../docs/STATUS.md) |
+| r24 | W3.7 | retrieval (rank, not recall) | Top 1 with the reranker is `econ101-late-policy`, a copy of Article 14 in the corpus; [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) |
+
+Even at T = 0, the same configuration gave different outcomes across runs: `w1-19` flipped between `rule_question` and `other` under the same classifier, while `w1-21` abstained in only one of four W2.5 runs with the same answer prompt. So a single run per configuration cannot separate prompt effects from run-to-run noise; from week 4 we will evaluate each configuration across multiple runs.
 
 ## 6. Response to last week's feedback
 
@@ -167,14 +170,18 @@ Etiketleri insanlar verdi; hiçbir etiket bir modelden gelmedi. -->
 
 ## 10. Next week
 
-<!-- Her satırda metrik + hedef SAYI (handbook §7 "by how much"). Week-2 §10'daki 3. öncelik (classifier_v2, item_key,
-heldout_v2) bu hafta yapılmadı: gerekçesini yaz (bütçe RAG koşularına gitti), week 4'e taşı. Adaylar:
-1) Week-4 deliverable'ları (handbook W4.x: tools / agent loop) — metrik task_success (şu an null).
-2) classifier_v2 (tek değişiklik) → intent hataları 42 vakada ≤ 1 (bu hafta Run B'de 2: w1-19, w1-20); heldout_v2'de ölçülür.
-3) Türkçe retrieval (w1-11, r02) → TR hit@5 11/12 → hedef 12/12, w1-11 e2e'de geçsin; audience filtresi (W3.1 "who may see it"). -->
+**Week-2 targets and what happened** ([week-2 §10](week-2.md))
+
+| Week-2 target | Week-3 result | Status |
+|---|---|---|
+| `hit_at_5` ≥ 0.80 with hybrid + reranker | 29/30 = 0.967 [0.833, 0.994]; [W3.5](../results/2026-11-23_retrieval_hybrid-rerank/) | Met |
+| Hybrid beats BM25 on Turkish questions | TR hit@5: hybrid 11/12, dense 10/12, BM25 8/12 (descriptive, no test) | Met |
+| Accuracy with real search no worse than stub | 17/19 vs 16/19, McNemar b = 1, c = 2, p = 1.0; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/) | Not supported, no difference |
+| `unsupported_claims` ≤ 0.10 | Waiting for W3.6 | Pending |
+| Intent errors ≤ 1 (`classifier_v2`, `item_key`, `heldout_v2`) | Not run this week; 2 errors in Run B (w1-19, w1-20) | Week 4 |
 
 | Priority | Metric it should move | Expected change |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
+| 1. W4.1–W4.4: three tools, a loop with step, token and time limits, 10 multi-step tasks with traces | Task success, steps, cost per task (new keys) | First measurement: traces for all 10 tasks; the loop stops within its limits on every task |
+| 2. `classifier_v2`: one change to the `rule_question` definition | Intent errors on the 42 cases and `heldout_v2` | 2 (Run B) → ≤ 1 |
+| 3. Translate Turkish queries before search | TR hit@5; w1-11; false abstentions | 11/12 → ≥ 11/12 with w1-11 passing; 1/34 → 0/34 |
