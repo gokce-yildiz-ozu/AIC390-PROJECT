@@ -48,7 +48,8 @@ def backend_available(kind: str) -> bool:
 
 st.sidebar.title("Run settings")
 mode = st.sidebar.radio("Mode", ["Live", "Replay (saved live run)"], index=0)
-kinds = [k for k in demo.SEARCH_BACKENDS if backend_available(k)]
+# Replay needs no search engine, so every backend can be replayed on any computer.
+kinds = [k for k in demo.SEARCH_BACKENDS if mode != "Live" or backend_available(k)]
 search_kind = st.sidebar.selectbox(
     "Search backend",
     kinds,
@@ -164,6 +165,8 @@ if out["sources"]:
 # 4. Answer -----------------------------------------------------------------------------------------------------
 
 st.subheader("4 · Answer")
+if not out["valid"]:
+    st.error("A model reply was not valid JSON after one retry (see the trace): nothing was saved.")
 if out["abstain"]:
     st.caption("Abstained: no answer is given without a source.")
 st.success(out["answer_text"] or "(no reply)")

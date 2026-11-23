@@ -53,5 +53,6 @@ def test_replay_returns_the_newest_saved_run_marked_as_replay(tmp_path):
 
 def test_every_example_has_a_saved_live_run_for_the_replay_fallback():
     for e in demo.EXAMPLES:
-        record = demo.load_replay(e["id"], "bm25")
+        record = demo.load_replay(e["id"], "hybrid")
         assert record is not None and record["case"]["text"] == e["case"]["text"], e["id"]
+        assert record["output"]["valid"] and record["n_chunks"], e["id"]
