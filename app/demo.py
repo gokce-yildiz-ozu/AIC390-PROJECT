@@ -58,7 +58,9 @@ search_kind = st.sidebar.selectbox(
 )
 extract_version = st.sidebar.selectbox("Extraction prompt", ["extract_v1", "extract_v2", "extract_v3"])
 answer_version = st.sidebar.selectbox(
-    "Answer prompt", ["answer_v2", "answer_v1"], help="answer_v2 (W3.4): [n] citations and fixed abstentions"
+    "Answer prompt",
+    ["answer_v1", "answer_v2"],
+    help="default answer_v1 (Run B rule, STATUS); answer_v2 (W3.4): [n] citations and fixed abstentions",
 )
 if mode == "Live":
     st.sidebar.caption(f"Search index ready in {cached_search(search_kind)[1]:.1f} s (loaded once).")
@@ -123,8 +125,12 @@ if not record:
 
 out = record["output"]
 if record["mode"] == "replay":
+    used = [t["prompt_version"] for t in model_calls(out["trace"])]
     chunks = record.get("n_chunks") or "an earlier, smaller number of"
-    st.warning(f"REPLAY of a live run from {record['ran_at']}, {chunks} chunks searched (not a new model call).")
+    st.warning(
+        f"REPLAY of a live run from {record['ran_at']}, {chunks} chunks searched, "
+        f"{', '.join(used)} (not a new model call)."
+    )
 
 # 1. Classifier -------------------------------------------------------------------------------------------------
 
