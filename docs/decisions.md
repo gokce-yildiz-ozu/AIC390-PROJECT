@@ -49,7 +49,9 @@ record their commit); they do not repeat it.
 - `urgency` gets graded cases or the "not measured" line (gap 5).
 - Unit tests in `tests/test_dates.py`, `test_agent.py` and `test_classifier.py` also take their expected values from `week2_cases.jsonl` (written before this decision). They stay as regression tests; no new test is derived from a test set, and no test reads a held-out file.
 
-## D-008 — Corpus scale: at least 10,000 chunks (proposed, 2026-11-18; owner: data and retrieval lead)
+## D-008 — Corpus scale: at least 10,000 chunks (accepted, 2026-11-23; proposed 2026-11-18; owner: data and retrieval lead)
+
+**As built (2026-11-23).** 10 core documents (the core target went from 48 to 10 on 2026-11-21, STATUS row 4) plus 3,879 bulk documents from seed 20261122: 900 courses, 1,158 syllabi (`audience: all`) and 2,721 announcements (`enrolled:<course>`); 11,388 chunks in all (`results/2026-11-23_bulk-corpus/summary.json`, `data/chunks.jsonl` sha256 `3cdd826e…`, commit `ab6300c`). The same seed gives identical files on Linux and Windows. The rules below are tested in `tests/test_bulk_corpus.py`. Two parts of the plan are not done yet: the generated documents are templates with randomized values and no sample has been reviewed by hand (`reviewed: false`), and the extra retrieval row with the course filter (Consequences) has not been run.
 
 **Context.** The instructor asked for a corpus of at least 10,000 chunks (2026-11-18). The 48 documents of D-005 give
 a few hundred.
@@ -75,7 +77,9 @@ documents by hand in a week is impossible; a seeded generator is reproducible (R
 alone), and with it as an extra row, so the filter cannot hide the scale. Index build time grows (embedding
 10,000 chunks; slow on CPU). The bulk is visibly templated; the report says so in its limitations.
 
-## D-007 — Retrieval stack: in-memory hybrid search with a local reranker (proposed, 2026-11-18; owner: data and retrieval lead)
+## D-007 — Retrieval stack: in-memory hybrid search with a local reranker (accepted, 2026-11-23; proposed 2026-11-18; owner: data and retrieval lead)
+
+**Measured (2026-11-23).** On the 30 frozen retrieval questions, without the course filter (W3.5): hit@5 29/30 = 0.967 [0.833, 0.994] Wilson, MRR 0.933 (`results/2026-11-23_retrieval_hybrid-rerank/`). W3.7: hybrid vs dense only, exact McNemar on hit@5 p = 1.0; reranker on vs off, on hit@1 p = 0.625. Both are equal under the rules written before the runs, so the stack stays as below (STATUS, plan rows of 2026-11-23). Model ids and revisions are in each run's `config.json` (bge-m3 `5617a9f`). Two points the evidence does not support: the 7 confusable questions were 7/7 with dense alone, so the exact-identifier argument below was not borne out on this set; and the reranker's added latency (+0.249 s median) was measured on a GPU, not on a CPU.
 
 **Decision.** No database for retrieval. Chunks live in `data/chunks.jsonl`; indexes are built by a script and
 cached locally (not committed).

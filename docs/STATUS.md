@@ -11,7 +11,7 @@ Short and current. Rewrite lines rather than appending a diary. Last updated: 20
 - **Live demo on 2026-11-25 must include RAG and the request classifier** (`docs/feedback/2026-11-18-week1.md`).
 - Week 2 done (`reports/week-2.md`): W2.5 kept `extract_v1` (three versions equal, token rule); held-out 6/13; judge
   kappa 0.80. Bulk corpus and index done (11,388 chunks); retrieval baseline hit@5 29/30 (W3.5), ablations in (W3.7); W3.4 code is in (`answer_v2`).
-- Model: openai/gpt-oss-120b on Groq, free plan (D-006). Retrieval stack: D-007; corpus of ≥ 10,000 chunks: D-008 (both proposed).
+- Model: openai/gpt-oss-120b on Groq, free plan (D-006). Retrieval stack: D-007; corpus of ≥ 10,000 chunks: D-008 (both accepted 2026-11-23).
 
 ## Demo plan (2026-11-25)
 
