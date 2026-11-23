@@ -31,7 +31,7 @@ En önemli tek sayı için aday: hit@5 ya da stub→gerçek arama farkı (aynı 
 | W3.3 | done | [`src/aic390/rag/search.py`](../src/aic390/rag/search.py), [`docs/decisions.md`](../docs/decisions.md) D-007 | <!-- BM25 (bm25s) + bge-m3, RRF k=60, top 20 each, bge-reranker-v2-m3 --> |
 | W3.4 | done | [`prompts/answer_v2.md`](../prompts/answer_v2.md), [`src/aic390/agent/answer.py`](../src/aic390/agent/answer.py), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/), [Run A vs B](../results/2026-11-23_compare_w3-real-ansv1_vs_w3-real-ansv2_common-ids/) | <!-- answer_v2: [n] her bilgiden sonra, kodda yeniden numaralanıyor, 3 sabit abstention cevabı. Ölçüldü ama önceden yazılmış kural varsayılan yapmadı (abstention 5/6 < 6/6). Varsayılan ve demo: answer_v1 --> |
 | W3.5 | done | [`eval/retrieval.py`](../eval/retrieval.py), [`eval/testsets/retrieval_questions.jsonl`](../eval/testsets/retrieval_questions.jsonl), [`results/2026-11-23_retrieval_hybrid-rerank/`](../results/2026-11-23_retrieval_hybrid-rerank/) | <!-- 30 soru, corpus yazarı dışında biri yazdı, dondurulmuş; hit@1/3/5/10 ve MRR CI ile --> |
-| W3.6 | <!-- kappa'dan sonra --> | [`eval/faithfulness.py`](../eval/faithfulness.py), [`prompts/faithfulness_v1.md`](../prompts/faithfulness_v1.md), [`results/2026-11-23_faithfulness-v1/`](../results/2026-11-23_faithfulness-v1/) | <!-- 13 iddia / 7 vaka (< 20: plan kuralı); iki kör insan etiketçi; rater 1 w1-21'in Run B yorumunu etiketlemeden önce okudu (söyle) --> |
+| W3.6 | done | [`eval/faithfulness.py`](../eval/faithfulness.py), [`prompts/faithfulness_v1.md`](../prompts/faithfulness_v1.md), [`results/2026-11-23_faithfulness-v1/`](../results/2026-11-23_faithfulness-v1/) | 13 claims from 7 Run B answers: fewer than 20, so all were labelled and the intervals are wide. Judge kappa 0.629 against each rater, bootstrap 95% [0.000, 1.000] (threshold 0.6 met on the point estimate); the raters agree 13/13. Rater 1 read the Run B note on w1-21 before labelling. <!-- 13 iddia / 7 vaka (< 20: plan kuralı); iki kör insan etiketçi; rater 1 w1-21'in Run B yorumunu etiketlemeden önce okudu (söyle) --> |
 | W3.7 | done | [dense](../results/2026-11-23_retrieval_dense-rerank/), [BM25](../results/2026-11-23_retrieval_bm25-rerank/), [no reranker](../results/2026-11-23_retrieval_hybrid-norerank/), [hybrid vs dense](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_dense-rerank_hit_at_5/), [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) | <!-- iki ablation, her biri tek değişiklik; BM25-only ek satır --> |
 | W3.8 | done | §5 below, [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [stub vs real](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/) | <!-- her hata retrieval / generation / routing; kanıt trace'teki top-5 --> |
 | Product track | <!-- görüşmelere göre --> | §7 | |
@@ -192,6 +192,7 @@ We compared each end-to-end failure with stub search, which searches only the go
 | w1-11 | Run A, Run B | retrieval | Trace: gold not in top 5; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/) |
 | r02 | W3.5 | retrieval | Gold not in top 10; [W3.5](../results/2026-11-23_retrieval_hybrid-rerank/) |
 | w1-21 | Run B | generation | [Hallucination log #14](../docs/hallucination_log.md), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/) |
+| w1-12 | Run B (W3.6) | generation | Claim 2 cites [2] (Article 14), which does not state it; the content is in [1], so the citation points to the wrong source. Both raters: unsupported; judge: supported; [W3.6](../results/2026-11-23_faithfulness-v1/) |
 | w1-20 | stub, Run A, Run B | prompt | Intent `other` in all runs; [week-2 §5](week-2.md) |
 | w1-19 | Run B | prompt (run-to-run noise) | Run A `rule_question`, Run B `other`; [STATUS](../docs/STATUS.md) |
 | r24 | W3.7 | retrieval (rank, not recall) | Top 1 with the reranker is `econ101-late-policy`, a copy of Article 14 in the corpus; [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) |
@@ -246,7 +247,7 @@ Etiketleri insanlar verdi; hiçbir etiket bir modelden gelmedi. -->
 | `hit_at_5` ≥ 0.80 with hybrid + reranker | 29/30 = 0.967 [0.833, 0.994]; [W3.5](../results/2026-11-23_retrieval_hybrid-rerank/) | Met |
 | Hybrid beats BM25 on Turkish questions | TR hit@5: hybrid 11/12, dense 10/12, BM25 8/12 (descriptive, no test) | Met |
 | Accuracy with real search no worse than stub | 17/19 vs 16/19, McNemar b = 1, c = 2, p = 1.0; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/) | Not supported, no difference |
-| `unsupported_claims` ≤ 0.10 | Waiting for W3.6 | Pending |
+| `unsupported_claims` ≤ 0.10 | 1/13 = 0.077 [0.014, 0.333] (judge), n = 13; both raters 2/13; [W3.6](../results/2026-11-23_faithfulness-v1/) | Met on the point estimate; upper bound above 0.10 |
 | Intent errors ≤ 1 (`classifier_v2`, `item_key`, `heldout_v2`) | Not run this week; 2 errors in Run B (w1-19, w1-20) | Week 4 |
 
 | Priority | Metric it should move | Expected change |
