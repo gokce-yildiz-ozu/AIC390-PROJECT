@@ -2,9 +2,11 @@
 
     python eval/compare.py results/<run A> results/<run B>
     python eval/compare.py results/<run A> --repeat results/<run A, second run>   # run-to-run flips
+    python eval/compare.py results/<run A> results/<run B> --common-ids           # a planned subset vs a full run
 
-Both runs must have the same cases_sha256 and the same case ids. b = cases only A got right, c = cases only B
-got right; cases both got right or both got wrong do not enter the test. Writes
+Both runs must have the same cases_sha256 and the same case ids. With --common-ids the ids may differ: both sides are
+cut to the cases they share, and the output lists what was left out of each. b = cases only A got right,
+c = cases only B got right; cases both got right or both got wrong do not enter the test. Writes
 results/<date>_compare_<A label>_vs_<B label>/compare.json (or _repeat_ for --repeat).
 """
 
@@ -21,6 +23,7 @@ from run_e2e import CODE_FIELDS, RESULTS_DIR, grade, is_correct, proportion, rel
 
 SCRIPT = "eval/compare.py"
 MIN_DISCORDANT = 6  # with b + c < 6 even an all-one-way split gives p > 0.05
+SUBSET_REASON = "subset of the test set (--ids / --limit)"  # written by run_e2e.reporting_problems
 SAME_SYSTEM_KEYS = ("prompts", "temperature", "search", "table", "split_filter")
 
 
@@ -67,11 +70,36 @@ def pair_problems(a: dict, b: dict, same_system: bool = False) -> list[str]:
     return problems
 
 
-def not_for_reporting(run: dict) -> list[str]:
+def cut_to_common(a: dict, b: dict) -> tuple[dict, dict, dict]:
+    """Both runs on the ids they share, and a record of what each side had and lost."""
+    ids = set(a["outputs"]) & set(b["outputs"])
+    if not ids:
+        raise ValueError("no case ids in common")
+
+    def cut(run: dict) -> dict:
+        return {**run, "outputs": {i: r for i, r in run["outputs"].items() if i in ids}}
+
+    info = {
+        "n_common": len(ids),
+        "ids": sorted(ids),
+        "A_total": len(a["outputs"]),
+        "B_total": len(b["outputs"]),
+        "left_out_of_A": sorted(set(a["outputs"]) - ids),
+        "left_out_of_B": sorted(set(b["outputs"]) - ids),
+        "subset_runs": [label(r) for r in (a, b) if r["config"].get("subset")],
+    }
+    return cut(a), cut(b), info
+
+
+def not_for_reporting(run: dict, allow_subset: bool = False) -> list[str]:
+    """allow_subset: a comparison on common ids may use a run made with --ids. It is listed in
+    common_ids.subset_runs; every other reason (dirty tree, unfinished run, ...) still blocks."""
     name = label(run)
     reasons = [] if run["summary"] is not None else ["no summary.json"]
     if run["summary"] is not None:
         reasons += run["summary"].get("not_for_reporting_reasons", [])
+    if allow_subset:
+        reasons = [r for r in reasons if r != SUBSET_REASON]
     changed = sorted(i for i, r in run["outputs"].items() if r["correct"] != r["stored_correct"])
     if changed:
         reasons.append(f"grading changed since the run (regraded: {', '.join(changed)})")
@@ -132,16 +160,22 @@ def repeat_changes(a: dict, b: dict) -> dict:
     }
 
 
-def compare(a: dict, b: dict, repeat: bool = False) -> dict:
+def compare(a: dict, b: dict, repeat: bool = False, common_ids: bool = False) -> dict:
+    if repeat and common_ids:
+        raise ValueError("--common-ids does not apply to --repeat: a repeat run has the same cases")
+    common = None
+    if common_ids:
+        a, b, common = cut_to_common(a, b)
     problems = pair_problems(a, b, same_system=repeat)
     if problems:
         raise ValueError("; ".join(problems))
-    reasons = not_for_reporting(a) + not_for_reporting(b)
+    reasons = not_for_reporting(a, common_ids) + not_for_reporting(b, common_ids)
     result = {
         "mode": "repeat" if repeat else "compare",
         "for_reporting": not reasons,
         "not_for_reporting_reasons": reasons,
         "cases_sha256": a["config"]["cases_sha256"],
+        "common_ids": common,
         "A": _side(a),
         "B": _side(b),
         **mcnemar(a, b),
@@ -157,6 +191,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("A", type=Path, help="results folder of run A")
     ap.add_argument("B", type=Path, nargs="?", default=None, help="results folder of run B")
     ap.add_argument("--repeat", type=Path, default=None, help="a second run of the same system as A: count flips")
+    ap.add_argument("--common-ids", action="store_true", help="compare on the cases both runs have")
     args = ap.parse_args(argv)
     if (args.B is None) == (args.repeat is None):
         print("error: give either B or --repeat A2", file=sys.stderr)
@@ -164,12 +199,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         a = load_run(args.A)
         b = load_run(args.B or args.repeat)
-        result = compare(a, b, repeat=args.repeat is not None)
+        result = compare(a, b, repeat=args.repeat is not None, common_ids=args.common_ids)
     except (OSError, ValueError, KeyError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 
     name = f"{date.today().isoformat()}_{result['mode']}_{result['A']['label']}_vs_{result['B']['label']}"
+    name += "_common-ids" if args.common_ids else ""
     out = RESULTS_DIR / name
     out.mkdir(parents=True, exist_ok=True)
     (out / "compare.json").write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
