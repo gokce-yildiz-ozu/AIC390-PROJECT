@@ -89,11 +89,10 @@ Her deneyde Decision cümlesini deneyin sahibi yazar. -->
 
 ### Experiment 5: answer_v1 vs answer_v2 with real search (Run B, W3.4)
 
-<!-- YAZAN: Enes (answer_v2 onun) -->
-- **Hypothesis:** <!-- v2 doğrulukta kötü değil, unanswerable'da en az v1 kadar çekilir (özellikle w1-21), her cevapta geçerli [n] -->
-- **Change:** <!-- --prompts answer=answer_v2 -->
-- **Result:** <!-- 42 vaka: 38/42 = 0.905 [0.779, 0.962]; abstention_correct 5/6 = 0.833 [0.436, 0.970]; false_abstentions 1/34. Ortak 19: 15/19 vs 17/19, McNemar b = 2 (w1-19, w1-21), c = 0, p = 0.5; Run A abstention 6/6; 7 cevaplı vakanın hepsinde geçerli [n] -->
-- **Decision:** <!-- kural: p ≥ 0.05 ama abstention düştü → answer_v1 varsayılan, demo v1; w1-19 answer'dan değil (classifier, aynı prompt) -->
+- **Hypothesis:** `answer_v2` is not worse on accuracy, abstains at least as often as `answer_v1` on the 6 unanswerable cases (w1-21 in particular), and every answered case carries valid `[n]` markers.
+- **Change:** One change against Run A: `--prompts answer=answer_v2`. All 42 frozen cases, real search, seed table.
+- **Result:** 38/42 = 0.905, Wilson 95% [0.779, 0.962]. On the 19 cases common with Run A: 15/19 against 17/19, exact McNemar b = 2 (w1-19, w1-21), c = 0, p = 0.5. `abstention_correct` 5/6 = 0.833 [0.436, 0.970], Run A 6/6 = 1.000 [0.610, 1.000]; `false_abstentions` 1/34 = 0.029 [0.005, 0.149]. All 7 answered rule questions carry valid markers.
+- **Decision:** `answer_v1` stays the default, also in the demo. Our rule, written before the run, needed p ≥ 0.05 and no loss in abstention; the second condition failed. The lost abstention is one case, w1-21, the case `answer_v2` was written for (hallucination log #14). w1-19 is not caused by the prompt: the classifier runs before it and changed its answer between the runs. With 6 cases and one run per prompt this does not show that `answer_v1` is better (it answered w1-21 in 3 of 4 week-2 runs), so new cases come in week 4.
 
 ### Experiment 6: faithfulness judge vs two blind raters (W3.6)
 
@@ -143,6 +142,8 @@ week-1 geri bildiriminde bu hafta kapanan maddeler (docs/feedback/2026-11-18-wee
 <!-- Herkes kendi görüşmesini yazar. İsim, numara, iletişim YOK (R10): rol + tarih. Her görüşme: bugün nasıl takip
 ediyor, ne öderdi / kim öderdi, AI'dan ne korkutuyor; en şaşırtıcı bulgu; ürüne etkisi ("şunu değiştiriyoruz / değiştirmiyoruz"). -->
 
+**Interview (Enes), 2026-11-23: first-year business student, 6 courses.** Friends remind them of deadlines on WhatsApp; dates also come from the LMS and email. The last homework they missed was left to the last moment and cost about 3% of the grade ("not sure"). They might pay 100–200 TL a month, but would rather have the school pay and the tool read the LMS. Fears: private information leaking, and emails sent to instructors in their name. Most surprising: the date was known; the problem was putting it off, and they want several reminders that stop once they say the work is done. Our design has one reminder, 24 hours before. We keep sources and confirmation before any action; a "done" mark and more than one reminder are proposed for the reminder action; the team has not decided yet. Limits: one person, a friend of the interviewer, and our last question suggested showing the source. Notes: [`docs/interviews/2026-11-23_student_e.md`](../docs/interviews/2026-11-23_student_e.md).
+
 ## 8. Contributions
 
 <!-- Week-2 tag'inden beri commit: Mert 13, Enes 8, Gökçe 8 (git shortlog -sn week-2..HEAD; tag'den önce yeniden say).
@@ -151,7 +152,7 @@ Saat hücresi BOŞ KALMAYACAK. -->
 | Member | Role | What they did this week | Commits or files | Hours |
 |---|---|---|---|---|
 | Serap Gökçe Yıldız | Evaluation and safety lead | <!-- STATUS plan satırları; faithfulness aracı ve etiket sayfası; Run A/B karşılaştırmaları; week-3 scoreboard script'i; W3.8; rapor --> | `eval/faithfulness.py`, `prompts/faithfulness_v1.md`, `scripts/write_week3_scoreboard.py`, `results/2026-11-23_faithfulness-v1/`, `results/2026-11-23_compare_*`, `reports/week-3.md` | |
-| Enes Kemal Köylü | Agent and tools lead | <!-- answer_v2; search adımlarının trace'e loglanması; compare --common-ids; demo gerçek index + süre ölçümü; hallucination log #14 --> | `prompts/answer_v2.md`, `src/aic390/agent/`, `eval/compare.py`, `app/demo.py`, `scripts/time_demo_search.py`, `results/2026-11-23_demo-search-timing_cpu/` | |
+| Enes Kemal Köylü | Agent and tools lead | `answer_v2` (W3.4); search calls logged in the trace for W3.8; `compare.py --common-ids`; demo on the full corpus with hybrid search, replays and search timing; failed model replies no longer shown as "no deadline"; hallucination log #14; one customer interview | `prompts/answer_v2.md`, `src/aic390/agent/`, `eval/compare.py`, `app/demo.py`, `scripts/time_demo_search.py`, `results/2026-11-23_demo-search-timing_cpu/`, `docs/hallucination_log.md`, `docs/interviews/` | 7 |
 | Mert Bozma | Data and retrieval lead | <!-- bulk üretici + testler; 11.388 chunk; course filtresi; eval/retrieval.py; baseline + 2 ablation; Run A ve Run B koşuları (GPU makinesi); architecture retrieval satırları; D-007/D-008 accepted --> | `scripts/generate_bulk_corpus.py`, `data/corpus_bulk/`, `src/aic390/rag/`, `eval/retrieval.py`, `results/2026-11-23_retrieval_*`, `results/2026-11-23_e2e_w3-*` | |
 
 ## 9. AI tools used
