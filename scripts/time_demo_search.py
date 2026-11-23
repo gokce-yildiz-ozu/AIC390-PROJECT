@@ -12,6 +12,7 @@ import platform
 import statistics
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import date
 from pathlib import Path
@@ -46,9 +47,12 @@ def main() -> int:
     latencies = []
     for query, course in queries:
         for _ in range(REPEATS):
-            start = time.perf_counter()
-            search(query, course=course, as_of="2026-11-19T10:00:00+03:00")
-            latencies.append(time.perf_counter() - start)
+            # An empty query cache each time: a question asked in the demo is new, so its embedding is computed.
+            with tempfile.TemporaryDirectory() as empty:
+                rag._default.embedder.cache_dir = Path(empty)
+                start = time.perf_counter()
+                search(query, course=course, as_of="2026-11-19T10:00:00+03:00")
+                latencies.append(time.perf_counter() - start)
     latencies.sort()
     summary = {
         "script": "scripts/time_demo_search.py",
