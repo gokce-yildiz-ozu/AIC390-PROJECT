@@ -1,0 +1,19 @@
+{
+  "script": "scripts/time_demo_search.py",
+  "commit": "c02a587",
+  "uncommitted_changes": false,
+  "device": "cpu",
+  "gpu": null,
+  "cpu": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+  "torch_threads": 16,
+  "embedding_model": "BAAI/bge-m3",
+  "reranker_model": "BAAI/bge-reranker-v2-m3",
+  "n_chunks": 11388,
+  "load_s": 29.8,
+  "n_queries": 18,
+  "query_latency_s": {
+    "p50": 3.333,
+    "min": 2.544,
+    "max": 6.204
+  }
+}
