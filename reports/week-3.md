@@ -16,11 +16,7 @@ Sınır: ≤ 1.500 kelime (tablolar, scoreboard bloğu ve yorumlar hariç), Summ
 
 ## 1. Summary
 
-<!-- YAZAN: Gökçe (en son, her şey bitince). ≤ 100 kelime.
-Olgular: stub → gerçek hibrit arama + reranker; corpus 3.889 belge (10 çekirdek + 3.879 üretilmiş), 11.388 chunk.
-Retrieval hit@5 29/30 = 0.967 [0.833, 0.994]. Uçtan uca gerçek aramayla 38/42 = 0.905 [0.779, 0.962] (Run B).
-Run B kuralı answer_v1'i varsayılan bıraktı (abstention 5/6 vs 6/6). İki retrieval hatası da Türkçe soru.
-En önemli tek sayı için aday: hit@5 ya da stub→gerçek arama farkı (aynı 19 vakada 16/19 → 17/19, fark yok). -->
+Week 3 replaced the stub with real retrieval: hybrid search with a reranker over 3,889 documents and 11,388 chunks. The most important number: the gold passage is in the top 5 for 29/30 retrieval questions, 0.967 [0.833, 0.994]. End to end with real search and `answer_v2`, 38/42 = 0.905 [0.779, 0.962]; our pre-written rule keeps `answer_v1` as the default, since `answer_v2` lost one abstention. On the search cases, real search could not be told apart from the stub. Both retrieval failures are Turkish questions on English regulations; we test query translation in week 4.
 
 ## 2. Deliverables
 
@@ -230,7 +226,7 @@ Saat hücresi BOŞ KALMAYACAK. -->
 
 | Tool | Used for |
 |---|---|
-| Claude (claude.ai, planning chat) | Planning the week and the experiments, reviewing our results and this report against the handbook, the report skeleton with the facts each section needs, a helper script for the W3.6 labelling sheet (not in the repository), the English summary and format of the second interview's notes from the interviewee's Turkish answers, and drafting or editing parts of this report from our results (Experiments 4 and 6, notes in §2, §6, §8 and §10), which we reviewed |
+| Claude (claude.ai, planning chat) | Planning the week and the experiments, reviewing our results and this report against the handbook, the report skeleton with the facts each section needs, a helper script for the W3.6 labelling sheet (not in the repository), the English summary and format of the second interview's notes from the interviewee's Turkish answers, and drafting or editing parts of this report from our results (Summary, Experiments 4 and 6, notes in §2, §6, §8 and §10), which we reviewed |
 | Claude Code (VS Code and desktop app) | Writing and testing code (faithfulness tool, week-3 scoreboard script, search calls in the trace, demo) and preparing commits that each of us reviewed and made |
 
 All W3.6 labels came from the two human raters; no label came from a model. The faithfulness judge is part of the measured system, not a writing aid.
