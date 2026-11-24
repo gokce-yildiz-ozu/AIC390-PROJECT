@@ -5,6 +5,8 @@ Facts below come from the proposal (`docs/proposal/`) and D-005. All data is syn
 
 ## 1. Documents (for RAG)
 
+**Update 2026-11-23:** built as 10 core documents (`data/corpus/`) plus 3,879 generated documents (`data/corpus_bulk/`), 11,388 chunks (D-008). The 48-document plan below is the week-1 plan.
+
 48 synthetic documents (D-005): above W3.1's minimum of 30, and built so that a course code alone does not
 identify the right passage.
 

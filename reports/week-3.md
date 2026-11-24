@@ -18,13 +18,13 @@ Week 3 replaced the stub with real retrieval: hybrid search with a reranker over
 
 | ID | Status | Evidence | Note |
 |---|---|---|---|
-| W3.1 | done | [`data/corpus/`](../data/corpus/), [`scripts/generate_bulk_corpus.py`](../scripts/generate_bulk_corpus.py), [`results/2026-11-23_bulk-corpus/`](../results/2026-11-23_bulk-corpus/), [`docs/decisions.md`](../docs/decisions.md) D-008 | <!-- Olgular: 10 çekirdek belge reviewed (43e105b); üretici seed 20261122: 900 ders, 3.879 belge (1.158 syllabus, 2.721 duyuru), 258 revize syllabus; chunk dili en 9.130 / tr 2.231 (bulk). Metadata: source, version/valid_from, audience. audience filtreleniyor mu? HAYIR (architecture'da "not enforced yet" satırı var mı kontrol) --> |
-| W3.2 | partial | [`src/aic390/rag/chunking.py`](../src/aic390/rag/chunking.py), [`data/chunks.jsonl`](../data/chunks.jsonl) | <!-- Olgular: section (##) başına bir chunk, citation birimi = section, max_words 200, overlap yok; 11.388 chunk. EKSİK: kelime dağılımı (medyan, p90, max) bir script'ten gelmeli (Mert). Gelince status → done --> |
-| W3.3 | done | [`src/aic390/rag/search.py`](../src/aic390/rag/search.py), [`docs/decisions.md`](../docs/decisions.md) D-007 | <!-- BM25 (bm25s) + bge-m3, RRF k=60, top 20 each, bge-reranker-v2-m3 --> |
+| W3.1 | done | [`data/corpus/`](../data/corpus/), [`scripts/generate_bulk_corpus.py`](../scripts/generate_bulk_corpus.py), [`results/2026-11-23_bulk-corpus/`](../results/2026-11-23_bulk-corpus/), [`docs/decisions.md`](../docs/decisions.md) D-008 | 10 core documents, reviewed (`43e105b`); a seeded generator (seed 20261122) adds 3,879 documents for 900 invented courses: 1,158 syllabi (258 with a revised version) and 2,721 announcements. 11,388 chunks (en 9,157, tr 2,231). Metadata: `source`, `version`, `valid_from`, `audience`. `audience` is recorded but not enforced in search yet (week 4) |
+| W3.2 | done | [`src/aic390/rag/chunking.py`](../src/aic390/rag/chunking.py), [`data/chunks.jsonl`](../data/chunks.jsonl), [`scripts/chunk_stats.py`](../scripts/chunk_stats.py), [`results/2026-11-24_chunk-stats/`](../results/2026-11-24_chunk-stats/) | One chunk per `##` section, which is also the citation unit; a section over 200 words would be split, none is. Words per chunk: median 15, p90 36, max 55 (n = 11,388). No overlap: each section is one self-contained rule, and gold passages are (`doc_id`, `section`), so chunk settings never change the test set |
+| W3.3 | done | [`src/aic390/rag/search.py`](../src/aic390/rag/search.py), [`docs/decisions.md`](../docs/decisions.md) D-007 | BM25 (`bm25s`) and `BAAI/bge-m3` (cosine), reciprocal rank fusion k = 60 over the top 20 of each, then `BAAI/bge-reranker-v2-m3` on the fused top 20. In memory, no database (D-007) |
 | W3.4 | done | [`prompts/answer_v2.md`](../prompts/answer_v2.md), [`src/aic390/agent/answer.py`](../src/aic390/agent/answer.py), [Run B](../results/2026-11-23_e2e_w3-real-ansv2_openai-gpt-oss-120b/), [Run A vs B](../results/2026-11-23_compare_w3-real-ansv1_vs_w3-real-ansv2_common-ids/) | `answer_v2`: `[n]` after every fact, renumbered in code to the source order; three fixed replies for abstaining. Fixed replies in `answer_v2` (Run B); the default `answer_v1` does not give them with real search, because no search in Run B returned zero hits. Default and demo: `answer_v1` |
-| W3.5 | done | [`eval/retrieval.py`](../eval/retrieval.py), [`eval/testsets/retrieval_questions.jsonl`](../eval/testsets/retrieval_questions.jsonl), [`results/2026-11-23_retrieval_hybrid-rerank/`](../results/2026-11-23_retrieval_hybrid-rerank/) | <!-- 30 soru, corpus yazarı dışında biri yazdı, dondurulmuş; hit@1/3/5/10 ve MRR CI ile --> |
+| W3.5 | done | [`eval/retrieval.py`](../eval/retrieval.py), [`eval/testsets/retrieval_questions.jsonl`](../eval/testsets/retrieval_questions.jsonl), [`results/2026-11-23_retrieval_hybrid-rerank/`](../results/2026-11-23_retrieval_hybrid-rerank/) | 30 questions written and frozen by the evaluation lead, not the corpus author; gold unit (`doc_id`, `section`). hit@5 29/30 = 0.967 [0.833, 0.994]; Experiment 1 |
 | W3.6 | done | [`eval/faithfulness.py`](../eval/faithfulness.py), [`prompts/faithfulness_v1.md`](../prompts/faithfulness_v1.md), [`results/2026-11-23_faithfulness-v1/`](../results/2026-11-23_faithfulness-v1/) | 13 claims from 7 Run B answers: fewer than 20, so all were labelled and the intervals are wide. Judge kappa 0.629 against each rater, bootstrap 95% [0.000, 1.000] (threshold 0.6 met on the point estimate); the raters agree 13/13. Rater 1 read the Run B note on w1-21 before labelling. <!-- 13 iddia / 7 vaka (< 20: plan kuralı); iki kör insan etiketçi; rater 1 w1-21'in Run B yorumunu etiketlemeden önce okudu (söyle) --> |
-| W3.7 | done | [dense](../results/2026-11-23_retrieval_dense-rerank/), [BM25](../results/2026-11-23_retrieval_bm25-rerank/), [no reranker](../results/2026-11-23_retrieval_hybrid-norerank/), [hybrid vs dense](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_dense-rerank_hit_at_5/), [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) | <!-- iki ablation, her biri tek değişiklik; BM25-only ek satır --> |
+| W3.7 | done | [dense](../results/2026-11-23_retrieval_dense-rerank/), [BM25](../results/2026-11-23_retrieval_bm25-rerank/), [no reranker](../results/2026-11-23_retrieval_hybrid-norerank/), [hybrid vs dense](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_dense-rerank_hit_at_5/), [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) | Two ablations, one change each; BM25 only as an extra row. Both equal under the rules written before the runs; Experiments 2 and 3 |
 | W3.8 | done | §5 below, [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [stub vs real](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/) | 7 failures, one rule: gold section not in the top k → retrieval (3); gold there but the answer wrong → generation (2); intent wrong before search → prompt (2). Stub search serves as a near-oracle; see §5 |
 | Product track | done | §7, [first interview](../docs/interviews/2026-11-23_student_e.md), [second interview](../docs/interviews/2026-11-24_student_g.md) | Two interviews with students |
 
@@ -110,27 +110,24 @@ Hypotheses and decision rules were written in [`docs/STATUS.md`](../docs/STATUS.
 
 ### Experiment 1: retrieval baseline, main configuration (W3.5)
 
-<!-- YAZAN: Mert -->
-- **Hypothesis:** <!-- STATUS: hit_at_5 ≥ 0.80 (week-2 raporundaki hedef) -->
-- **Change:** <!-- ölçüm, karşılaştırma yok: hibrit + reranker, course filtresi yok, 11.388 chunk -->
-- **Result:** <!-- hit@1 27/30 = 0.900 [0.744, 0.965]; hit@5 29/30 = 0.967 [0.833, 0.994]; MRR 0.933 [0.850, 1.000] bootstrap; multi all@5 2/4; TR hit@5 11/12, EN 18/18; kaçan: r02; medyan arama 0.256 s (RTX 5060) -->
-- **Decision:** <!-- hedef tuttu, alt sınır bile 0.80 üstünde; sınırlama: bulk belgeler şablon, gerçek okulun belgelerinden kolay dikkat dağıtıcı -->
+- **Hypothesis:** hit@5 ≥ 0.80 on the 30 frozen questions (the week-2 target).
+- **Change:** none; a measurement of the main configuration: hybrid + reranker, 11,388 chunks, no course filter.
+- **Result:** hit@5 29/30 = 0.967 [0.833, 0.994], hit@1 27/30 = 0.900 [0.744, 0.965], MRR 0.933 [0.850, 1.000] (bootstrap). Turkish hit@5 11/12, English 18/18; the miss is r02 (§5). Median search 0.256 s on a laptop GPU.
+- **Decision:** target met; even the lower bound is above 0.80. Limit: the bulk documents are templated, so they are easier distractors than a real school's.
 
 ### Experiment 2: hybrid vs dense only (W3.7, ablation 1)
 
-<!-- YAZAN: Mert -->
-- **Hypothesis:** <!-- hibrit 7 confusable soruda daha iyi; dense TR'de BM25'ten iyi -->
-- **Change:** <!-- mode = dense (reranker her ikisinde açık) -->
-- **Result:** <!-- dense hit@5 28/30 = 0.933 [0.787, 0.982]; McNemar b = 1 (r09), c = 0, p = 1.0; confusable 7/7 vs 7/7; TR hit@5 dense 10/12, BM25 8/12; BM25-only hit@5 25/30 = 0.833 [0.664, 0.927] -->
-- **Decision:** <!-- eşit → hibrit kalır (D-007); hipotezin ilk yarısı desteklenmedi -->
+- **Hypothesis:** hybrid beats dense on the 7 confusable questions; dense beats BM25 on the 12 Turkish ones.
+- **Change:** `mode = dense` instead of hybrid; reranker on in both.
+- **Result:** dense hit@5 28/30 = 0.933 [0.787, 0.982]. McNemar b = 1 (r09), c = 0, p = 1.0; with b + c < 6 no split can reach p < 0.05. Confusable: 7/7 in both. Turkish hit@5: dense 10/12, BM25 8/12; BM25 alone 25/30 = 0.833 [0.664, 0.927].
+- **Decision:** equal, so hybrid stays (D-007). First half not supported; second half holds (descriptive).
 
 ### Experiment 3: reranker on vs off (W3.7, ablation 2)
 
-<!-- YAZAN: Mert -->
-- **Hypothesis:** <!-- reranker hit@1 ve MRR'yi hit@5'ten çok artırır -->
-- **Change:** <!-- rerank = False -->
-- **Result:** <!-- reranker'sız hit@1 25/30 = 0.833 [0.664, 0.927], MRR 0.879 [0.774, 0.973], hit@5 aynı; McNemar hit@1 b = 3 (r15, r17, r29), c = 1 (r24), p = 0.625; gecikme +0.249 s (0.256 vs 0.007) -->
-- **Decision:** <!-- eşit ve +0.249 s ≤ 1.0 s kuralı → reranker kalır; r24 near-duplicate (§5) -->
+- **Hypothesis:** the reranker raises hit@1 and MRR more than hit@5.
+- **Change:** `rerank = False`; hybrid in both.
+- **Result:** without it, hit@1 25/30 = 0.833 [0.664, 0.927], MRR 0.879 [0.774, 0.973], hit@5 unchanged (29/30). McNemar on hit@1: b = 3 (r15, r17, r29), c = 1 (r24), p = 0.625. Cost +0.249 s per query (GPU).
+- **Decision:** equal, and under the 1.0 s rule written before the run, so the reranker stays. In r24 a near-duplicate of Article 14 went first (§5).
 
 ### Experiment 4: stub search vs real search on the 19 search cases (Run A, W3.8)
 
@@ -198,7 +195,7 @@ Weeks 2 and 3 are presented in the same session, so there is no new feedback aft
 |---|---|---|---|---|
 | Serap Gökçe Yıldız | Evaluation and safety lead | Experiment plan rows in STATUS before the runs; faithfulness tool and labelling sheet; W3.6 labels (rater 1), judge run and kappa; Run A vs stub and Run B vs Run A comparisons; week-3 scoreboard script; report skeleton, §5, §10 | 15 commits; `eval/faithfulness.py`, `prompts/faithfulness_v1.md`, `scripts/write_week3_scoreboard.py`, `results/2026-11-23_faithfulness-v1/`, `results/2026-11-23_compare_*`, `reports/week-3.md` | 5 |
 | Enes Kemal Köylü | Agent and tools lead | `answer_v2` (W3.4); search calls logged in the trace for W3.8; `compare.py --common-ids`; demo on the full corpus with hybrid search, replays and search timing; failed model replies no longer shown as "no deadline"; hallucination log #14; one customer interview | `prompts/answer_v2.md`, `src/aic390/agent/`, `eval/compare.py`, `app/demo.py`, `scripts/time_demo_search.py`, `results/2026-11-23_demo-search-timing_cpu/`, `docs/hallucination_log.md`, `docs/interviews/` | 7 |
-| Mert Bozma | Data and retrieval lead | <!-- bulk üretici + testler; 11.388 chunk; course filtresi; eval/retrieval.py; baseline + 2 ablation; Run A ve Run B koşuları (GPU makinesi); architecture retrieval satırları; D-007/D-008 accepted --> | `scripts/generate_bulk_corpus.py`, `data/corpus_bulk/`, `src/aic390/rag/`, `eval/retrieval.py`, `results/2026-11-23_retrieval_*`, `results/2026-11-23_e2e_w3-*` | 6 |
+| Mert Bozma | Data and retrieval lead | Seeded bulk generator and its tests (D-008, 11,388 chunks); course filter keeps the general documents; `eval/retrieval.py` and `scripts/chunk_stats.py`; W3.5 baseline and both W3.7 ablations; Run A and Run B on the GPU laptop; architecture retrieval rows; D-007 and D-008 accepted; W3.6 rater 2 | `scripts/generate_bulk_corpus.py`, `data/corpus_bulk/`, `src/aic390/rag/`, `eval/retrieval.py`, `results/2026-11-23_retrieval_*`, `results/2026-11-23_e2e_w3-*`, `scripts/chunk_stats.py` | 6 |
 
 ## 9. AI tools used
 

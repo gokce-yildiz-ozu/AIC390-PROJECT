@@ -1,0 +1,28 @@
+{
+  "chunks_path": "data/chunks.jsonl",
+  "chunks_sha256": "3cdd826ef7eca932eda01647928c4226505ae77245aa26ba235595a983572e20",
+  "max_words": 200,
+  "unit": "words of the chunk text, split on whitespace",
+  "all": {
+    "chunks": 11388,
+    "min": 8,
+    "median": 15.0,
+    "p90": 36.0,
+    "max": 55
+  },
+  "core": {
+    "chunks": 27,
+    "min": 9,
+    "median": 22,
+    "p90": 41.6,
+    "max": 55
+  },
+  "bulk": {
+    "chunks": 11361,
+    "min": 8,
+    "median": 15,
+    "p90": 36.0,
+    "max": 40
+  },
+  "split_sections": 0
+}
