@@ -1,9 +1,5 @@
 # Weekly report
 
-<!-- İSKELET (21:10, Pzt 23 Kasım). Tag'den ÖNCE bu dosyadaki BÜTÜN HTML yorumları silinecek (week-2'de iç not
-kalmıştı). Yorumlardaki olgular repodaki dosyalardan; metni yazan kişi kendi cümleleriyle yazar.
-Sınır: ≤ 1.500 kelime (tablolar, scoreboard bloğu ve yorumlar hariç), Summary ≤ 100 kelime. -->
-
 | Field | Value |
 |---|---|
 | Team | Deadline Radar |
@@ -33,10 +29,6 @@ Week 3 replaced the stub with real retrieval: hybrid search with a reranker over
 | Product track | done | §7, [first interview](../docs/interviews/2026-11-23_student_e.md), [second interview](../docs/interviews/2026-11-24_student_g.md) | Two interviews with students |
 
 ## 3. Scoreboard
-
-<!-- `python scripts/write_week3_scoreboard.py` çıktısını (eval/scoreboard.json) buraya aynen yapıştır; elle sayı yazma.
-Kaynak klasörler (board sadece script adı veriyor): e2e ve maliyet = Run B; hit_at_5/mrr = retrieval_hybrid-rerank;
-unsupported_claims = faithfulness-v1; injection_success = week 2'den taşındı (notu board'da). -->
 
 ```json
 {
@@ -108,12 +100,9 @@ unsupported_claims = faithfulness-v1; injection_success = week 2'den taşındı 
 }
 ```
 
-<!-- Altına kısa notlar: cost liste fiyatıyla, gerçek harcama 0 (free plan); injection_success bu hafta ölçülmedi;
-e2e koşulu: real hybrid search, seed table, answer_v2 (varsayılan v1 olsa da scoreboard Run B'den, planlandığı gibi). -->
-
 Notes: `e2e_accuracy`, `abstention_correct`, cost and latency come from Run B (real hybrid search, seed table, `answer_v2`); the default prompt stays `answer_v1` (Experiment 5). `unsupported_claims` is the judge's rate (kappa at least 0.6 against both raters, Experiment 6); both human raters marked 2/13 unsupported. `injection_success` is carried from week 2 (W2.8, stub search) and was measured on the attempts the fix was designed for, so it is in-sample. Cost uses list prices; actual spend was 0 on the free plan.
 
-Changes to any test set this week: none <!-- doğru: week2_cases ve retrieval_questions değişmedi; corpus değişti, gold section'lar aynı -->
+Changes to any test set this week: none
 
 ## 4. Experiments
 
@@ -166,11 +155,6 @@ Hypotheses and decision rules were written in [`docs/STATUS.md`](../docs/STATUS.
 
 ## 5. Failure analysis
 
-<!-- YAZAN: Gökçe. Template "top 3" istiyor: en güçlü üç = w1-11 (retrieval), w1-21 (generation), w1-20 (routing).
-Diğerleri (r02, w1-19, r24) altında W3.8 tablosunda. Kök neden kelimeleri template'ten: retrieval, generation, prompt, data...
-Olgular planlama sohbetinde (W3.8 tablosu). Faithfulness'ta desteksiz iddia çıkarsa generation satırı olarak eklenir.
-"Çeviri ekleyince düzelir" gibi ölçülmemiş iddia yok: "week 4'te denenecek". -->
-
 | # | Input (short) | What happened | Root cause | Fix (done or planned) |
 |---|---|---|---|---|
 | 1 | w1-11 (TR, make-up exam rule); same pattern in r02 (TR, make-up week, W3.5) | Gold `regulation-article-12` not in the top 5; all five are bulk `Attendance` sections. The model abstained: Run B's only false abstention (1/34). With stub search the case passes. r02: gold section not in the top 10. Both are Turkish questions on English regulations | retrieval | Planned, week 4: translate the query before search; measured on hit@5 for the Turkish questions (now 11/12) and on w1-11. Not measured yet |
@@ -178,7 +162,7 @@ Olgular planlama sohbetinde (W3.8 tablosu). Faithfulness'ta desteksiz iddia çı
 | 3 | w1-20 (TR, dorm application deadline); w1-19 (EN, "45 on the midterm, will I pass?") | The classifier says `other`, so the student gets the fixed out-of-scope reply with no pointer to where to ask (no invented date). w1-20: 6 of 6 runs (4 W2.5 runs, Run A, Run B). w1-19: `rule_question` in Run A, `other` in Run B, same `classifier_v1`, T = 0. Recurring: [week-2 failure 1](week-2.md) | prompt | Planned, week 4 (unchanged from week 2): `classifier_v2`, one change to the `rule_question` definition, measured on the 42 cases and on `heldout_v2` |
 
 **W3.8: every failure this week, labelled.**
-We compared each end-to-end failure with stub search, which searches only the gold sections: close to an ideal retriever, but not a full oracle, since it still matches by keywords. If the gold section was missing from the top k, we labelled the failure retrieval; if it was there but the answer was wrong, generation. `w1-21` has no gold section: the right topic was retrieved, the documents contain no answer, and the model answered instead of abstaining, so it is also generation. Intent errors (`w1-19`, `w1-20`) happen before search and never reach retrieval or generation, so we label them prompt. <!-- etiket kuralı bir cümle: gold top-5'te yoksa retrieval, varsa ve cevap yanlışsa generation; stub sadece gold section'ları tuttuğu için oracle, ama kelime örtüşmeli bir arama, tam oracle değil -->
+We compared each end-to-end failure with stub search, which searches only the gold sections: close to an ideal retriever, but not a full oracle, since it still matches by keywords. If the gold section was missing from the top k, we labelled the failure retrieval; if it was there but the answer was wrong, generation. `w1-21` has no gold section: the right topic was retrieved, the documents contain no answer, and the model answered instead of abstaining, so it is also generation. Intent errors (`w1-19`, `w1-20`) happen before search and never reach retrieval or generation, so we label them prompt.
 
 | Case | Run | Label | Evidence |
 |---|---|---|---|
@@ -204,17 +188,11 @@ Weeks 2 and 3 are presented in the same session, so there is no new feedback aft
 
 ## 7. Product track
 
-<!-- Herkes kendi görüşmesini yazar. İsim, numara, iletişim YOK (R10): rol + tarih. Her görüşme: bugün nasıl takip
-ediyor, ne öderdi / kim öderdi, AI'dan ne korkutuyor; en şaşırtıcı bulgu; ürüne etkisi ("şunu değiştiriyoruz / değiştirmiyoruz"). -->
-
 **Interview (Enes), 2026-11-23: first-year business student, 6 courses.** Friends remind them of deadlines on WhatsApp; dates also come from the LMS and email. The last homework they missed was left to the last moment and cost about 3% of the grade ("not sure"). They might pay 100–200 TL a month, but would rather have the school pay and the tool read the LMS. Fears: private information leaking, and emails sent to instructors in their name. Most surprising: the date was known; the problem was putting it off, and they want several reminders that stop once they say the work is done. Our design has one reminder, 24 hours before. We keep sources and confirmation before any action; a "done" mark and more than one reminder are proposed for the reminder action; the team has not decided yet. Limits: one person, a friend of the interviewer, and our last question suggested showing the source. Notes: [`docs/interviews/2026-11-23_student_e.md`](../docs/interviews/2026-11-23_student_e.md).
 
 **Interview (Gökçe), 2026-11-24: second-year industrial engineering student, by WhatsApp.** Their last homework was posted only on the last page of a slide deck; they learned of it on the due date. The first interviewee knew the date and put the work off; this one never saw it. Both rely on WhatsApp for updates, want the school to pay, and would probably stop using it after one wrong date. Our corpus has no slides: an open gap the team has not decided on yet. Notes: [`docs/interviews/2026-11-24_student_g.md`](../docs/interviews/2026-11-24_student_g.md).
 
 ## 8. Contributions
-
-<!-- Week-2 tag'inden beri commit: Mert 13, Enes 8, Gökçe 8 (git shortlog -sn week-2..HEAD; tag'den önce yeniden say).
-Saat hücresi BOŞ KALMAYACAK. -->
 
 | Member | Role | What they did this week | Commits or files | Hours |
 |---|---|---|---|---|
