@@ -33,7 +33,7 @@ En önemli tek sayı için aday: hit@5 ya da stub→gerçek arama farkı (aynı 
 | W3.5 | done | [`eval/retrieval.py`](../eval/retrieval.py), [`eval/testsets/retrieval_questions.jsonl`](../eval/testsets/retrieval_questions.jsonl), [`results/2026-11-23_retrieval_hybrid-rerank/`](../results/2026-11-23_retrieval_hybrid-rerank/) | <!-- 30 soru, corpus yazarı dışında biri yazdı, dondurulmuş; hit@1/3/5/10 ve MRR CI ile --> |
 | W3.6 | done | [`eval/faithfulness.py`](../eval/faithfulness.py), [`prompts/faithfulness_v1.md`](../prompts/faithfulness_v1.md), [`results/2026-11-23_faithfulness-v1/`](../results/2026-11-23_faithfulness-v1/) | 13 claims from 7 Run B answers: fewer than 20, so all were labelled and the intervals are wide. Judge kappa 0.629 against each rater, bootstrap 95% [0.000, 1.000] (threshold 0.6 met on the point estimate); the raters agree 13/13. Rater 1 read the Run B note on w1-21 before labelling. <!-- 13 iddia / 7 vaka (< 20: plan kuralı); iki kör insan etiketçi; rater 1 w1-21'in Run B yorumunu etiketlemeden önce okudu (söyle) --> |
 | W3.7 | done | [dense](../results/2026-11-23_retrieval_dense-rerank/), [BM25](../results/2026-11-23_retrieval_bm25-rerank/), [no reranker](../results/2026-11-23_retrieval_hybrid-norerank/), [hybrid vs dense](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_dense-rerank_hit_at_5/), [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) | <!-- iki ablation, her biri tek değişiklik; BM25-only ek satır --> |
-| W3.8 | done | §5 below, [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [stub vs real](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/) | <!-- her hata retrieval / generation / routing; kanıt trace'teki top-5 --> |
+| W3.8 | done | §5 below, [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [stub vs real](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/) | 7 failures, one rule: gold section not in the top k → retrieval (3); gold there but the answer wrong → generation (2); intent wrong before search → prompt (2). Stub search serves as a near-oracle; see §5 |
 | Product track | done | §7, [first interview](../docs/interviews/2026-11-23_student_e.md), [second interview](../docs/interviews/2026-11-24_student_g.md) | Two interviews with students |
 
 ## 3. Scoreboard
@@ -121,8 +121,7 @@ Changes to any test set this week: none <!-- doğru: week2_cases ve retrieval_qu
 
 ## 4. Experiments
 
-<!-- Hipotezler ve karar kuralları koşulardan önce docs/STATUS.md Experiments'a yazıldı: bunu bir kez söyle ve link ver.
-Her deneyde Decision cümlesini deneyin sahibi yazar. -->
+Hypotheses and decision rules were written in [`docs/STATUS.md`](../docs/STATUS.md) (Experiments) before each run.
 
 ### Experiment 1: retrieval baseline, main configuration (W3.5)
 
@@ -150,11 +149,10 @@ Her deneyde Decision cümlesini deneyin sahibi yazar. -->
 
 ### Experiment 4: stub search vs real search on the 19 search cases (Run A, W3.8)
 
-<!-- YAZAN: Gökçe ya da Mert (koşuyu Mert yaptı) -->
-- **Hypothesis:** <!-- gerçek aramayla doğruluk en fazla stub kadar -->
-- **Change:** <!-- --search real; her şey v1, seed table -->
-- **Result:** <!-- 17/19 = 0.895 [0.686, 0.971] vs stub 16/19 = 0.842 [0.624, 0.945]; McNemar b = 1 (w1-11), c = 2 (w1-08, w1-21), p = 1.0 -->
-- **Decision:** <!-- fark yok; w1-11 retrieval hatası (trace); w1-08 ve w1-21 tek koşuda gürültüden ayrılamaz (w1-08 week-2'de de koşudan koşuya değişti) -->
+- **Hypothesis:** Accuracy with real search is at most the stub's, because the stub returns only the gold sections.
+- **Change:** One change against week 2's `w25-v1-a`: `--search real`. All prompts v1, seed table, T = 0; only the 19 cases that use search.
+- **Result:** 17/19 = 0.895, Wilson 95% [0.686, 0.971], against 16/19 = 0.842 [0.624, 0.945] with the stub. Exact McNemar b = 1 (w1-11), c = 2 (w1-08, w1-21), p = 1.0 ([comparison](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/)).
+- **Decision:** Not supported, and no difference either. w1-11 is a retrieval failure: Article 12 is not in the top 5 (§5). w1-08 also flipped between two week-2 runs, so with one run each, w1-08 and w1-21 cannot be told apart from run-to-run noise.
 
 ### Experiment 5: answer_v1 vs answer_v2 with real search (Run B, W3.4)
 
@@ -165,11 +163,10 @@ Her deneyde Decision cümlesini deneyin sahibi yazar. -->
 
 ### Experiment 6: faithfulness judge vs two blind raters (W3.6)
 
-<!-- YAZAN: Gökçe — kappa'dan sonra. n = 13 iddia (< 20), aralıklar geniş; rater 1 w1-21 notu -->
-- **Hypothesis:**
-- **Change:**
-- **Result:**
-- **Decision:**
+- **Hypothesis:** The judge agrees with each of two blind raters at kappa ≥ 0.6.
+- **Change:** A measurement, no comparison. Judge `qwen/qwen3.8-27b`, T = 0, `faithfulness_v1`, on all 13 claims of Run B's 7 answered rule questions. The raters committed their labels before the judge ran.
+- **Result:** Kappa 0.629 against each rater, bootstrap 95% [0.000, 1.000] (undefined in 227 of 2,000 resamples); the raters agree 13/13. The one disagreement, w1-12#2, cites the wrong source: raters unsupported, judge supported. Unsupported: judge 1/13, raters 2/13.
+- **Decision:** Met on the point estimate, so `unsupported_claims` comes from the judge. But the gate rests on that one claim (agreement there gives kappa 1), and it is the error type the week-6 citation check targets (§5).
 
 ## 5. Failure analysis
 
@@ -201,14 +198,13 @@ Even at T = 0, the same configuration gave different outcomes across runs: `w1-1
 
 ## 6. Response to last week's feedback
 
-<!-- Week-2 ve week-3 aynı derste sunuluyor: week-2'den sonra yeni geri bildirim yok. Bunu bir satırla söyle, sonra
-week-1 geri bildiriminde bu hafta kapanan maddeler (docs/feedback/2026-11-18-week1.md #3, #3b, #3c). -->
+Weeks 2 and 3 are presented in the same session, so there is no new feedback after week 2; the table lists the [week-1 points](../docs/feedback/2026-11-18-week1.md) this week closes.
 
 | Feedback point | What we changed | Evidence |
 |---|---|---|
-| The corpus should be at least 10,000 chunks (3c) | <!-- 11.388 chunk; sayı belge ekleyerek, chunk küçültmeden (D-008) --> | [`results/2026-11-23_bulk-corpus/`](../results/2026-11-23_bulk-corpus/), D-008 |
-| The live demo must show the classifier and RAG (3) | <!-- demo tam corpus üstünde hibrit arama; BM25/dense/fused/rerank sıraları ekranda; index yükleme ve arama süresi ekranda --> | [`app/demo.py`](../app/demo.py), [`results/2026-11-23_demo-search-timing_cpu/`](../results/2026-11-23_demo-search-timing_cpu/) |
-| Show the architecture in detail, and our data (3b) | <!-- retrieval satırları (0b7df66), 11.388 chunk'lık arama kutusu (8fe2a9d), ölçülen gecikme --> | [`docs/architecture.md`](../docs/architecture.md) |
+| The corpus should be at least 10,000 chunks (3c) | 11,388 chunks, reached by adding documents (10 core + 3,879 generated), not by shrinking chunks (D-008) | [`results/2026-11-23_bulk-corpus/`](../results/2026-11-23_bulk-corpus/), D-008 |
+| The live demo must show the classifier and RAG (3) | The demo runs hybrid search on the full corpus and shows the BM25 and dense ranks, the reranker score and the index load time; search time is measured | [`app/demo.py`](../app/demo.py), [`results/2026-11-23_demo-search-timing_cpu/`](../results/2026-11-23_demo-search-timing_cpu/) |
+| Show the architecture in detail, and our data (3b) | Retrieval rows in the architecture (`0b7df66`) and the search box at 11,388 chunks with measured latency (`8fe2a9d`) | [`docs/architecture.md`](../docs/architecture.md) |
 
 ## 7. Product track
 
@@ -226,7 +222,7 @@ Saat hücresi BOŞ KALMAYACAK. -->
 
 | Member | Role | What they did this week | Commits or files | Hours |
 |---|---|---|---|---|
-| Serap Gökçe Yıldız | Evaluation and safety lead | <!-- STATUS plan satırları; faithfulness aracı ve etiket sayfası; Run A/B karşılaştırmaları; week-3 scoreboard script'i; W3.8; rapor --> | `eval/faithfulness.py`, `prompts/faithfulness_v1.md`, `scripts/write_week3_scoreboard.py`, `results/2026-11-23_faithfulness-v1/`, `results/2026-11-23_compare_*`, `reports/week-3.md` | |
+| Serap Gökçe Yıldız | Evaluation and safety lead | Experiment plan rows in STATUS before the runs; faithfulness tool and labelling sheet; W3.6 labels (rater 1), judge run and kappa; Run A vs stub and Run B vs Run A comparisons; week-3 scoreboard script; report skeleton, §5, §10 | 15 commits; `eval/faithfulness.py`, `prompts/faithfulness_v1.md`, `scripts/write_week3_scoreboard.py`, `results/2026-11-23_faithfulness-v1/`, `results/2026-11-23_compare_*`, `reports/week-3.md` | |
 | Enes Kemal Köylü | Agent and tools lead | `answer_v2` (W3.4); search calls logged in the trace for W3.8; `compare.py --common-ids`; demo on the full corpus with hybrid search, replays and search timing; failed model replies no longer shown as "no deadline"; hallucination log #14; one customer interview | `prompts/answer_v2.md`, `src/aic390/agent/`, `eval/compare.py`, `app/demo.py`, `scripts/time_demo_search.py`, `results/2026-11-23_demo-search-timing_cpu/`, `docs/hallucination_log.md`, `docs/interviews/` | 7 |
 | Mert Bozma | Data and retrieval lead | <!-- bulk üretici + testler; 11.388 chunk; course filtresi; eval/retrieval.py; baseline + 2 ablation; Run A ve Run B koşuları (GPU makinesi); architecture retrieval satırları; D-007/D-008 accepted --> | `scripts/generate_bulk_corpus.py`, `data/corpus_bulk/`, `src/aic390/rag/`, `eval/retrieval.py`, `results/2026-11-23_retrieval_*`, `results/2026-11-23_e2e_w3-*` | |
 
@@ -234,7 +230,7 @@ Saat hücresi BOŞ KALMAYACAK. -->
 
 | Tool | Used for |
 |---|---|
-| Claude (claude.ai, planning chat) | Planning the week and the experiments, reviewing our results and this report against the handbook, the report skeleton with the facts each section needs, a helper script for the W3.6 labelling sheet (not in the repository), the English summary and format of the second interview's notes from the interviewee's Turkish answers, and editing our drafts of parts of this report |
+| Claude (claude.ai, planning chat) | Planning the week and the experiments, reviewing our results and this report against the handbook, the report skeleton with the facts each section needs, a helper script for the W3.6 labelling sheet (not in the repository), the English summary and format of the second interview's notes from the interviewee's Turkish answers, and drafting or editing parts of this report from our results (Experiments 4 and 6, notes in §2, §6, §8 and §10), which we reviewed |
 | Claude Code (VS Code and desktop app) | Writing and testing code (faithfulness tool, week-3 scoreboard script, search calls in the trace, demo) and preparing commits that each of us reviewed and made |
 
 All W3.6 labels came from the two human raters; no label came from a model. The faithfulness judge is part of the measured system, not a writing aid.
@@ -247,8 +243,8 @@ All W3.6 labels came from the two human raters; no label came from a model. The 
 |---|---|---|
 | `hit_at_5` ≥ 0.80 with hybrid + reranker | 29/30 = 0.967 [0.833, 0.994]; [W3.5](../results/2026-11-23_retrieval_hybrid-rerank/) | Met |
 | Hybrid beats BM25 on Turkish questions | TR hit@5: hybrid 11/12, dense 10/12, BM25 8/12 (descriptive, no test) | Met |
-| Accuracy with real search no worse than stub | 17/19 vs 16/19, McNemar b = 1, c = 2, p = 1.0; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/) | Not supported, no difference |
-| `unsupported_claims` ≤ 0.10 | 1/13 = 0.077 [0.014, 0.333] (judge), n = 13; both raters 2/13; [W3.6](../results/2026-11-23_faithfulness-v1/) | Met on the point estimate; upper bound above 0.10 |
+| Accuracy with real search no worse than stub | 17/19 vs 16/19, McNemar b = 1, c = 2, p = 1.0; [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/) | No difference detected (p = 1.0); real search one case higher |
+| `unsupported_claims` ≤ 0.10 | 1/13 = 0.077 [0.014, 0.333] (judge), n = 13; both raters 2/13; [W3.6](../results/2026-11-23_faithfulness-v1/) | Judge: met (1/13). Raters: not met (2/13). n = 13 cannot decide |
 | Intent errors ≤ 1 (`classifier_v2`, `item_key`, `heldout_v2`) | Not run this week; 2 errors in Run B (w1-19, w1-20) | Week 4 |
 
 | Priority | Metric it should move | Expected change |
