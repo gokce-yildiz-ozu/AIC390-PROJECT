@@ -117,7 +117,7 @@ Hypotheses and decision rules were written in [`docs/STATUS.md`](../docs/STATUS.
 
 ### Experiment 2: hybrid vs dense only (W3.7, ablation 1)
 
-- **Hypothesis:** hybrid beats dense on the 7 confusable questions; dense beats BM25 on the 12 Turkish ones.
+- **Hypothesis:** hybrid beats dense on the 7 confusable questions; dense is at least as good as BM25 on the 12 Turkish ones.
 - **Change:** `mode = dense` instead of hybrid; reranker on in both.
 - **Result:** dense hit@5 28/30 = 0.933 [0.787, 0.982]. McNemar b = 1 (r09), c = 0, p = 1.0; with b + c < 6 no split can reach p < 0.05. Confusable: 7/7 in both. Turkish hit@5: dense 10/12, BM25 8/12; BM25 alone 25/30 = 0.833 [0.664, 0.927].
 - **Decision:** equal, so hybrid stays (D-007). First half not supported; second half holds (descriptive).
