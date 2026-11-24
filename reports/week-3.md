@@ -34,7 +34,7 @@ En önemli tek sayı için aday: hit@5 ya da stub→gerçek arama farkı (aynı 
 | W3.6 | done | [`eval/faithfulness.py`](../eval/faithfulness.py), [`prompts/faithfulness_v1.md`](../prompts/faithfulness_v1.md), [`results/2026-11-23_faithfulness-v1/`](../results/2026-11-23_faithfulness-v1/) | 13 claims from 7 Run B answers: fewer than 20, so all were labelled and the intervals are wide. Judge kappa 0.629 against each rater, bootstrap 95% [0.000, 1.000] (threshold 0.6 met on the point estimate); the raters agree 13/13. Rater 1 read the Run B note on w1-21 before labelling. <!-- 13 iddia / 7 vaka (< 20: plan kuralı); iki kör insan etiketçi; rater 1 w1-21'in Run B yorumunu etiketlemeden önce okudu (söyle) --> |
 | W3.7 | done | [dense](../results/2026-11-23_retrieval_dense-rerank/), [BM25](../results/2026-11-23_retrieval_bm25-rerank/), [no reranker](../results/2026-11-23_retrieval_hybrid-norerank/), [hybrid vs dense](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_dense-rerank_hit_at_5/), [rerank on vs off](../results/2026-11-23_retrieval-compare_hybrid-rerank_vs_hybrid-norerank_hit_at_1/) | <!-- iki ablation, her biri tek değişiklik; BM25-only ek satır --> |
 | W3.8 | done | §5 below, [Run A](../results/2026-11-23_e2e_w3-real-ansv1_openai-gpt-oss-120b/), [stub vs real](../results/2026-11-23_compare_w25-v1-a_vs_w3-real-ansv1_common-ids/) | <!-- her hata retrieval / generation / routing; kanıt trace'teki top-5 --> |
-| Product track | <!-- görüşmelere göre --> | §7 | |
+| Product track | done | §7, [first interview](../docs/interviews/2026-11-23_student_e.md), [second interview](../docs/interviews/2026-11-24_student_g.md) | Two interviews with students |
 
 ## 3. Scoreboard
 
@@ -217,6 +217,8 @@ ediyor, ne öderdi / kim öderdi, AI'dan ne korkutuyor; en şaşırtıcı bulgu;
 
 **Interview (Enes), 2026-11-23: first-year business student, 6 courses.** Friends remind them of deadlines on WhatsApp; dates also come from the LMS and email. The last homework they missed was left to the last moment and cost about 3% of the grade ("not sure"). They might pay 100–200 TL a month, but would rather have the school pay and the tool read the LMS. Fears: private information leaking, and emails sent to instructors in their name. Most surprising: the date was known; the problem was putting it off, and they want several reminders that stop once they say the work is done. Our design has one reminder, 24 hours before. We keep sources and confirmation before any action; a "done" mark and more than one reminder are proposed for the reminder action; the team has not decided yet. Limits: one person, a friend of the interviewer, and our last question suggested showing the source. Notes: [`docs/interviews/2026-11-23_student_e.md`](../docs/interviews/2026-11-23_student_e.md).
 
+**Interview (Gökçe), 2026-11-24: second-year industrial engineering student, by WhatsApp.** Their last homework was posted only on the last page of a slide deck; they learned of it on the due date. The first interviewee knew the date and put the work off; this one never saw it. Both rely on WhatsApp for updates, want the school to pay, and would probably stop using it after one wrong date. Our corpus has no slides: an open gap the team has not decided on yet. Notes: [`docs/interviews/2026-11-24_student_g.md`](../docs/interviews/2026-11-24_student_g.md).
+
 ## 8. Contributions
 
 <!-- Week-2 tag'inden beri commit: Mert 13, Enes 8, Gökçe 8 (git shortlog -sn week-2..HEAD; tag'den önce yeniden say).
@@ -230,13 +232,12 @@ Saat hücresi BOŞ KALMAYACAK. -->
 
 ## 9. AI tools used
 
-<!-- Week-2 ile aynı format ve aynı dürüstlük. Bu hafta: planlama sohbeti (deney planı, rapor iskeleti, sonuç incelemesi,
-etiketleme yardımcı script'i — script repoda değil), Claude Code (faithfulness aracı, scoreboard script'i, trace, demo...).
-Etiketleri insanlar verdi; hiçbir etiket bir modelden gelmedi. -->
-
 | Tool | Used for |
 |---|---|
-| | |
+| Claude (claude.ai, planning chat) | Planning the week and the experiments, reviewing our results and this report against the handbook, the report skeleton with the facts each section needs, a helper script for the W3.6 labelling sheet (not in the repository), the English summary and format of the second interview's notes from the interviewee's Turkish answers, and editing our drafts of parts of this report |
+| Claude Code (VS Code and desktop app) | Writing and testing code (faithfulness tool, week-3 scoreboard script, search calls in the trace, demo) and preparing commits that each of us reviewed and made |
+
+All W3.6 labels came from the two human raters; no label came from a model. The faithfulness judge is part of the measured system, not a writing aid.
 
 ## 10. Next week
 
